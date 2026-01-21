@@ -1,0 +1,11 @@
+@reference "../../styles/global.css";
+
+.accordionTrigger {
+    @apply bg-zinc-500 hover:bg-sky-700 w-full text-left;
+}
+
+
+.accordionTrigger:hover {
+  background: #0369a1;
+  @apply hover:cursor-pointer
+}

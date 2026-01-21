@@ -1,0 +1,25 @@
+import { useParams } from "react-router-dom";
+import type { ComponentType, JSX } from "react";
+
+import Lesson1Page from "./Lessons/Unit1Pages/Lesson1Page";
+import Lesson2Page from "./Lessons/Unit1Pages/Lesson2Page";
+
+type LessonRouteParams = {
+  lessonId: string;
+};
+
+const lessonMap: Record<string, ComponentType> = {
+  lesson1: Lesson1Page,
+  lesson2: Lesson2Page,
+};
+
+export default function LessonPage(): JSX.Element {
+    const { lessonId } = useParams<LessonRouteParams>();
+
+    const Component = lessonId ? lessonMap[lessonId] : undefined;
+    if (!Component) {
+        throw new Response("Lesson not found", { status: 404 });
+    }
+
+    return <Component />;
+}
