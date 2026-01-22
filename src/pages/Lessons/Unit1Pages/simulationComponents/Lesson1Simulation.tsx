@@ -4,16 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import type { ThreeElements } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Slider from "../../../../components/controls/Slider";
-import useSliders from "../../../../hooks/useSlider";
-
-type variableState = {
-  id: string;
-  label?: string;
-  value: number[];
-  updateValue: (value: number[]) => void;
-  min?: number;
-  max?: number;
-};
+import SimulationControls from "./SimulationControls";
 
 function Box(props: ThreeElements["mesh"]) {
   const meshRef = useRef<THREE.Mesh>(null!);
@@ -35,40 +26,44 @@ function Box(props: ThreeElements["mesh"]) {
   );
 }
 
-function SimulationControls({controllableVariables} : {controllableVariables: variableState[]}) {
-  return (
-    <div className="absolute z-10 h-max-full overflow-scroll">
-      {controllableVariables.map((variable) => {
-        return (
-          <Slider
-            key={variable.id}
-            value={variable.value}
-            onValueChange={variable.updateValue}
-            min={0}
-            max={1000}
-          />
-        );
-      })}
-    </div>
-  );
-}
+
 
 export default function Lesson1SimulationComponent() {
-  const { variables, getVariables } = useSliders(
-    {
-      volume: 75,
-      temp: 75,
-      num: 75,
-      particle: 75,
-    },
-    {
-      volume: { label: "Volume (L)", min: 0, max: 1000 },
-      temp: { label: "Temperature (K)", min: 0, max: 500 },
-      num: { label: "Number of Particles", min: 1, max: 1000 },
-      particle: { label: "Particle Size", min: 1, max: 100 },
-    }
-  );
-  console.log(variables.volume, variables.temp);
+  const [volumeValue, setVolumeValue] = useState([75]);
+  const [tempValue, setTempValue] = useState([75]);
+  const [numValue, setNumValue] = useState([75]);
+  const [particleValue, setParticleValue] = useState([75]);
+
+  const controllableVariables: React.ReactNode[] = [
+    <Slider
+      key={"1"}
+      value={volumeValue}
+      onValueChange={setVolumeValue}
+      min={0}
+      max={1000}
+    />,
+    <Slider
+      key={"2"}
+      value={tempValue}
+      onValueChange={setTempValue}
+      min={0}
+      max={1000}
+    />,
+    <Slider
+      key={"3"}
+      value={numValue}
+      onValueChange={setNumValue}
+      min={0}
+      max={1000}
+    />,
+    <Slider
+      key={"4"}
+      value={particleValue}
+      onValueChange={setParticleValue}
+      min={0}
+      max={1000}
+    />,
+  ];
 
   const camera: {
     fov: number;
@@ -80,7 +75,7 @@ export default function Lesson1SimulationComponent() {
   return (
     <>
       <div className="page-div min-h-165 flex p-0 border-2 border-amber-300 relative">
-        <SimulationControls controllableVariables={getVariables()} />
+        <SimulationControls controllableVariables={controllableVariables} />
         <div className="canvas-div flex-1 z-0">
           <Canvas camera={camera}>
             <OrbitControls makeDefault />
