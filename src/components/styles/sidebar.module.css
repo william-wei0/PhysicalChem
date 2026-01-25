@@ -1,7 +1,7 @@
 @reference "../../styles/global.css";
 
 .accordionTrigger {
-    @apply bg-zinc-500 hover:bg-sky-700 w-full text-left;
+    @apply hover:bg-sky-700 w-full text-left border-b-2 border-zinc-500 pl-4 pt-4 pb-1;
 }
 
 

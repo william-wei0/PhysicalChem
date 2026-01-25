@@ -1,13 +1,14 @@
-
-export default function Slider({ 
-  value, 
-  onValueChange, 
-  min = 0, 
+export default function Slider({
+  value,
+  onValueChange,
+  label = "Slider Component",
+  min = 0,
   max = 100,
-  step = 1 
-}: { 
+  step = 1,
+}: {
   value: number[];
   onValueChange: (value: number[]) => void;
+  label?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -20,11 +21,9 @@ export default function Slider({
   };
 
   return (
-    <div className="w-full p-4 border-2 border-cyan-700 bg-white rounded-lg">
-      <h2 className="font-bold text-gray-800 mb-4">Slider Component</h2>
-
-      <div className="space-y-4">
-        {/* Slider */}
+    <div className="w-full p-4 bg-transparent rounded-lg">
+      <h2 className="font-bold text-center text-gray-800">{label}</h2>
+      <div className="">
         <div className="relative">
           <input
             type="range"
@@ -33,32 +32,32 @@ export default function Slider({
             step={step}
             value={currentValue}
             onChange={(e) => handleSliderChange(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-2 cursor-pointer slider"
+            //flex w-56 touch-none items-center py-3 select-none
             style={{
               background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`,
             }}
           />
         </div>
 
-        {/* Value Display */}
-        <input
-          className="w-full font-bold text-blue-600 text-center border border-gray-300 rounded px-2 py-1"
-          type="number"
-          value={currentValue}
-          min={min}
-          max={max}
-          onChange={(e) => {
-            const newValue = Number(e.target.value);
-            if (newValue >= min && newValue <= max) {
-              handleSliderChange(newValue);
-            }
-          }}
-        />
-
         {/* Min/Max Labels */}
-        <div className="flex justify-between text-sm text-gray-600">
+        <div className="grid grid-cols-3 text-sm">
           <span>{min}</span>
-          <span>{max}</span>
+          <input
+            className="justify-self-center w-full text-center font-bold "
+            type="number"
+            value={currentValue}
+            min={min}
+            max={max}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              if (newValue >= min && newValue <= max) {
+                handleSliderChange(newValue);
+              }
+            }}
+          />
+          
+          <span className="text-right">{max}</span>
         </div>
       </div>
 

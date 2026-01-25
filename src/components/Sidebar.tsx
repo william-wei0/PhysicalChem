@@ -20,20 +20,20 @@ type LinksAccordionProps = {
 const section: LinksAccordionProps[] = [
   {
     id: "1",
-    title: "Unit 1",
+    title: "Unit 1: Physical Properties of Atoms",
     content: "unit1",
     triggerClassName: styles.accordionTrigger
   },
   {
     id: "2",
-    title: "Unit 2",
+    title: "Unit 2: Physical Properties of Atoms",
     content: "unit2",
     triggerClassName: styles.accordionTrigger
   },
   {
     id: "3",
-    title: "Unit 3",
-    content: <Link to="/" className="block w-full">Home</Link>,
+    title: "Unit 3: Physical Properties of Atoms",
+    content: <Link to="/" className="inline-block px-4 py-2 bg-blue-500 text-white rounded transition-all duration-300 hover:bg-blue-600 hover:scale-105">Home</Link>,
     triggerClassName: styles.accordionTrigger,
     contentClassName: styles.accordionTrigger
   },
@@ -41,11 +41,11 @@ const section: LinksAccordionProps[] = [
 
 export default function Sidebar() {
   return (
-    <div className="bg-zinc-300 text-blue p-4 rounded flex-1">
-      <header className="bg-zinc-400">
-        This is this sidebar header
+    <div className="bg-zinc-100 text-blue p-4 flex-1 border border-black">
+      <header className="text-center font-bold text-lg p-2">
+        Unit Lessons
       </header>
-      <div className="bg-zinc-500">
+      <div className="">
       <Accordion>
         {section.map((item) => (
           <AccordionItem id={item.id} key={item.id}>

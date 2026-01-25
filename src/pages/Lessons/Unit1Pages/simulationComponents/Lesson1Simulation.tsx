@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import type { ThreeElements } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import Slider from "../../../../components/controls/Slider";
+import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "./SimulationControls";
 
 function Box(props: ThreeElements["mesh"]) {
@@ -39,6 +39,7 @@ export default function Lesson1SimulationComponent() {
       key={"1"}
       value={volumeValue}
       onValueChange={setVolumeValue}
+      label="Volume"
       min={0}
       max={1000}
     />,
@@ -46,6 +47,7 @@ export default function Lesson1SimulationComponent() {
       key={"2"}
       value={tempValue}
       onValueChange={setTempValue}
+      label="Temperature"
       min={0}
       max={1000}
     />,
@@ -53,6 +55,7 @@ export default function Lesson1SimulationComponent() {
       key={"3"}
       value={numValue}
       onValueChange={setNumValue}
+      label="Number of Particles"
       min={0}
       max={1000}
     />,
@@ -60,6 +63,7 @@ export default function Lesson1SimulationComponent() {
       key={"4"}
       value={particleValue}
       onValueChange={setParticleValue}
+      label="Particle Density"
       min={0}
       max={1000}
     />,
