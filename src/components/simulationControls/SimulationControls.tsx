@@ -1,6 +1,6 @@
 import { useState } from "react";
-import CloseButtonWithText from "../../../../components/buttons/CloseButtonWithText";
-import OpenSimulationControlsButton from "../../../../components/buttons/OpenSimulationControlsButton";
+import CloseButtonWithText from "../buttons/CloseButtonWithText";
+import OpenSimulationControlsButton from "../buttons/OpenSimulationControlsButton";
 
 export default function SimulationControls({
   controllableVariables,

@@ -4,7 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import type { ThreeElements } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Slider from "../../../../components/simulationControls/Slider";
-import SimulationControls from "./SimulationControls";
+import SimulationControls from "../../../../components/simulationControls/SimulationControls";
 
 function Box(props: ThreeElements["mesh"]) {
   const meshRef = useRef<THREE.Mesh>(null!);
