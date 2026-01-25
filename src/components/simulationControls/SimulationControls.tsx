@@ -15,14 +15,14 @@ export default function SimulationControls({
   return (
     <>
       <div
-        className={`absolute right-3 top-3 z-10 rounded-2xl overflow-hidden transition-colors duration-500 ${
+        className={`absolute right-3 top-3 z-10 rounded-2xl bg-zinc-100 border border-black overflow-hidden duration-500 ${
           isControlsPanelVisible
-            ? "bg-zinc-200 w-80 opacity-100"
-            : "bg-black w-0 opacity-0 p-0"
+            ? "height-full w-80 opacity-100"
+            : "height-full w-0 opacity-0 p-0"
         }`}
         style={{
           transition:
-            "width 500ms ease-in-out, opacity 100ms ease-out, padding 200ms ease-out, background-color 1000ms ease-in-out",
+            "width 500ms ease-in-out, opacity 100ms ease-out, padding 200ms ease-out",
         }}
       >
         <CloseButtonWithText
