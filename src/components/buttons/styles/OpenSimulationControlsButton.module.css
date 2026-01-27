@@ -28,7 +28,7 @@
 }
 
 .OpenSimulationControlsButton .OpenSimulationControlsButtonText {
-  transform: translateX(50px) translateY(-1px);
+  transform: translateX(46px) translateY(-1px);
   font-weight: 300;
 }
 

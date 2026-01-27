@@ -5,6 +5,7 @@ import type { ThreeElements } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "../../../../components/simulationControls/SimulationControls";
+import "../../styles/canvas.css"
 
 function Box(props: ThreeElements["mesh"]) {
   const meshRef = useRef<THREE.Mesh>(null!);
@@ -34,7 +35,7 @@ export default function Lesson1SimulationComponent() {
   const [numValue, setNumValue] = useState([75]);
   const [particleValue, setParticleValue] = useState([75]);
 
-  const controllableVariables: React.ReactNode[] = [
+  const controllableSimulationVariables: React.ReactNode[] = [
     <Slider
       key={"1"}
       value={volumeValue}
@@ -78,9 +79,9 @@ export default function Lesson1SimulationComponent() {
 
   return (
     <>
-      <div className="page-div min-h-165 flex p-0 border-2 border-amber-300 relative">
-        <SimulationControls controllableVariables={controllableVariables} />
-        <div className="canvas-div flex-1 z-0">
+      <div className="simulation-container">
+        <SimulationControls controllableSimulationVariables={controllableSimulationVariables} />
+        <div className="canvas">
           <Canvas camera={camera}>
             <OrbitControls makeDefault />
             <ambientLight intensity={Math.PI / 2} />

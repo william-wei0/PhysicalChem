@@ -1,13 +1,13 @@
 import { useState } from "react";
-import CloseButtonWithText from "../buttons/CloseButtonWithText";
 import OpenSimulationControlsButton from "../buttons/OpenSimulationControlsButton";
+import CloseButtonHighlight from "../buttons/CloseButtonHighlight";
 
 export default function SimulationControls({
-  controllableVariables,
+  controllableSimulationVariables,
 }: {
-  controllableVariables: React.ReactNode;
+  controllableSimulationVariables: React.ReactNode;
 }) {
-  const [isControlsPanelVisible, setisControlsPanelVisible] = useState(false);
+  const [isControlsPanelVisible, setisControlsPanelVisible] = useState(true);
   const handleClick = () => {
     setisControlsPanelVisible(!isControlsPanelVisible);
   };
@@ -15,22 +15,20 @@ export default function SimulationControls({
   return (
     <>
       <div
-        className={`absolute right-3 top-3 z-10 rounded-2xl bg-zinc-100 border border-black overflow-hidden duration-500 ${
+        className={`absolute right-3 top-3 z-10 rounded-2xl bg-zinc-100 border border-black w-80 transition-all duration-500 ${
           isControlsPanelVisible
-            ? "height-full w-80 opacity-100"
-            : "height-full w-0 opacity-0 p-0"
+            ? "translate-x-0 opacity-100"
+            : "translate-x-[calc(100%+12px)] opacity-0"
         }`}
-        style={{
-          transition:
-            "width 500ms ease-in-out, opacity 100ms ease-out, padding 200ms ease-out",
-        }}
       >
-        <CloseButtonWithText
+        <CloseButtonHighlight
           onClick={handleClick}
-          className="right-3 top-2 z-10 absolute"
+          className="right-3 top-3 z-10 absolute"
         />
-        <h1 className="text-center font-bold mt-6 text-[20px]">Simulation Controls</h1>
-        {controllableVariables}
+        <h1 className="text-center font-bold mt-6 text-[20px]">
+          Simulation Controls
+        </h1>
+        {controllableSimulationVariables}
       </div>
 
       {!isControlsPanelVisible && (

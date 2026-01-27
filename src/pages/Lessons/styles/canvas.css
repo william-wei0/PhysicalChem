@@ -1,0 +1,11 @@
+@reference "../../../styles/global.css";
+
+
+.simulation-container{
+    height: calc(100vh - 200px);
+    @apply h-screen flex border-2 border-amber-300 relative overflow-x-hidden;
+}
+
+.canvas{
+    @apply flex-1 w-full z-0;
+}

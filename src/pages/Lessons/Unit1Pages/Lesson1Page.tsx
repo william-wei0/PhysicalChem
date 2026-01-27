@@ -1,4 +1,3 @@
-import "./styles/lesson1Page.module.css";
 import Lesson1Simulation from "./simulationComponents/Lesson1Simulation";
 
 export default function Lesson1Page() {
