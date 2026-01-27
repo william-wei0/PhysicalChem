@@ -4,8 +4,12 @@ export default function Lesson1Page() {
 
 
   return (
-    <>
-      <h1 className="shrink-0">Lesson1</h1>
+    <div className="p-4">
+      <h1 className="text-center font-bold text-2xl">Lesson 1. Properties of Atoms</h1>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
       <Lesson1Simulation/>
       <p>Content</p>
       <p>Content</p>
@@ -18,6 +22,6 @@ export default function Lesson1Page() {
       <p>Content</p>
       <p>Content</p>
       <p>Content</p>
-    </>
+    </div>
   );
 }

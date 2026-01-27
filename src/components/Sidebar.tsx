@@ -4,7 +4,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./accordion/accordion";
-import { useState } from "react";
 import { Link } from "react-router";
 import styles from "./styles/sidebar.module.css";
 import MinimizeSidebarButton from "./buttons/MinimizeSidebarButton";
@@ -49,41 +48,48 @@ const section: LinksAccordionProps[] = [
   },
 ];
 
-export default function Sidebar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+export default function Sidebar({
+  isOpen,
+  onToggle,
+}: {
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
   return (
-    <>
-      {isSidebarOpen ? (
-        <div className="bg-zinc-100 text-blue p-4 flex-1 border border-black relative">
+    <div
+      className="bg-zinc-100 flex-1 border border-black relative"
+    >
+      {isOpen && (
+        <div className="p-4">
+          {" "}
           <MinimizeSidebarButton
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className={"absolute right-2 top-2"}
+            onClick={onToggle}
+            className="absolute right-2 top-2 z-10"
           />
-          <header className="text-center font-bold text-lg p-2">
-            Unit Lessons
-          </header>
-          <div className="">
-            <Accordion>
-              {section.map((item) => (
-                <AccordionItem id={item.id} key={item.id}>
-                  <AccordionTrigger className={item.triggerClassName}>
-                    {" "}
-                    {item.title}
-                  </AccordionTrigger>
-                  <AccordionContent className={item.contentClassName}>
-                    {item.content}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <header className="text-center font-bold text-lg p-2">
+              Unit Lessons
+            </header>
+            <div>
+              <Accordion>
+                {section.map((item) => (
+                  <AccordionItem id={item.id} key={item.id}>
+                    <AccordionTrigger className={item.triggerClassName}>
+                      {item.title}
+                    </AccordionTrigger>
+                    <AccordionContent className={item.contentClassName}>
+                      {item.content}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="bg-zinc-100 text-blue flex-1 border border-black relative">
-          <ExpandSidebarButton onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="h-full" />
+      )}
+      {!isOpen && (
+        <div className="bg-zinc-100 h-full">
+          <ExpandSidebarButton onClick={onToggle} className="h-full" />
         </div>
       )}
-    </>
+    </div>
   );
 }

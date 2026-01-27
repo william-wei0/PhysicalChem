@@ -1,24 +1,31 @@
-import { Link } from "react-router"
+import { Link } from "react-router";
 export default function Navbar() {
   return (
-    <>
-      <nav className={"mx-auto py-3.5 px-4.5 flex items-center justify-between gap-4"}>
-        <Link to="/" className={"font-bold text-lg no-underline text-gray-900"}>
-          {/* Replace text with an <img /> if you have a logo image */}
-          Learn Physical Chemistry
-        </Link>
-
-        <div className={"flex gap-4.5 items-center"}>
-          <Link to="/" className={"no-underline text-gray-700 font-medium"}>Home</Link>
-          <Link to="/lessons/lesson1" className={"no-underline text-gray-700 font-medium"}>Lesson1</Link>
-          <Link to="/lessons/lesson2" className={"no-underline text-gray-700 font-medium"}>Lesson2</Link>
+    <nav className="bg-zinc-800 text-white px-6 py-4">
+      <div className="grid grid-cols-3 items-center">
+        {/* Left */}
+        <div className="flex gap-6">
+          <Link to="/" className="hover:text-zinc-300 transition-colors">
+            Home
+          </Link>
+          <Link to="/lessons/lesson1" className="hover:text-zinc-300 transition-colors">
+            Lessons
+          </Link>
         </div>
 
-        <Link to="/" className="no-underline text-gray-900 flex items-center gap-2">
-          <span className="text-xl leading-none" aria-hidden="true">👤</span>
-          <span className="absolute left-[-9999px]">Account</span>
-        </Link>
-      </nav>
-    </>
+        {/* Center */}
+        <h1 className="text-xl font-bold text-center">CM-UY 3113: Physical Chemistry</h1>
+
+        {/* Right */}
+        <div className="flex gap-4 justify-end">
+          <Link to="/login" className="px-4 py-1 hover:text-zinc-300 transition-colors">
+            Login
+          </Link>
+          <Link to="/signup" className="px-4 py-1 bg-blue-600 rounded hover:bg-blue-700 transition-colors">
+            Sign Up
+          </Link>
+        </div>
+      </div>
+    </nav>
   );
 }

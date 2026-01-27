@@ -32,8 +32,7 @@ export default function Slider({
             step={step}
             value={currentValue}
             onChange={(e) => handleSliderChange(Number(e.target.value))}
-            className="w-full h-2 cursor-pointer slider"
-            //flex w-56 touch-none items-center py-3 select-none
+            className="w-full h-2 cursor-pointer "
             style={{
               background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`,
             }}
@@ -44,7 +43,7 @@ export default function Slider({
         <div className="grid grid-cols-3 text-sm">
           <span>{min}</span>
           <input
-            className="justify-self-center w-full text-center font-bold "
+            className="justify-self-center w-full text-center pl-[1rem] font-bold "
             type="number"
             value={currentValue}
             min={min}
