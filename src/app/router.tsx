@@ -3,7 +3,9 @@ import ErrorPage from "../pages/ErrorPage";
 import LessonsPage from "../pages/LessonsPage";
 import LessonIndexPage from "../pages/Lessons/LessonIndexPage";
 import LessonLayout from "../pages/Lessons/LessonLayout";
+import SignUpPage from "@/pages/SignUpPage";
 import App from "./App";
+import LoginPage from "@/pages/LoginPage";
 
 const routes = [
     {
@@ -23,6 +25,16 @@ const routes = [
             { index: true, element: <LessonIndexPage/>},
             { path: ":lessonId", element: <LessonsPage /> },
         ],
+    },
+    {   
+        path: "/signup",
+        element: <SignUpPage />,
+        errorElement: <ErrorPage/>,
+    },
+    {   
+        path: "/login",
+        element: <LoginPage />,
+        errorElement: <ErrorPage/>,
     }
 ]
 
