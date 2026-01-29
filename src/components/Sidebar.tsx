@@ -8,11 +8,12 @@ import { Link } from "react-router";
 import styles from "./styles/sidebar.module.css";
 import MinimizeSidebarButton from "./buttons/MinimizeSidebarButton";
 import ExpandSidebarButton from "./buttons/ExpandSidebarButton";
+import clsx from "clsx";
 
 type LinksAccordionProps = {
   id: string;
   title: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
   triggerClassName?: string;
   triggerStyle?: string;
   contentClassName?: string;
@@ -24,13 +25,13 @@ const section: LinksAccordionProps[] = [
     id: "1",
     title: "Unit 1: Physical Properties of Atoms",
     content: "unit1",
-    triggerClassName: styles.accordionTrigger,
+    triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation, "border-t"),
   },
   {
     id: "2",
     title: "Unit 2: Physical Properties of Atoms",
     content: "unit2",
-    triggerClassName: styles.accordionTrigger,
+    triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation),
   },
   {
     id: "3",
@@ -38,13 +39,69 @@ const section: LinksAccordionProps[] = [
     content: (
       <Link
         to="/"
-        className="inline-block px-4 py-2 bg-blue-500 text-white rounded transition-all duration-300 hover:bg-blue-600 hover:scale-105"
+        className={""}
       >
-        Home
+        3.3: The Superposition of 1s2pz
       </Link>
     ),
-    triggerClassName: styles.accordionTrigger,
-    contentClassName: styles.accordionTrigger,
+    triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation),
+    contentClassName: clsx("text-left relative", styles.lessonItem)
+  },
+    {
+    id: "4",
+    title: "Unit 4: Physical Properties of Atoms",
+    content: (
+      <Link
+        to="/"
+        className={""}
+      >
+        3.3: The Superposition of 1s2pz
+      </Link>
+    ),
+    triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation),
+    contentClassName: clsx("text-left relative", styles.lessonItem)
+  },
+      {
+    id: "5",
+    title: "Unit 5: Physical Properties of Atoms",
+    content: (
+      <Link
+        to="/"
+        className={""}
+      >
+        3.3: The Superposition of 1s2pz
+      </Link>
+    ),
+    triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation),
+    contentClassName: clsx("text-left relative", styles.lessonItem)
+  },
+      {
+    id: "6",
+    title: "Unit 6: Physical Properties of Atoms",
+    content: (
+      <Link
+        to="/"
+        className={""}
+      >
+        3.3: The Superposition of 1s2pz
+      </Link>
+    ),
+    triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation),
+    contentClassName: clsx("text-left relative", styles.lessonItem)
+  },
+        {
+    id: "7",
+    title: "Unit 7: Physical Properties of Atoms",
+    content: (
+      <Link
+        to="/"
+        className={""}
+      >
+        3.3: The Superposition of 1s2pz
+      </Link>
+    ),
+    triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation),
+    contentClassName: clsx("text-left relative", styles.lessonItem)
   },
 ];
 
@@ -57,7 +114,7 @@ export default function Sidebar({
 }) {
   return (
     <div
-      className="bg-zinc-100 flex-1 border border-black relative"
+      className="bg-zinc-50 flex-1 border border-black relative"
     >
       {isOpen && (
         <div className="p-4">
@@ -66,10 +123,10 @@ export default function Sidebar({
             onClick={onToggle}
             className="absolute right-2 top-2 z-10"
           />
-            <header className="text-center font-bold text-lg p-2">
-              Unit Lessons
+            <header className="text-center font-bold text-lg p-2 mb-5">
+              Lessons Overview
             </header>
-            <div>
+            <div className="bg-zinc-200 rounded-2xl border border-black pb-5 pt-5">
               <Accordion>
                 {section.map((item) => (
                   <AccordionItem id={item.id} key={item.id}>

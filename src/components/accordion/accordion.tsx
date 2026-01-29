@@ -73,7 +73,7 @@ export const AccordionContent = ({
   return (
     <>
       {context?.activeContent === item?.id ? (
-        <div className={className} style={style}>
+        <div className={`${className}`} style={style}>
           {children}
         </div>
       ) : null}

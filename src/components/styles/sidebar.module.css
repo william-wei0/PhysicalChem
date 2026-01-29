@@ -1,11 +1,31 @@
 @reference "../../styles/global.css";
 
 .accordionTrigger {
-    @apply hover:bg-sky-700 w-full text-left border-b-2 border-zinc-500 pl-4 pt-4 pb-1;
+    @apply relative w-full text-left border-b-2 border-zinc-500 pl-4 pt-4 pb-1 bg-zinc-100;
 }
 
 
-.accordionTrigger:hover {
-  background: #0369a1;
-  @apply hover:cursor-pointer
+
+.underlineAnimation::after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 0px;
+  background: black;
+  transition: width 300ms ease-in-out;
+  bottom: -2px;
+  right: 0;
+}
+
+.underlineAnimation:hover::after {
+  content: "";
+  height: 4px;
+  background: black;
+  width: 100%;
+}
+
+.lessonItem {
+  @apply pl-8 pr-4 py-2 bg-zinc-200 hover:bg-zinc-100
+         cursor-pointer transition-colors duration-150 border-l-2 
+         border-transparent hover:border-zinc-400;
 }
