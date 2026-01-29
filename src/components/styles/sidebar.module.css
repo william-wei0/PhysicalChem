@@ -26,6 +26,6 @@
 
 .lessonItem {
   @apply pl-8 pr-4 py-2 bg-zinc-200 hover:bg-zinc-100
-         cursor-pointer transition-colors duration-150 border-l-2 
-         border-transparent hover:border-zinc-400;
+         cursor-pointer transition-colors duration-150 border-l-3 
+         border-transparent hover:border-zinc-500 border-b-black border-b;
 }
