@@ -25,9 +25,9 @@ export default function SimulationControls({
           onClick={handleClick}
           className="right-3 top-3 z-10 absolute"
         />
-        <h1 className="text-center font-bold mt-6 text-[20px]">
+        <h2 className="text-center font-bold mt-6 text-[20px]">
           Simulation Controls
-        </h1>
+        </h2>
         {controllableSimulationVariables}
       </div>
 

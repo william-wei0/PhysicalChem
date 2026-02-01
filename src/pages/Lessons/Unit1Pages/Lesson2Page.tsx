@@ -1,60 +1,44 @@
-import * as THREE from "three";
-import { useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import type { ThreeElements } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-
-function Box(props: ThreeElements["mesh"]) {
-  const meshRef = useRef<THREE.Mesh>(null!);
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-  useFrame((_state, delta) => (meshRef.current.rotation.x += delta));
-  return (
-    <mesh
-      {...props}
-      ref={meshRef}
-      scale={active ? 1.5 : 1}
-      onClick={(_event) => setActive(!active)}
-      onPointerOver={(_event) => setHover(true)}
-      onPointerOut={(_event) => setHover(false)}
-    >
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? "hotpink" : "#c08d2f"} />
-    </mesh>
-  );
-}
+import Lesson2Simulation from "./simulationComponents/Lesson2Simulation";
+import LessonSection from "../LessonSection";
+import "../styles/lessons.css"
 
 export default function Lesson2Page() {
-  const camera: {
-    fov: number;
-    near: number;
-    far: number;
-    position: [number, number, number];
-  } = { fov: 75, near: 0.1, far: 1000, position: [0, 0, 1] };
-
   return (
-    <>
-      <h1 className="shrink-0">Lesson2</h1>
-      <div className="flex-1 min-h-165 p-20">
-        <Canvas camera={camera}>
-          <OrbitControls makeDefault />
-          <ambientLight intensity={Math.PI / 2} />
-          <spotLight
-            position={[10, 10, 10]}
-            angle={0.15}
-            penumbra={1}
-            decay={0}
-            intensity={Math.PI}
-          />
-          <pointLight
-            position={[-10, -10, -10]}
-            decay={0}
-            intensity={Math.PI}
-          />
-          <Box position={[-1.2, 0, 0]} />
-          <Box position={[1.2, 0, 0]} />
-        </Canvas>
-      </div>
-    </>
+    <div className="lessonPage">
+      <h1>
+        Lesson 1. Properties of Atoms
+      </h1>
+      <LessonSection>
+        <h2>Defining Motion.</h2>
+        <p>Our study of physics opens with kinematics—the study of motion without considering its causes. 
+          Objects are in motion everywhere you look. Everything from a tennis game to a space-probe 
+          flyby of the planet Neptune involves motion. 
+          When you are resting, your heart moves blood through your veins. 
+          Even in inanimate objects, atoms are always moving.</p>
+        <p>How do you know something is moving? The location of an object 
+          at any particular time is its position. More precisely, you need to specify 
+          its position relative to a convenient reference frame. Earth is often used as a reference frame,
+           and we often describe the position of an object as it relates to stationary objects in that reference frame. 
+           For example, a rocket launch would be described in terms of the position of the rocket with respect to Earth as
+            a whole, while a professor’s position could be described in terms of where she is in relation to the nearby white board. 
+            In other cases, we use reference frames that are not stationary but are in motion relative to Earth. To describe the position of 
+           a person in an airplane, for example, we use the airplane, not Earth, as the reference frame.</p>
+        <p>Content</p>
+        <p>Content</p>
+      </LessonSection>
+
+      <Lesson2Simulation />
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+      <p>Content</p>
+    </div>
   );
 }

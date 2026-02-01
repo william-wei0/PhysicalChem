@@ -26,7 +26,7 @@ export default function LessonLayout(): JSX.Element {
           onToggle={() => setIsSidebarOpen(!isSidebarOpen)} 
         />
       </aside>
-      <main className="[grid-area:main] min-h-0 flex flex-col overflow-auto border-t bg-zinc-50">
+      <main className="[grid-area:main] min-h-0 flex flex-col overflow-auto border-t">
         <Outlet />
       </main>
       <footer className="[grid-area:footer] bg-zinc-900 text-white p-4 rounded">

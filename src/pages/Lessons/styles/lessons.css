@@ -1,0 +1,21 @@
+@reference "../../../styles/global.css";
+
+.lessonPage{
+    @apply p-6;
+}
+
+.lessonPage h1{
+    @apply font-bold text-4xl m-4;
+}
+
+.lessonSection{
+    @apply m-6 p-6 bg-white rounded-2xl;
+}
+
+.lessonSection h2{
+    @apply font-bold text-3xl;
+}
+
+.lessonSection p{
+    @apply mb-4 mt-4;
+}
