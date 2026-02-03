@@ -26,7 +26,7 @@ const AnimatedCanvas = () => {
   const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
     x: canvasDimensions.width * 0.2,
     slitWidth: 20,
-    wallWidth: 50,
+    wallWidth: 20,
   });
 
   const handleDiffractionSlitWidth = (wallWidth: number[]) => {
@@ -105,13 +105,143 @@ const AnimatedCanvas = () => {
       );
     };
 
-    const drawLightIntensity = () => {
+    const drawLightIntensityOnWall = () => {
       ctx.fillStyle = "rgba(255, 0, 0, 1)";
       for (let y = 0; y < canvasDimensions.height; y += 0.5) {
         const lightIntensity = getLightIntensity(y);
         ctx.fillRect(receptorWall.x, y, lightIntensity, 0.5);
       }
     };
+
+    function contrast255(x: number, c: number, mid = 128) {
+      // x in [0,255]
+      x = (x - mid) * c + mid;
+      return x < 0 ? 0 : x > 255 ? 255 : x;
+    }
+    function gamma255(x: number, gamma: number) {
+      const t = x / 255;
+      return Math.max(0, Math.min(255, Math.pow(t, gamma) * 255));
+    }
+
+    // -------------------DRAW RIPPLE BEFORE WALL -------------------
+    // -------------------DRAW RIPPLE BEFORE WALL -------------------
+    // -------------------DRAW RIPPLE BEFORE WALL -------------------
+    // -------------------DRAW RIPPLE BEFORE WALL -------------------
+
+    const precomputeInitialRipple = (
+      width: number,
+      height: number,
+      wavelength: number,
+      period: number,
+      phase = 0.785398,
+    ): WavePrecomp => {
+      const A = new Float32Array(width);
+      const B = new Float32Array(width);
+
+      const k = (2 * Math.PI) / wavelength;
+      const omega = (2 * Math.PI) / period;
+
+      for (let x = 0; x < width; x++) {
+        const phi = k * x - phase;
+        const invDen = 1;
+        A[x] = invDen * Math.cos(phi);
+        B[x] = invDen * Math.sin(phi);
+      }
+
+      return { A, B, omega, width, height };
+    };
+
+    function makeInitalRippleRenderer(
+      simW: number, // 700
+      simH: number, // 600
+      outW: number, // 1100
+      outH: number, // 945
+      rgb = [255, 231, 0],
+    ) {
+      // --- 2) Offscreen canvas to accept putImageData ---
+      const simCanvas = document.createElement("canvas");
+      simCanvas.width = simW;
+      simCanvas.height = simH;
+      const simCtx = simCanvas.getContext("2d", { willReadFrequently: true })!;
+      // (willReadFrequently isn't required here, but it's harmless)
+
+      // Params that affect precompute
+      const phase = 5.0;
+
+      let pre: WavePrecomp | null = null;
+      let lastSlitWidth = NaN;
+      let lastCanvasH = NaN;
+
+      return function draw(
+        ctx: CanvasRenderingContext2D,
+        tMs: number,
+        x0: number, // top-left destination on the output canvas
+        y0: number,
+        wavelength = 10,
+        speed = 2.0,
+      ) {
+        const imageData = simCtx.createImageData(simW, simH);
+        const data = imageData.data;
+
+        const canvasH = canvasDimensions.height;
+        const slitWidth = diffractionWall.slitWidth;
+
+        // --- IMPORTANT: scale slitWidth into sim-space ---
+
+        // Rebuild precompute if needed
+        if (!pre || slitWidth !== lastSlitWidth || canvasH !== lastCanvasH) {
+          lastSlitWidth = slitWidth;
+          lastCanvasH = canvasH;
+
+          pre = precomputeInitialRipple(
+            simW,
+            simH,
+            wavelength,
+            1 / speed,
+            phase,
+          );
+        }
+
+        // Fast per-frame render
+        const time = tMs / 1000;
+        const ot = pre.omega * time;
+        const c = Math.cos(ot);
+        const s = Math.sin(ot);
+
+        const A = pre.A;
+        const B = pre.B;
+        const brightness = 100;
+        for (let x = 0; x < simW; x++) {
+          let v = (A[x] * c + B[x] * s) * brightness;
+          if (v < 0) v = 0;
+          else if (v > 255) v = 255;
+
+          for (let y = 0; y < simH; y++) {
+            const index = (y * simW + x) * 4;
+            data[index] = rgb[0]; // R
+            data[index + 1] = rgb[1]; // G
+            data[index + 2] = rgb[2]; // B
+            data[index + 3] = v; // A (0-255) - this overwrites!
+          }
+        }
+
+        simCtx.putImageData(imageData, 0, 0); // Replaces all pixels
+        // --- 4) Upscale to output canvas ---
+        // Smoothing choice:
+        ctx.imageSmoothingEnabled = true; // smoother
+        // ctx.imageSmoothingEnabled = false; // pixelated
+
+        ctx.drawImage(simCanvas, x0, y0, outW, outH);
+      };
+    }
+
+    ctx.fillStyle = "rgba(255, 255, 255, 1)";
+    ctx.fillRect(
+      receptorWall.x,
+      0,
+      receptorWall.width,
+      canvasDimensions.height,
+    );
 
     // -------------------DRAW RIPPLE -------------------
     // -------------------DRAW RIPPLE -------------------
@@ -232,7 +362,6 @@ const AnimatedCanvas = () => {
       // (willReadFrequently isn't required here, but it's harmless)
 
       // Params that affect precompute
-      const wavelength = 10;
       const sourceStep = 10;
       const phase = 0.785398;
 
@@ -247,7 +376,7 @@ const AnimatedCanvas = () => {
         tMs: number,
         x0: number, // top-left destination on the output canvas
         y0: number,
-        freq = 0.8,
+        wavelength = 0.8,
         speed = 2.0,
       ) {
         const canvasH = canvasDimensions.height;
@@ -271,28 +400,30 @@ const AnimatedCanvas = () => {
             slitTopSim,
             slitBottomSim,
             wavelength,
-            1 / freq,
+            1 / speed,
             sourceStep * scaleY, // optional; keeps spacing consistent when scaling
             phase,
           );
         }
 
         // Fast per-frame render
-        const time = (tMs / 1000) * speed;
+        const time = tMs / 1000;
         const ot = pre.omega * time;
         const c = Math.cos(ot);
         const s = Math.sin(ot);
 
         const A = pre.A;
         const B = pre.B;
-        const brightness = 200;
+        const brightness = 150;
 
         let alphaIndex = 3;
         for (let p = 0; p < numberofPixels; p++, alphaIndex += 4) {
           let v = (A[p] * c + B[p] * s) * brightness;
           if (v < 0) v = 0;
           else if (v > 255) v = 255;
-          data[alphaIndex] = v;
+          v = gamma255(v, 1.2); // boost highlights
+          v = contrast255(v, 1.3, 80); // stretch around lower mid
+          data[alphaIndex] = v | 0;
         }
 
         // --- 3) Put pixels into sim canvas (no scaling) ---
@@ -308,13 +439,20 @@ const AnimatedCanvas = () => {
     }
 
     const drawCircularRipple = makeRippleRenderer(
-      175,
-      150, // sim size
-      1100,
-      945, // output size
+      175 * 2,
+      150 * 2, // sim size
+      receptorWall.x - diffractionWall.x - diffractionWall.wallWidth,
+      canvasDimensions.height, // output size
       [255, 231, 0],
     );
 
+    const drawInitialWaveRipple = makeInitalRippleRenderer(
+      100 * 3,
+      246 * 3, // sim size
+      diffractionWall.x,
+      canvasDimensions.height, // output size
+      [255, 231, 0],
+    );
     // -------------------DRAW RIPPLE -------------------
     // -------------------DRAW RIPPLE -------------------
     // -------------------DRAW RIPPLE -------------------
@@ -324,24 +462,20 @@ const AnimatedCanvas = () => {
     // -------------------DRAW RIPPLE -------------------
     const tMs = 0;
 
+    const wavelength = 15;
+    const speed = 0.5;
     const animate = (tMs: number) => {
       // Clear canvas with a slight trail effect
       ctx.fillStyle = "rgba(26, 32, 44, 0.4)";
       ctx.fillRect(0, 0, canvasDimensions.width, canvasDimensions.height);
 
       if (!isPaused) {
-        //drawLightBeamRipple(ctx, tMs, 0, 0, 0.03, 1.0);
+        drawInitialWaveRipple(ctx, tMs, 0, 0, (wavelength * 3) / 2, speed);
+        drawCircularRipple(ctx, tMs, diffractionWall.x, 0, wavelength, speed);
         drawDiffractionWall();
         drawReceptorWall();
-        drawLightIntensity();
-        drawCircularRipple(
-          ctx,
-          tMs,
-          diffractionWall.x + diffractionWall.wallWidth,
-          0,
-          0.3,
-          10.0,
-        );
+        drawLightIntensityOnWall();
+
         tMs += 1;
       }
 
