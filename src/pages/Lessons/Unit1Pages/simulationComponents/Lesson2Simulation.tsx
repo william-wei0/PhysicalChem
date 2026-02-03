@@ -25,7 +25,7 @@ const AnimatedCanvas = () => {
 
   const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
     x: canvasDimensions.width * 0.2,
-    slitWidth: 100,
+    slitWidth: 20,
     wallWidth: 50,
   });
 
@@ -40,8 +40,8 @@ const AnimatedCanvas = () => {
 
   const animationFrameRef = useRef<number>(0);
   const [isPaused, setIsPaused] = useState(false);
-  const slitMiniumum = 25;
-  const slitMaxiumum = 900;
+  const slitMiniumum = 5;
+  const slitMaxiumum = 250;
   const controllableSimulationVariables: React.ReactNode[] = [
     <Slider
       key={"1"}
@@ -113,83 +113,215 @@ const AnimatedCanvas = () => {
       }
     };
 
-    function makeRippleRenderer(
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+
+    type WavePrecomp = {
+      A: Float32Array;
+      B: Float32Array;
+      omega: number;
+      width: number;
+      height: number;
+    };
+
+    function precomputeWaveAB(
       width: number,
       height: number,
+      slitTop: number,
+      slitBottom: number,
+      wavelength: number,
+      period: number,
+      sourceStep: number,
+      phase = 0.785398,
+    ): WavePrecomp {
+      const nPix = width * height;
+      const A = new Float32Array(nPix);
+      const B = new Float32Array(nPix);
+
+      const k = (2 * Math.PI) / wavelength;
+      const omega = (2 * Math.PI) / period;
+
+      const wavePointSources: number[] = [];
+      for (
+        let pointSource = slitTop;
+        pointSource < slitBottom;
+        pointSource += sourceStep
+      )
+        wavePointSources.push(pointSource);
+
+      // Compute for top half only
+      for (let y = 0; y < height / 2; y++) {
+        const row = y * width;
+
+        for (let x = 0; x < width; x++) {
+          const p = row + x;
+
+          let sumA = 0;
+          let sumB = 0;
+
+          for (
+            let sourceIndex = 0;
+            sourceIndex < wavePointSources.length;
+            sourceIndex++
+          ) {
+            const sy = wavePointSources[sourceIndex];
+            const dy = y - sy;
+            const dx = x;
+
+            const r = Math.hypot(dx, dy);
+            const inc = 1;
+            const invDen = 1 / Math.sqrt(r + 0.001);
+            const phi = k * r - phase;
+
+            sumA += inc * invDen * Math.cos(phi);
+            sumB += inc * invDen * Math.sin(phi);
+          }
+
+          A[p] = sumA;
+          B[p] = sumB;
+        }
+      }
+
+      // Mirror to bottom half
+      const halfHeight = height / 2;
+      for (let y = 0; y < halfHeight; y++) {
+        const mirrorY = height - 1 - y;
+        const sourceRow = y * width;
+        const destRow = mirrorY * width;
+
+        for (let x = 0; x < width; x++) {
+          const sourceP = sourceRow + x;
+          const destP = destRow + x;
+
+          A[destP] = A[sourceP];
+          B[destP] = B[sourceP];
+        }
+      }
+
+      return { A, B, omega, width, height };
+    }
+
+    function makeRippleRenderer(
+      simW: number, // 700
+      simH: number, // 600
+      outW: number, // 1100
+      outH: number, // 945
       rgb = [255, 231, 0],
     ) {
-      // Cache ImageData + its data buffer
-      const img = new ImageData(width, height);
+      // --- 1) Simulation ImageData at sim size ---
+      const img = new ImageData(simW, simH);
       const data = img.data;
 
-      // Fill RGB ONCE
-      for (let p = 0; p < width * height; p++) {
+      for (let p = 0; p < simW * simH; p++) {
         const i = p * 4;
         data[i + 0] = rgb[0];
         data[i + 1] = rgb[1];
         data[i + 2] = rgb[2];
-        data[i + 3] = 255; // initial alpha (will be overwritten each frame)
+        data[i + 3] = 255;
       }
 
-      // Per-frame draw: update ONLY alpha bytes
+      // --- 2) Offscreen canvas to accept putImageData ---
+      const simCanvas = document.createElement("canvas");
+      simCanvas.width = simW;
+      simCanvas.height = simH;
+      const simCtx = simCanvas.getContext("2d", { willReadFrequently: true })!;
+      // (willReadFrequently isn't required here, but it's harmless)
+
+      // Params that affect precompute
+      const wavelength = 10;
+      const sourceStep = 10;
+      const phase = 0.785398;
+
+      let pre: WavePrecomp | null = null;
+      let lastSlitWidth = NaN;
+      let lastCanvasH = NaN;
+
+      const numberofPixels = simW * simH;
+
       return function draw(
         ctx: CanvasRenderingContext2D,
         tMs: number,
-        x0: number,
+        x0: number, // top-left destination on the output canvas
         y0: number,
         freq = 0.8,
         speed = 2.0,
       ) {
-        const time = (tMs / 1000) * speed;
+        const canvasH = canvasDimensions.height;
+        const slitWidth = diffractionWall.slitWidth;
 
-        for (let y = 0; y < height; y++) {
-          const row = y * width; // precompute row offset
-          for (let x = 0; x < width; x++) {
-            const p = row + x; // pixel index
-            const i = p * 4; // byte index
+        // --- IMPORTANT: scale slitWidth into sim-space ---
+        const scaleY = simH / canvasH;
+        const slitWidthSim = slitWidth * scaleY;
 
-            // compute alpha (ensure it's 0..255 integer)
-            const a = getWaveAmplitude(x, y, time); // ideally returns 0..255
-            data[i + 3] = a;
-          }
+        // Rebuild precompute if needed
+        if (!pre || slitWidth !== lastSlitWidth || canvasH !== lastCanvasH) {
+          lastSlitWidth = slitWidth;
+          lastCanvasH = canvasH;
+
+          const slitTopSim = simH / 2 - slitWidthSim / 2;
+          const slitBottomSim = simH / 2 + slitWidthSim / 2;
+
+          pre = precomputeWaveAB(
+            simW,
+            simH,
+            slitTopSim,
+            slitBottomSim,
+            wavelength,
+            1 / freq,
+            sourceStep * scaleY, // optional; keeps spacing consistent when scaling
+            phase,
+          );
         }
 
-        ctx.putImageData(img, x0, y0);
+        // Fast per-frame render
+        const time = (tMs / 1000) * speed;
+        const ot = pre.omega * time;
+        const c = Math.cos(ot);
+        const s = Math.sin(ot);
+
+        const A = pre.A;
+        const B = pre.B;
+        const brightness = 200;
+
+        let alphaIndex = 3;
+        for (let p = 0; p < numberofPixels; p++, alphaIndex += 4) {
+          let v = (A[p] * c + B[p] * s) * brightness;
+          if (v < 0) v = 0;
+          else if (v > 255) v = 255;
+          data[alphaIndex] = v;
+        }
+
+        // --- 3) Put pixels into sim canvas (no scaling) ---
+        simCtx.putImageData(img, 0, 0);
+
+        // --- 4) Upscale to output canvas ---
+        // Smoothing choice:
+        ctx.imageSmoothingEnabled = true; // smoother
+        // ctx.imageSmoothingEnabled = false; // pixelated
+
+        ctx.drawImage(simCanvas, x0, y0, outW, outH);
       };
     }
 
-    const wavelength = 10;
-    const period = 10;
-    const slitTop = canvasDimensions.height / 2 - diffractionWall.slitWidth / 2;
-    const slitBottom =
-      canvasDimensions.height / 2 + diffractionWall.slitWidth / 2;
-    const _iterations = (slitBottom - slitTop) / 10;
-
-    const getWaveAmplitude = (x: number, y: number, time: number) => {
-      let waveAmplitude = 0.0;
-      for (
-        let waveSourcePoint = slitTop;
-        waveSourcePoint < slitBottom;
-        waveSourcePoint += 100
-      ) {
-        const radius = Math.sqrt(
-          (x - waveSourcePoint) * (x - waveSourcePoint) +
-            (y - slitTop) * (y - slitTop),
-        );
-        const wn = (2.0 * Math.PI * radius) / wavelength;
-        const omegat = (2.0 * Math.PI * time) / period;
-        const inclinationFactor = 1.0 + (slitTop - y) / (radius + 0.001);
-        waveAmplitude += Math.cos(wn - omegat - 0.785398) * inclinationFactor;
-      }
-      return Math.min(Math.max(waveAmplitude*50, 0), 255);
-    };
-
     const drawCircularRipple = makeRippleRenderer(
-      receptorWall.x - diffractionWall.x - diffractionWall.wallWidth,
-      canvasDimensions.height,
+      175,
+      150, // sim size
+      1100,
+      945, // output size
       [255, 231, 0],
     );
 
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
+    // -------------------DRAW RIPPLE -------------------
     const tMs = 0;
 
     const animate = (tMs: number) => {
@@ -207,7 +339,7 @@ const AnimatedCanvas = () => {
           tMs,
           diffractionWall.x + diffractionWall.wallWidth,
           0,
-          0.03,
+          0.3,
           10.0,
         );
         tMs += 1;
