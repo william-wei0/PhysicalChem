@@ -8,24 +8,23 @@ import {
   drawDiffractionWall,
   drawReceptorWall,
   drawLightIntensityOnWall,
+  animateParticles,
   type AnimationParams,
-} from './Lesson2SimulationAnimations';
-
-
-interface DiffractionWall {
-  x: number;
-  slitWidth: number;
-  wallWidth: number;
-}
-
-interface ReceptorWall {
-  x: number;
-  width: number;
-}
+  type DiffractionWall,
+  type ReceptorWall,
+  type Particle
+} from "./Lesson2SimulationAnimations";
 
 const AnimatedCanvas = () => {
+  const backgroundColor = "rgba(26, 32, 44, 0.4)";
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const [wavelength, setWavelength] = useState([10]);
+  const [speed, setSpeed] = useState([0.5]);
+  const [contrast, setConstrast] = useState([1.2]);
+  const [particleCount, _setParticleCount] = useState(100);
+  const [particleSize, _setParticleSize] = useState(3);
 
   const [canvasDimensions, _setDimensions] = useState({
     width: window.innerWidth,
@@ -36,6 +35,7 @@ const AnimatedCanvas = () => {
     x: canvasDimensions.width * 0.2,
     slitWidth: 20,
     wallWidth: 20,
+    color: "rgba(255, 255, 255, 1)",
   });
 
   const handleDiffractionSlitWidth = (wallWidth: number[]) => {
@@ -45,101 +45,182 @@ const AnimatedCanvas = () => {
   const [receptorWall, _setReceptorWall] = useState<ReceptorWall>({
     x: canvasDimensions.width * 0.8,
     width: canvasDimensions.width - canvasDimensions.width * 0.8,
+    color: "rgba(255, 255, 255, 1)",
   });
 
   const animationFrameRef = useRef<number>(0);
   const [isPaused, setIsPaused] = useState(false);
   const slitMinimum = 5;
   const slitMaximum = 250;
+  const particlesRef = useRef<Particle[]>([]);
+
+  
+
   const controllableSimulationVariables: React.ReactNode[] = [
     <Slider
-      key={"1"}
+      key={"Diffraction"}
       value={[diffractionWall.slitWidth]}
       onValueChange={handleDiffractionSlitWidth}
       label="Diffraction"
       min={slitMinimum}
       max={slitMaximum}
     />,
+    <Slider
+      key={"Wavelength"}
+      value={wavelength}
+      onValueChange={setWavelength}
+      label="Wavelength"
+      min={5}
+      max={20}
+      step={0.01}
+    />,
+    <Slider
+      key={"Speed"}
+      value={speed}
+      onValueChange={setSpeed}
+      label="Speed"
+      min={0.1}
+      max={4}
+      step={0.01}
+    />,
+    <Slider
+      key={"Contrast"}
+      value={contrast}
+      onValueChange={setConstrast}
+      label="Constrast"
+      min={0.1}
+      max={1.5}
+      step={0.01}
+    />,
   ];
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-useEffect(() => {
-  const canvas = canvasRef.current;
-  if (!canvas) return;
+    const particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5),
+        vy: (Math.random() - 0.5),
+        size: particleSize + Math.random() * particleSize,
+        hue: Math.random() * 360,
+      });
+    }
+    particlesRef.current = particles;
+  }, [particleCount, particleSize]);
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+  useEffect(() => {
+    const lightColor = [0, 83, 250];
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const animationParams: AnimationParams = {
-    diffractionWall,
-    receptorWall,
-    canvasDimensions,
-    slitMinimum,
-    slitMaximum,
-  };
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const drawCircularRipple = makeRippleRenderer(
-    175 * 2,
-    150 * 2,
-    receptorWall.x - diffractionWall.x - diffractionWall.wallWidth,
-    canvasDimensions.height,
-    [255, 231, 0]
-  );
+    // Create animation parameters object
+    const animationParams: AnimationParams = {
+      diffractionWall,
+      receptorWall,
+      canvasDimensions,
+      slitMinimum,
+      slitMaximum,
+      contrast,
+    };
 
-  const drawInitialWaveRipple = makeInitialRippleRenderer(
-    100 * 3,
-    246 * 3,
-    diffractionWall.x,
-    canvasDimensions.height,
-    [255, 231, 0]
-  );
+    const scaleFactor = 1/9
+    // Initialize the renderer functions
+    const drawCircularRipple = makeRippleRenderer(
+      175*3,
+      150*3,
+      receptorWall.x - diffractionWall.x - diffractionWall.wallWidth,
+      canvasDimensions.height,
+      lightColor,
+    );
 
-  // Animation parameters
-  const wavelength = 15;
-  const speed = 0.5;
+    const drawInitialWaveRipple = makeInitialRippleRenderer(
+      100*2,
+      246*2,
+      diffractionWall.x,
+      canvasDimensions.height,
+      lightColor,
+    );
 
-  const animate = (tMs: number) => {
-    // Clear canvas with a slight trail effect
-    ctx.fillStyle = "rgba(26, 32, 44, 0.4)";
-    ctx.fillRect(0, 0, canvasDimensions.width, canvasDimensions.height);
+    // Track time properly for pause/resume
+    let startTime: number | null = null;
+    let elapsedTime = 0;
 
-    if (!isPaused) {
+    const animate = (timestamp: number) => {
+      // Clear canvas with a slight trail effect
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(0, 0, canvasDimensions.width, canvasDimensions.height);
+      let currentTime = 0;
+
+      if (!isPaused) {
+        // Initialize start time on first frame or after unpause
+        if (startTime === null) {
+          startTime = timestamp;
+        }
+
+        // Calculate current animation time
+        currentTime = elapsedTime + (timestamp - startTime);
+      } else {
+        // When paused, save elapsed time and reset start time
+        if (startTime !== null) {
+          elapsedTime += timestamp - startTime;
+          startTime = null;
+        }
+      }
       drawInitialWaveRipple(
         ctx,
-        tMs,
+        currentTime,
         0,
         0,
-        (wavelength * 3) / 2,
-        speed,
-        animationParams
+        (wavelength[0] * 3) / 2,
+        speed[0],
+        animationParams,
       );
-      
+
       drawCircularRipple(
         ctx,
-        tMs,
+        currentTime,
         diffractionWall.x,
         0,
-        wavelength,
-        speed,
-        animationParams
+        wavelength[0],
+        speed[0],
+        animationParams,
       );
-      
+
       drawDiffractionWall(ctx, animationParams);
       drawReceptorWall(ctx, animationParams);
       drawLightIntensityOnWall(ctx, animationParams);
-    }
+      animateParticles(ctx, particlesRef.current, animationParams);
 
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    // Start the animation
     animationFrameRef.current = requestAnimationFrame(animate);
-  };
 
-  animationFrameRef.current = requestAnimationFrame(animate);
-
-  return () => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
-  };
-}, [diffractionWall, receptorWall, canvasDimensions, isPaused, slitMinimum, slitMaximum]);
+    // Cleanup
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [
+    diffractionWall,
+    receptorWall,
+    canvasDimensions,
+    isPaused,
+    slitMinimum,
+    slitMaximum,
+    speed,
+    wavelength,
+    contrast,
+  ]);
 
   const handleCanvasClick = () => {
     setIsPaused(!isPaused);

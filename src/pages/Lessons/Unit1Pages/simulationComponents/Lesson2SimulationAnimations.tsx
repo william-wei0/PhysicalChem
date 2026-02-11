@@ -6,15 +6,17 @@ type WavePrecomp = {
   height: number;
 };
 
-interface DiffractionWall {
+export interface DiffractionWall {
   x: number;
   wallWidth: number;
   slitWidth: number;
+  color: string;
 }
 
-interface ReceptorWall {
+export interface ReceptorWall {
   x: number;
   width: number;
+  color: string;
 }
 
 interface CanvasDimensions {
@@ -28,6 +30,16 @@ export interface AnimationParams {
   canvasDimensions: CanvasDimensions;
   slitMinimum: number;
   slitMaximum: number;
+  contrast: number[];
+}
+
+export interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  hue: number;
 }
 
 function contrast255(x: number, c: number, mid = 128) {
@@ -49,7 +61,7 @@ export function drawDiffractionWall(
   const diffractionWallWidth = diffractionWall.wallWidth;
   const diffractionSlitWidth = diffractionWall.slitWidth;
 
-  ctx.fillStyle = "rgba(255, 255, 255, 1)";
+  ctx.fillStyle = diffractionWall.color;
   ctx.fillRect(
     x,
     0,
@@ -69,7 +81,7 @@ export function drawReceptorWall(
   params: AnimationParams,
 ) {
   const { receptorWall, canvasDimensions } = params;
-  ctx.fillStyle = "rgba(255, 255, 255, 1)";
+  ctx.fillStyle = receptorWall.color;
   ctx.fillRect(receptorWall.x, 0, receptorWall.width, canvasDimensions.height);
 }
 
@@ -362,7 +374,7 @@ export function makeRippleRenderer(
       let v = (A[p] * c + B[p] * s) * brightness;
       if (v < 0) v = 0;
       else if (v > 255) v = 255;
-      v = gamma255(v, 1.2);
+      v = gamma255(v, params.contrast[0]);
       v = contrast255(v, 1.3, 80);
       data[alphaIndex] = v | 0;
     }
@@ -371,4 +383,44 @@ export function makeRippleRenderer(
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(simCanvas, x0, y0, outW, outH);
   };
+}
+
+export function animateParticles(
+  ctx: CanvasRenderingContext2D,
+  particles: Particle[],
+  params: AnimationParams,
+) {
+  const { receptorWall, canvasDimensions } = params;
+  particles.forEach((particle) => {
+    particle.x += particle.vx;
+    particle.y += particle.vy;
+
+    if (particle.x < 0 || particle.x > receptorWall.x) {
+      particle.vx *= -1;
+      particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
+    }
+    if (particle.y < 0 || particle.y > canvasDimensions.height) {
+      particle.vy *= -1;
+      particle.y = Math.max(0, Math.min(canvasDimensions.height, particle.y));
+    }
+
+    const gradient = ctx.createRadialGradient(
+      particle.x,
+      particle.y,
+      0,
+      particle.x,
+      particle.y,
+      particle.size * 2,
+    );
+    gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.8)`);
+    gradient.addColorStop(0.5, `hsla(${particle.hue}, 80%, 50%, 0.4)`);
+    gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`);
+
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    particle.hue = (particle.hue + 0.1) % 360;
+  });
 }
