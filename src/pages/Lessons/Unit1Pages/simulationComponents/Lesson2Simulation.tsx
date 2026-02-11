@@ -9,6 +9,7 @@ import {
   drawReceptorWall,
   drawLightIntensityOnWall,
   animateParticles,
+  blurIntersectionBetweenWaves,
   type AnimationParams,
   type DiffractionWall,
   type ReceptorWall,
@@ -33,13 +34,13 @@ const AnimatedCanvas = () => {
 
   const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
     x: canvasDimensions.width * 0.2,
-    slitWidth: 20,
+    slitSize: 20,
     wallWidth: 20,
     color: "rgba(255, 255, 255, 1)",
   });
 
   const handleDiffractionSlitWidth = (wallWidth: number[]) => {
-    setdiffractionWall({ ...diffractionWall, slitWidth: wallWidth[0] });
+    setdiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
   };
 
   const [receptorWall, _setReceptorWall] = useState<ReceptorWall>({
@@ -59,7 +60,7 @@ const AnimatedCanvas = () => {
   const controllableSimulationVariables: React.ReactNode[] = [
     <Slider
       key={"Diffraction"}
-      value={[diffractionWall.slitWidth]}
+      value={[diffractionWall.slitSize]}
       onValueChange={handleDiffractionSlitWidth}
       label="Diffraction"
       min={slitMinimum}
@@ -89,7 +90,7 @@ const AnimatedCanvas = () => {
       onValueChange={setConstrast}
       label="Constrast"
       min={0.1}
-      max={1.5}
+      max={2.5}
       step={0.01}
     />,
   ];
@@ -130,20 +131,18 @@ const AnimatedCanvas = () => {
       contrast,
     };
 
-    const scaleFactor = 1/9
+    const scaleFactor = 4
     // Initialize the renderer functions
     const drawCircularRipple = makeRippleRenderer(
-      175*3,
-      150*3,
+      scaleFactor,
       receptorWall.x - diffractionWall.x - diffractionWall.wallWidth,
       canvasDimensions.height,
       lightColor,
     );
 
     const drawInitialWaveRipple = makeInitialRippleRenderer(
-      100*2,
-      246*2,
-      diffractionWall.x,
+      scaleFactor,
+      diffractionWall.x + diffractionWall.wallWidth/2,
       canvasDimensions.height,
       lightColor,
     );
@@ -197,6 +196,7 @@ const AnimatedCanvas = () => {
       drawReceptorWall(ctx, animationParams);
       drawLightIntensityOnWall(ctx, animationParams);
       animateParticles(ctx, particlesRef.current, animationParams);
+      blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams)
 
       animationFrameRef.current = requestAnimationFrame(animate);
     };

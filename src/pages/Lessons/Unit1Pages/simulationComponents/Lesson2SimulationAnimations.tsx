@@ -9,7 +9,7 @@ type WavePrecomp = {
 export interface DiffractionWall {
   x: number;
   wallWidth: number;
-  slitWidth: number;
+  slitSize: number;
   color: string;
 }
 
@@ -59,7 +59,7 @@ export function drawDiffractionWall(
   const { diffractionWall, canvasDimensions } = params;
   const x = diffractionWall.x;
   const diffractionWallWidth = diffractionWall.wallWidth;
-  const diffractionSlitWidth = diffractionWall.slitWidth;
+  const diffractionSlitWidth = diffractionWall.slitSize;
 
   ctx.fillStyle = diffractionWall.color;
   ctx.fillRect(
@@ -101,7 +101,7 @@ export function drawLightIntensityOnWall(
     const scalefactor = 30;
     const diffractionSlitWidth =
       4 *
-      ((diffractionWall.slitWidth - slitMinimum + 10) /
+      ((diffractionWall.slitSize - slitMinimum + 10) /
         (slitMaximum - slitMinimum));
     y = y - canvasDimensions.height / 2;
     return (
@@ -135,12 +135,87 @@ function precomputeInitialRipple(
 
   for (let x = 0; x < width; x++) {
     const phi = k * x - phase;
-    const invDen = 1;
-    A[x] = invDen * Math.cos(phi);
-    B[x] = invDen * Math.sin(phi);
+    A[x] = Math.cos(phi);
+    B[x] = Math.sin(phi);
   }
 
   return { A, B, omega, width, height };
+}
+
+// Renderer factory functions
+export function makeInitialRippleRenderer(
+  scaleFactor: number,
+  outW: number,
+  outH: number,
+  rgb = [255, 231, 0],
+) {
+  const simW = Math.round(outW / scaleFactor);
+  const simH = Math.round(outH / scaleFactor);
+
+  const simCanvas = document.createElement("canvas");
+  simCanvas.width = simW;
+  simCanvas.height = simH;
+  const simCtx = simCanvas.getContext("2d", { willReadFrequently: true })!;
+
+  const phase = 0.785398;
+
+  let pre: WavePrecomp | null = null;
+  let lastSlitWidth = NaN;
+  let lastCanvasH = NaN;
+
+  return function draw(
+    ctx: CanvasRenderingContext2D,
+    tMs: number,
+    x0: number,
+    y0: number,
+    wavelength: number,
+    speed: number,
+    params: AnimationParams,
+  ) {
+    const imageData = simCtx.createImageData(simW, simH);
+    const data = imageData.data;
+
+    const canvasH = params.canvasDimensions.height;
+    const slitWidth = params.diffractionWall.slitSize;
+
+    // Rebuild precompute if needed
+    if (!pre || slitWidth !== lastSlitWidth || canvasH !== lastCanvasH) {
+      lastSlitWidth = slitWidth;
+      lastCanvasH = canvasH;
+
+      pre = precomputeInitialRipple(simW, simH, wavelength, 1 / speed, phase);
+    }
+
+    // Fast per-frame render
+    const time = tMs / 1000;
+    const ot = pre.omega * time;
+    const cosine = Math.cos(ot);
+    const sine = Math.sin(ot);
+
+    const A = pre.A;
+    const B = pre.B;
+    const brightness = 150;
+
+    for (let x = 0; x < simW; x++) {
+      let v = (A[x] * cosine + B[x] * sine) * brightness;
+      if (v < 0) v = 0;
+      else if (v > 255) v = 255;
+      v = gamma255(v, params.contrast[0]);
+      v = contrast255(v, 1.3, 80);
+
+      for (let y = 0; y < simH; y++) {
+        const index = (y * simW + x) * 4;
+        data[index] = rgb[0];
+        data[index + 1] = rgb[1];
+        data[index + 2] = rgb[2];
+        data[index + 3] = v | 0;
+      }
+    }
+
+    simCtx.putImageData(imageData, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(simCanvas, x0, y0, outW, outH);
+  };
 }
 
 function precomputeWaveAB(
@@ -189,7 +264,7 @@ function precomputeWaveAB(
 
         const r = Math.hypot(dx, dy);
         const inc = 1;
-        const invDen = 1 / Math.sqrt(r + 0.001);
+        const invDen = 1 / Math.sqrt(r + 7);
         const phi = k * r - phase;
 
         sumA += inc * invDen * Math.cos(phi);
@@ -220,85 +295,15 @@ function precomputeWaveAB(
   return { A, B, omega, width, height };
 }
 
-// Renderer factory functions
-export function makeInitialRippleRenderer(
-  simW: number,
-  simH: number,
-  outW: number,
-  outH: number,
-  rgb = [255, 231, 0],
-) {
-  const simCanvas = document.createElement("canvas");
-  simCanvas.width = simW;
-  simCanvas.height = simH;
-  const simCtx = simCanvas.getContext("2d", { willReadFrequently: true })!;
-
-  const phase = 5.0;
-
-  let pre: WavePrecomp | null = null;
-  let lastSlitWidth = NaN;
-  let lastCanvasH = NaN;
-
-  return function draw(
-    ctx: CanvasRenderingContext2D,
-    tMs: number,
-    x0: number,
-    y0: number,
-    wavelength: number,
-    speed: number,
-    params: AnimationParams,
-  ) {
-    const imageData = simCtx.createImageData(simW, simH);
-    const data = imageData.data;
-
-    const canvasH = params.canvasDimensions.height;
-    const slitWidth = params.diffractionWall.slitWidth;
-
-    // Rebuild precompute if needed
-    if (!pre || slitWidth !== lastSlitWidth || canvasH !== lastCanvasH) {
-      lastSlitWidth = slitWidth;
-      lastCanvasH = canvasH;
-
-      pre = precomputeInitialRipple(simW, simH, wavelength, 1 / speed, phase);
-    }
-
-    // Fast per-frame render
-    const time = tMs / 1000;
-    const ot = pre.omega * time;
-    const c = Math.cos(ot);
-    const s = Math.sin(ot);
-
-    const A = pre.A;
-    const B = pre.B;
-    const brightness = 100;
-
-    for (let x = 0; x < simW; x++) {
-      let v = (A[x] * c + B[x] * s) * brightness;
-      if (v < 0) v = 0;
-      else if (v > 255) v = 255;
-
-      for (let y = 0; y < simH; y++) {
-        const index = (y * simW + x) * 4;
-        data[index] = rgb[0];
-        data[index + 1] = rgb[1];
-        data[index + 2] = rgb[2];
-        data[index + 3] = v | 0;
-      }
-    }
-
-    simCtx.putImageData(imageData, 0, 0);
-    ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(simCanvas, x0, y0, outW, outH);
-  };
-}
-
 export function makeRippleRenderer(
-  simW: number,
-  simH: number,
+  scaleFactor: number,
   outW: number,
   outH: number,
   rgb = [255, 231, 0],
 ) {
+  const simW = Math.round(outW / scaleFactor);
+  const simH = Math.round(outH / scaleFactor);
+
   const img = new ImageData(simW, simH);
   const data = img.data;
 
@@ -315,8 +320,8 @@ export function makeRippleRenderer(
   simCanvas.height = simH;
   const simCtx = simCanvas.getContext("2d", { willReadFrequently: true })!;
 
-  const sourceStep = 10;
-  const phase = 0.785398;
+  const sourceStep = 5;
+  const phase = 5;
 
   let pre: WavePrecomp | null = null;
   let lastSlitWidth = NaN;
@@ -334,10 +339,9 @@ export function makeRippleRenderer(
     params: AnimationParams,
   ) {
     const canvasH = params.canvasDimensions.height;
-    const slitWidth = params.diffractionWall.slitWidth;
+    const slitWidth = params.diffractionWall.slitSize;
 
-    const scaleY = simH / canvasH;
-    const slitWidthSim = slitWidth * scaleY;
+    const slitWidthSim = slitWidth / scaleFactor;
 
     // Rebuild precompute if needed
     if (!pre || slitWidth !== lastSlitWidth || canvasH !== lastCanvasH) {
@@ -354,7 +358,7 @@ export function makeRippleRenderer(
         slitBottomSim,
         wavelength,
         1 / speed,
-        sourceStep * scaleY,
+        sourceStep / scaleFactor,
         phase,
       );
     }
@@ -367,7 +371,7 @@ export function makeRippleRenderer(
 
     const A = pre.A;
     const B = pre.B;
-    const brightness = 150;
+    const brightness = 100;
 
     let alphaIndex = 3;
     for (let p = 0; p < numberOfPixels; p++, alphaIndex += 4) {
@@ -423,4 +427,32 @@ export function animateParticles(
 
     particle.hue = (particle.hue + 0.1) % 360;
   });
+}
+
+export function blurIntersectionBetweenWaves(
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement | null,
+  params: AnimationParams,
+) {
+  if (!canvas)
+    return
+
+  const { diffractionWall, canvasDimensions } = params;
+
+  const x = diffractionWall.x - 10;
+  const y = canvasDimensions.height / 2 - diffractionWall.slitSize / 2;
+  const width = 15;
+  const height = diffractionWall.slitSize;
+
+  ctx.save();
+  // Define the blur region
+  ctx.rect(x, y, width, height);
+  ctx.clip();
+
+  // Redraw the area with blur
+  ctx.filter = "blur(4px)";
+  ctx.drawImage(canvas, 0, 0); // Draw entire canvas onto itself
+  ctx.filter = "none";
+
+  ctx.restore();
 }
