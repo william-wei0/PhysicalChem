@@ -6,6 +6,12 @@ type WavePrecomp = {
   height: number;
 };
 
+export type ParticlesOnWall = {
+  particlePositions : number[];
+  binSize: number;
+  totalParticles: number;
+}
+
 export interface DiffractionWall {
   x: number;
   wallWidth: number;
@@ -52,22 +58,14 @@ function gamma255(x: number, gamma: number) {
   return Math.max(0, Math.min(255, Math.pow(t, gamma) * 255));
 }
 
-export function drawDiffractionWall(
-  ctx: CanvasRenderingContext2D,
-  params: AnimationParams,
-) {
+export function drawDiffractionWall(ctx: CanvasRenderingContext2D, params: AnimationParams) {
   const { diffractionWall, canvasDimensions } = params;
   const x = diffractionWall.x;
   const diffractionWallWidth = diffractionWall.wallWidth;
   const diffractionSlitWidth = diffractionWall.slitSize;
 
   ctx.fillStyle = diffractionWall.color;
-  ctx.fillRect(
-    x,
-    0,
-    diffractionWallWidth,
-    canvasDimensions.height / 2 - diffractionSlitWidth / 2,
-  );
+  ctx.fillRect(x, 0, diffractionWallWidth, canvasDimensions.height / 2 - diffractionSlitWidth / 2);
   ctx.fillRect(
     x,
     canvasDimensions.height / 2 + diffractionSlitWidth / 2,
@@ -76,45 +74,46 @@ export function drawDiffractionWall(
   );
 }
 
-export function drawReceptorWall(
-  ctx: CanvasRenderingContext2D,
-  params: AnimationParams,
-) {
+export function drawReceptorWall(ctx: CanvasRenderingContext2D, params: AnimationParams) {
   const { receptorWall, canvasDimensions } = params;
   ctx.fillStyle = receptorWall.color;
   ctx.fillRect(receptorWall.x, 0, receptorWall.width, canvasDimensions.height);
 }
 
-export function drawLightIntensityOnWall(
-  ctx: CanvasRenderingContext2D,
-  params: AnimationParams,
-) {
-  const {
-    receptorWall,
-    canvasDimensions,
-    diffractionWall,
-    slitMinimum,
-    slitMaximum,
-  } = params;
+const calculateLightIntensity = (y: number, params: AnimationParams) => {
+  const {diffractionWall, canvasDimensions, slitMinimum, slitMaximum} = params;
+  const scalefactor = 30;
+  const diffractionSlitWidth =
+    4 * ((diffractionWall.slitSize - slitMinimum + 10) / (slitMaximum - slitMinimum));
+  y = y - canvasDimensions.height / 2;
+  return (
+    200 *
+    (Math.sin(diffractionSlitWidth * (y / scalefactor)) /
+      (diffractionSlitWidth * (y / scalefactor))) **
+      2
+  );
+};
 
-  const getLightIntensity = (y: number) => {
-    const scalefactor = 30;
-    const diffractionSlitWidth =
-      4 *
-      ((diffractionWall.slitSize - slitMinimum + 10) /
-        (slitMaximum - slitMinimum));
-    y = y - canvasDimensions.height / 2;
-    return (
-      200 *
-      (Math.sin(diffractionSlitWidth * (y / scalefactor)) /
-        (diffractionSlitWidth * (y / scalefactor))) **
-        2
-    );
-  };
-
+export function drawLightIntensityOnWall(ctx: CanvasRenderingContext2D, particlesOnWall : ParticlesOnWall, params: AnimationParams) {
+  const { receptorWall } = params;
   ctx.fillStyle = "rgba(255, 0, 0, 1)";
+  const maxHeight = receptorWall.width - 50;
+  const maxBinSize = 50;
+  const minBinSize = 10;
+  const binSize = Math.min(minBinSize*(750/particlesOnWall.totalParticles), maxBinSize);
+
+  for (let y = 0; y < particlesOnWall.particlePositions.length; y += 0.5) {
+    const lightIntensity = Math.min((particlesOnWall.particlePositions[y]/particlesOnWall.totalParticles)*40000, maxHeight);
+    ctx.fillRect(receptorWall.x, y, lightIntensity, binSize);
+  }
+}
+
+export function drawLightIntensityCurve(ctx: CanvasRenderingContext2D, params: AnimationParams) {
+  const { receptorWall, canvasDimensions} = params;
+
+  ctx.fillStyle = "rgba(255, 0, 255, 0.2)";
   for (let y = 0; y < canvasDimensions.height; y += 0.5) {
-    const lightIntensity = getLightIntensity(y);
+    const lightIntensity = calculateLightIntensity(y, params);
     ctx.fillRect(receptorWall.x, y, lightIntensity, 0.5);
   }
 }
@@ -236,11 +235,7 @@ function precomputeWaveAB(
   const omega = (2 * Math.PI) / period;
 
   const wavePointSources: number[] = [];
-  for (
-    let pointSource = slitTop;
-    pointSource < slitBottom;
-    pointSource += sourceStep
-  )
+  for (let pointSource = slitTop; pointSource < slitBottom; pointSource += sourceStep)
     wavePointSources.push(pointSource);
 
   // Compute for top half only
@@ -253,11 +248,7 @@ function precomputeWaveAB(
       let sumA = 0;
       let sumB = 0;
 
-      for (
-        let sourceIndex = 0;
-        sourceIndex < wavePointSources.length;
-        sourceIndex++
-      ) {
+      for (let sourceIndex = 0; sourceIndex < wavePointSources.length; sourceIndex++) {
         const sy = wavePointSources[sourceIndex];
         const dy = y - sy;
         const dx = x;
@@ -340,7 +331,6 @@ export function makeRippleRenderer(
   ) {
     const canvasH = params.canvasDimensions.height;
     const slitWidth = params.diffractionWall.slitSize;
-
     const slitWidthSim = slitWidth / scaleFactor;
 
     // Rebuild precompute if needed
@@ -393,20 +383,25 @@ export function animateParticles(
   ctx: CanvasRenderingContext2D,
   particles: Particle[],
   params: AnimationParams,
-) {
-  const { receptorWall, canvasDimensions } = params;
+) : number[] {
+  const { receptorWall } = params;
+  const yPositionofParticlesOnWall : number[] = []
+
   particles.forEach((particle) => {
     particle.x += particle.vx;
     particle.y += particle.vy;
 
     if (particle.x < 0 || particle.x > receptorWall.x) {
-      particle.vx *= -1;
+      particle.vx = 0;
+      particle.vy = 0;
       particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
+      yPositionofParticlesOnWall.push(particle.y)
     }
-    if (particle.y < 0 || particle.y > canvasDimensions.height) {
-      particle.vy *= -1;
-      particle.y = Math.max(0, Math.min(canvasDimensions.height, particle.y));
-    }
+    // if (particle.y < 0 || particle.y > canvasDimensions.height) {
+    //   particle.vy = 0;
+    //   particle.vx = 0;
+    //   particle.y = Math.max(0, Math.min(canvasDimensions.height, particle.y));
+    // }
 
     const gradient = ctx.createRadialGradient(
       particle.x,
@@ -416,17 +411,17 @@ export function animateParticles(
       particle.y,
       particle.size * 2,
     );
-    gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.8)`);
-    gradient.addColorStop(0.5, `hsla(${particle.hue}, 80%, 50%, 0.4)`);
+    gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.5)`);
+    gradient.addColorStop(0.5, `hsla(${particle.hue}, 80%, 50%, 0.25)`);
     gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`);
 
     ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
     ctx.fill();
-
-    particle.hue = (particle.hue + 0.1) % 360;
+    
   });
+  return yPositionofParticlesOnWall
 }
 
 export function blurIntersectionBetweenWaves(
@@ -434,8 +429,7 @@ export function blurIntersectionBetweenWaves(
   canvas: HTMLCanvasElement | null,
   params: AnimationParams,
 ) {
-  if (!canvas)
-    return
+  if (!canvas) return;
 
   const { diffractionWall, canvasDimensions } = params;
 
@@ -456,3 +450,39 @@ export function blurIntersectionBetweenWaves(
 
   ctx.restore();
 }
+
+
+  export function randomAngle(params: AnimationParams) {
+    const {canvasDimensions, diffractionWall, receptorWall} = params
+    const xMin = 0;
+    const xMax = canvasDimensions.height;
+
+    // The maximum value of (sin(x)/x)^2 is 1 at x=0
+    const maxPDF = 300;
+
+    while (true) {
+      // Generate random x in our range
+      const x = Math.random() * (xMax - xMin);
+
+      // Generate random y between 0 and maxPDF
+      const y = Math.random() * maxPDF;
+
+      // Calculate (sin(x)/x)^2
+      // Handle the special case at x=0 where sinc(0) = 1
+      let sincSquared;
+      if (Math.abs(x) < 1e-10) {
+        sincSquared = 200;
+      } else {
+        sincSquared = calculateLightIntensity(x, params)
+      }
+
+      // Accept this sample if y is below the PDF curve
+      if (y <= sincSquared) {
+        const angle = Math.atan((x-canvasDimensions.height/2)/(receptorWall.x-diffractionWall.x-diffractionWall.wallWidth))
+        return angle;
+      } else{
+        return Math.random() - 0.5
+      }
+      // Otherwise reject and try again
+    }
+  };

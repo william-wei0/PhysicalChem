@@ -10,10 +10,13 @@ import {
   drawLightIntensityOnWall,
   animateParticles,
   blurIntersectionBetweenWaves,
+  randomAngle,
+  drawLightIntensityCurve,
   type AnimationParams,
+  type ParticlesOnWall,
   type DiffractionWall,
   type ReceptorWall,
-  type Particle
+  type Particle,
 } from "./Lesson2SimulationAnimations";
 
 const AnimatedCanvas = () => {
@@ -24,12 +27,18 @@ const AnimatedCanvas = () => {
   const [wavelength, setWavelength] = useState([10]);
   const [speed, setSpeed] = useState([0.5]);
   const [contrast, setConstrast] = useState([1.2]);
-  const [particleCount, _setParticleCount] = useState(100);
+  const [particleCount, _setParticleCount] = useState(10000);
   const [particleSize, _setParticleSize] = useState(3);
 
   const [canvasDimensions, _setDimensions] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
+  });
+
+  const particlesOnWallRef = useRef<ParticlesOnWall>({
+    particlePositions: Array(canvasDimensions.height).fill(0),
+    binSize: 10,
+    totalParticles: 0,
   });
 
   const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
@@ -54,8 +63,6 @@ const AnimatedCanvas = () => {
   const slitMinimum = 5;
   const slitMaximum = 250;
   const particlesRef = useRef<Particle[]>([]);
-
-  
 
   const controllableSimulationVariables: React.ReactNode[] = [
     <Slider
@@ -95,23 +102,32 @@ const AnimatedCanvas = () => {
     />,
   ];
 
+
   useEffect(() => {
+    const animationParams: AnimationParams = {
+      diffractionWall,
+      receptorWall,
+      canvasDimensions,
+      slitMinimum,
+      slitMaximum,
+      contrast,
+    };
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
       particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5),
-        vy: (Math.random() - 0.5),
-        size: particleSize + Math.random() * particleSize,
-        hue: Math.random() * 360,
+        x: diffractionWall.x + diffractionWall.wallWidth,
+        y: canvas.height / 2,
+        vx: 5 * Math.cos(randomAngle(animationParams)),
+        vy: 5 * Math.sin(randomAngle(animationParams)),
+        size: particleSize,
+        hue: 51,
       });
     }
     particlesRef.current = particles;
-  }, [particleCount, particleSize]);
+  }, [particleCount, particleSize, diffractionWall, ]);
 
   useEffect(() => {
     const lightColor = [0, 83, 250];
@@ -131,7 +147,7 @@ const AnimatedCanvas = () => {
       contrast,
     };
 
-    const scaleFactor = 4
+    const scaleFactor = 4;
     // Initialize the renderer functions
     const drawCircularRipple = makeRippleRenderer(
       scaleFactor,
@@ -142,7 +158,7 @@ const AnimatedCanvas = () => {
 
     const drawInitialWaveRipple = makeInitialRippleRenderer(
       scaleFactor,
-      diffractionWall.x + diffractionWall.wallWidth/2,
+      diffractionWall.x + diffractionWall.wallWidth / 2,
       canvasDimensions.height,
       lightColor,
     );
@@ -192,13 +208,25 @@ const AnimatedCanvas = () => {
         animationParams,
       );
 
+      blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams);
       drawDiffractionWall(ctx, animationParams);
       drawReceptorWall(ctx, animationParams);
-      drawLightIntensityOnWall(ctx, animationParams);
-      animateParticles(ctx, particlesRef.current, animationParams);
-      blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams)
+      
+
+      const yPositionofParticlesOnWall = animateParticles(
+        ctx,
+        particlesRef.current,
+        animationParams,
+      );
+
+      yPositionofParticlesOnWall.forEach((index) => {
+        particlesOnWallRef.current.particlePositions[Math.round(index)] += 1
+      })
+      particlesOnWallRef.current.totalParticles += yPositionofParticlesOnWall.length;
+      drawLightIntensityOnWall(ctx, particlesOnWallRef.current, animationParams);
 
       animationFrameRef.current = requestAnimationFrame(animate);
+      drawLightIntensityCurve(ctx, animationParams)
     };
 
     // Start the animation
@@ -228,9 +256,7 @@ const AnimatedCanvas = () => {
 
   return (
     <div ref={containerRef} className="simulation-container">
-      <SimulationControls
-        controllableSimulationVariables={controllableSimulationVariables}
-      />
+      <SimulationControls controllableSimulationVariables={controllableSimulationVariables} />
       <canvas
         ref={canvasRef}
         width={canvasDimensions.width}
