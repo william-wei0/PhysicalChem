@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import "../../styles/canvas.css";
 import Slider from "@/components/simulationControls/Slider";
 import SimulationControls from "@/components/simulationControls/SimulationControls";
@@ -10,7 +10,7 @@ import {
   drawLightIntensityOnWall,
   animateParticles,
   blurIntersectionBetweenWaves,
-  randomAngle,
+  randomVelocityXY,
   drawLightIntensityCurve,
   type AnimationParams,
   type ParticlesOnWall,
@@ -27,7 +27,7 @@ const AnimatedCanvas = () => {
   const [wavelength, setWavelength] = useState([10]);
   const [speed, setSpeed] = useState([0.5]);
   const [contrast, setConstrast] = useState([1.2]);
-  const [particleCount, _setParticleCount] = useState(10000);
+  const [particleCount, _setParticleCount] = useState(1000);
   const [particleSize, _setParticleSize] = useState(3);
 
   const [canvasDimensions, _setDimensions] = useState({
@@ -37,7 +37,6 @@ const AnimatedCanvas = () => {
 
   const particlesOnWallRef = useRef<ParticlesOnWall>({
     particlePositions: Array(canvasDimensions.height).fill(0),
-    binSize: 10,
     totalParticles: 0,
   });
 
@@ -64,12 +63,23 @@ const AnimatedCanvas = () => {
   const slitMaximum = 250;
   const particlesRef = useRef<Particle[]>([]);
 
+  const animationParams = useMemo<AnimationParams>(() => ({
+  diffractionWall,
+  receptorWall,
+  canvasDimensions,
+  slitMinimum,
+  slitMaximum,
+  contrast,
+  wavelength,
+  }), [diffractionWall, receptorWall, canvasDimensions, slitMinimum, slitMaximum, contrast, wavelength]);
+
+
   const controllableSimulationVariables: React.ReactNode[] = [
     <Slider
       key={"Diffraction"}
       value={[diffractionWall.slitSize]}
       onValueChange={handleDiffractionSlitWidth}
-      label="Diffraction"
+      label="Diffraction Slit Size (nm)"
       min={slitMinimum}
       max={slitMaximum}
     />,
@@ -104,30 +114,31 @@ const AnimatedCanvas = () => {
 
 
   useEffect(() => {
-    const animationParams: AnimationParams = {
-      diffractionWall,
-      receptorWall,
-      canvasDimensions,
-      slitMinimum,
-      slitMaximum,
-      contrast,
-    };
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    
+
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
+      const newParticlePositionY = diffractionWall.slitSize * (Math.random() - 0.5) + (canvasDimensions.height / 2);
+      const speed = (randomVelocityXY(5, newParticlePositionY, animationParams))
       particles.push({
         x: diffractionWall.x + diffractionWall.wallWidth,
-        y: canvas.height / 2,
-        vx: 5 * Math.cos(randomAngle(animationParams)),
-        vy: 5 * Math.sin(randomAngle(animationParams)),
+        y: newParticlePositionY,
+        vx: speed[0],
+        vy: speed[1],
         size: particleSize,
         hue: 51,
       });
     }
     particlesRef.current = particles;
-  }, [particleCount, particleSize, diffractionWall, ]);
+
+    particlesOnWallRef.current.particlePositions.fill(0);
+    particlesOnWallRef.current.totalParticles = 0;
+
+
+  }, [animationParams, canvasDimensions, diffractionWall, receptorWall, particleCount, particleSize]);
 
   useEffect(() => {
     const lightColor = [0, 83, 250];
@@ -138,15 +149,6 @@ const AnimatedCanvas = () => {
     if (!ctx) return;
 
     // Create animation parameters object
-    const animationParams: AnimationParams = {
-      diffractionWall,
-      receptorWall,
-      canvasDimensions,
-      slitMinimum,
-      slitMaximum,
-      contrast,
-    };
-
     const scaleFactor = 4;
     // Initialize the renderer functions
     const drawCircularRipple = makeRippleRenderer(
@@ -239,6 +241,7 @@ const AnimatedCanvas = () => {
       }
     };
   }, [
+    animationParams,
     diffractionWall,
     receptorWall,
     canvasDimensions,
