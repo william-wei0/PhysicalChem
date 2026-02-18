@@ -81,17 +81,19 @@ export function drawReceptorWall(ctx: CanvasRenderingContext2D, params: Animatio
 }
 
 const calculateLightIntensity = (y: number, params: AnimationParams) => {
-  const { diffractionWall, canvasDimensions , slitMaximum, slitMinimum, wavelength} = params;
-  const scalefactor = 3500 / wavelength[0];
-  const diffractionSlitWidth =
-    4 * ((diffractionWall.slitSize - slitMinimum + 10) / (slitMaximum - slitMinimum));
-  y = y - canvasDimensions.height / 2;
-  return (
-    200 *
-    (Math.sin(diffractionSlitWidth * (y / scalefactor)) /
-      (diffractionSlitWidth * (y / scalefactor))) **
-      2
-  );
+  const { diffractionWall, receptorWall, canvasDimensions, wavelength } = params;
+
+  const a = diffractionWall.slitSize;
+  const D = receptorWall.x - diffractionWall.x - diffractionWall.wallWidth; // matches randomVelocityXY
+
+  const dy = y - canvasDimensions.height / 2;
+  const sinTheta = dy / Math.sqrt(dy * dy + D * D);
+
+  const beta = (Math.PI * a * sinTheta) / wavelength[0];
+
+  if (Math.abs(beta) < 1e-10) return (receptorWall.width - 50);
+
+  return (receptorWall.width - 50) * (Math.sin(beta) / beta) ** 2;
 };
 
 export function drawLightIntensityOnWall(
@@ -142,19 +144,24 @@ export function drawLightIntensityOnWall(
   }
 }
 
-export function randomVelocityXY(speed : number, particlePositionY : number, params: AnimationParams) {
-  const {canvasDimensions, diffractionWall, receptorWall} = params;
+export function randomVelocityXY(
+  speed: number,
+  particlePositionY: number,
+  params: AnimationParams,
+) {
+  const { canvasDimensions, diffractionWall, receptorWall } = params;
   const xMin = 0;
   const xMax = canvasDimensions.height;
-  const maxPDF = 200;
-  speed = speed * Math.random() + 2
+  const maxPDF = (receptorWall.width - 50);
+  speed = speed * Math.random() + 2;
   while (true) {
-    const randomHeightOnReceptorWall = (Math.random() - 0.5) * (xMax - xMin + 4000) + canvasDimensions.height/2;
+    const randomHeightOnReceptorWall =
+      (Math.random() - 0.5) * (xMax - xMin + 4000) + canvasDimensions.height / 2;
     const randomYForCalculation = Math.random() * maxPDF;
 
     let sincSquared;
     if (Math.abs(randomHeightOnReceptorWall) < 1e-10) {
-      sincSquared = 200;
+      sincSquared = maxPDF;
     } else {
       sincSquared = calculateLightIntensity(randomHeightOnReceptorWall, params);
     }
@@ -243,7 +250,7 @@ export function makeInitialRippleRenderer(
       lastSlitWidth = slitWidth;
       lastCanvasH = canvasH;
 
-      pre = precomputeInitialRipple(simW, simH, wavelength, 1 / speed, phase);
+      pre = precomputeInitialRipple(simW, simH, wavelength / scaleFactor, 1 / speed, phase);
     }
 
     // Fast per-frame render
@@ -407,7 +414,7 @@ export function makeRippleRenderer(
         simH,
         slitTopSim,
         slitBottomSim,
-        wavelength,
+        wavelength / scaleFactor,
         1 / speed,
         sourceStep / scaleFactor,
         phase,
@@ -453,20 +460,26 @@ export function animateParticles(
     particle.y += particle.vy;
 
     if (particle.x < 0 || particle.x > receptorWall.x) {
-      yPositionofParticlesOnWall.push(particle.y);
-      const newParticleY = diffractionWall.slitSize * (Math.random() - 0.5) + (canvasDimensions.height / 2)
-      const newVelocity = randomVelocityXY(5, newParticleY, params)
+      if (particle.y > 0 && particle.y < canvasDimensions.height) yPositionofParticlesOnWall.push(particle.y);
+      const newParticleY =
+        diffractionWall.slitSize * (Math.random() - 0.5) + canvasDimensions.height / 2;
+      const newVelocity = randomVelocityXY(5, newParticleY, params);
       particle.vx = newVelocity[0];
       particle.vy = newVelocity[1];
       // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
       particle.x = diffractionWall.x + diffractionWall.wallWidth;
-      particle.y = newParticleY
+      particle.y = newParticleY;
     }
-    // if (particle.y < 0 || particle.y > canvasDimensions.height) {
-    //   particle.vy = 0;
-    //   particle.vx = 0;
-    //   particle.y = Math.max(0, Math.min(canvasDimensions.height, particle.y));
-    // }
+    if (particle.y < 0 || particle.y > canvasDimensions.height) {
+      const newParticleY =
+        diffractionWall.slitSize * (Math.random() - 0.5) + canvasDimensions.height / 2;
+      const newVelocity = randomVelocityXY(5, newParticleY, params);
+      particle.vx = newVelocity[0];
+      particle.vy = newVelocity[1];
+      // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
+      particle.x = diffractionWall.x + diffractionWall.wallWidth;
+      particle.y = newParticleY;
+    }
 
     const gradient = ctx.createRadialGradient(
       particle.x,

@@ -24,11 +24,11 @@ const AnimatedCanvas = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [wavelength, setWavelength] = useState([10]);
+  const [wavelength, setWavelength] = useState([50]);
   const [speed, setSpeed] = useState([0.5]);
-  const [contrast, setConstrast] = useState([1.2]);
+  const [contrast, setConstrast] = useState([1.0]);
   const [particleCount, _setParticleCount] = useState(1000);
-  const [particleSize, _setParticleSize] = useState(3);
+  const [particleSize, _setParticleSize] = useState(5);
 
   const [canvasDimensions, _setDimensions] = useState({
     width: window.innerWidth,
@@ -42,7 +42,7 @@ const AnimatedCanvas = () => {
 
   const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
     x: canvasDimensions.width * 0.2,
-    slitSize: 20,
+    slitSize: 125,
     wallWidth: 20,
     color: "rgba(255, 255, 255, 1)",
   });
@@ -59,7 +59,7 @@ const AnimatedCanvas = () => {
 
   const animationFrameRef = useRef<number>(0);
   const [isPaused, setIsPaused] = useState(false);
-  const slitMinimum = 5;
+  const slitMinimum = 60;
   const slitMaximum = 250;
   const particlesRef = useRef<Particle[]>([]);
 
@@ -88,8 +88,8 @@ const AnimatedCanvas = () => {
       value={wavelength}
       onValueChange={setWavelength}
       label="Wavelength"
-      min={5}
-      max={20}
+      min={20}
+      max={80}
       step={0.01}
     />,
     <Slider
