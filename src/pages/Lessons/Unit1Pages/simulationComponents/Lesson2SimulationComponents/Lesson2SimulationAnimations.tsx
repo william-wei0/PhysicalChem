@@ -37,6 +37,7 @@ export interface AnimationParams {
   slitMaximum: number;
   contrast: number[];
   wavelength: number[];
+  speed: number[];
 }
 
 export interface Particle {
@@ -91,7 +92,7 @@ const calculateLightIntensity = (y: number, params: AnimationParams) => {
 
   const beta = (Math.PI * a * sinTheta) / wavelength[0];
 
-  if (Math.abs(beta) < 1e-10) return (receptorWall.width - 50);
+  if (Math.abs(beta) < 1e-10) return receptorWall.width - 50;
 
   return (receptorWall.width - 50) * (Math.sin(beta) / beta) ** 2;
 };
@@ -152,7 +153,7 @@ export function randomVelocityXY(
   const { canvasDimensions, diffractionWall, receptorWall } = params;
   const xMin = 0;
   const xMax = canvasDimensions.height;
-  const maxPDF = (receptorWall.width - 50);
+  const maxPDF = receptorWall.width - 50;
   speed = speed * Math.random() + 2;
   while (true) {
     const randomHeightOnReceptorWall =
@@ -451,16 +452,20 @@ export function animateParticles(
   ctx: CanvasRenderingContext2D,
   particles: Particle[],
   params: AnimationParams,
+  isPaused: boolean,
 ): number[] {
   const { receptorWall, diffractionWall, canvasDimensions } = params;
   const yPositionofParticlesOnWall: number[] = [];
 
   particles.forEach((particle) => {
-    particle.x += particle.vx;
-    particle.y += particle.vy;
+    if (!isPaused) {
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+    }
 
     if (particle.x < 0 || particle.x > receptorWall.x) {
-      if (particle.y > 0 && particle.y < canvasDimensions.height) yPositionofParticlesOnWall.push(particle.y);
+      if (particle.y > 0 && particle.y < canvasDimensions.height)
+        yPositionofParticlesOnWall.push(particle.y);
       const newParticleY =
         diffractionWall.slitSize * (Math.random() - 0.5) + canvasDimensions.height / 2;
       const newVelocity = randomVelocityXY(5, newParticleY, params);
