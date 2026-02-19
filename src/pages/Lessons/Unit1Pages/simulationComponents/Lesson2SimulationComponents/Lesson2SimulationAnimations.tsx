@@ -471,7 +471,7 @@ export function animateParticles(
         particle.y > canvasDimensions.height / 2 + diffractionWall.slitSize / 2 ||
         particle.y < canvasDimensions.height / 2 - diffractionWall.slitSize / 2
       ) {
-        particle.vx = 5 * Math.random();
+        particle.vx = 5 * Math.random() + 2;
         particle.vy = 5 * (Math.random() - 0.5);
         particle.x = 0;
         particle.y = canvasDimensions.height * Math.random();
@@ -487,22 +487,18 @@ export function animateParticles(
         yPositionofParticlesOnWall.push(particle.y);
       const newParticleY =
         diffractionWall.slitSize * (Math.random() - 0.5) + canvasDimensions.height / 2;
-      const newVelocity = randomVelocityXY(5, newParticleY, params);
-      particle.vx = newVelocity[0];
-      particle.vy = newVelocity[1];
+      particle.vx = 5 * Math.random() + 2;
+      particle.vy = 2 * (Math.random() - 0.5);
       // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
       particle.x = 0;
       particle.y = newParticleY;
     }
     if (particle.y < 0 || particle.y > canvasDimensions.height) {
-      const newParticleY =
-        diffractionWall.slitSize * (Math.random() - 0.5) + canvasDimensions.height / 2;
-      const newVelocity = randomVelocityXY(5, newParticleY, params);
-      particle.vx = newVelocity[0];
-      particle.vy = newVelocity[1];
+      particle.vx = 5 * Math.random() + 2;
+      particle.vy = 5 * (Math.random() - 0.5);
       // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
       particle.x = 0;
-      particle.y = newParticleY;
+      particle.y = canvasDimensions.height * Math.random();
     }
 
     const gradient = ctx.createRadialGradient(

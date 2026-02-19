@@ -17,7 +17,7 @@ const ParticleComponent = ({ animationParams }: { animationParams: AnimationPara
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { canvasDimensions, diffractionWall, wavelength, contrast, speed } = animationParams;
   const backgroundColor = "rgba(26, 32, 44, 0.4)";
-  const [particleCount, _setParticleCount] = useState(1000);
+  const [particleCount, _setParticleCount] = useState(1500);
   const [particleSize, _setParticleSize] = useState(5);
 
   const particlesOnWallRef = useRef<ParticlesOnWall>({
@@ -45,9 +45,9 @@ const ParticleComponent = ({ animationParams }: { animationParams: AnimationPara
     for (let i = 0; i < particleCount; i++) {
 
       particles.push({
-        x: 0,
+        x: diffractionWall.x * Math.random(),
         y: canvasDimensions.height * Math.random(),
-        vx: 5 * Math.random(),
+        vx: 5 * Math.random() + 2,
         vy: 5 * (Math.random() - 0.5),
         size: particleSize,
         hue: 51,
