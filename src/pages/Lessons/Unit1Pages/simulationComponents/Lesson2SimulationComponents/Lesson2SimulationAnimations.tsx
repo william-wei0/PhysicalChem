@@ -463,6 +463,25 @@ export function animateParticles(
       particle.y += particle.vy;
     }
 
+    if (
+      particle.x > diffractionWall.x &&
+      particle.x < diffractionWall.x + diffractionWall.wallWidth
+    ) {
+      if (
+        particle.y > canvasDimensions.height / 2 + diffractionWall.slitSize / 2 ||
+        particle.y < canvasDimensions.height / 2 - diffractionWall.slitSize / 2
+      ) {
+        particle.vx = 5 * Math.random();
+        particle.vy = 5 * (Math.random() - 0.5);
+        particle.x = 0;
+        particle.y = canvasDimensions.height * Math.random();
+      } else {
+        const newVelocity = randomVelocityXY(5, particle.y, params);
+        particle.vx = newVelocity[0];
+        particle.vy = newVelocity[1];
+      }
+    }
+
     if (particle.x < 0 || particle.x > receptorWall.x) {
       if (particle.y > 0 && particle.y < canvasDimensions.height)
         yPositionofParticlesOnWall.push(particle.y);
@@ -472,7 +491,7 @@ export function animateParticles(
       particle.vx = newVelocity[0];
       particle.vy = newVelocity[1];
       // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
-      particle.x = diffractionWall.x + diffractionWall.wallWidth;
+      particle.x = 0;
       particle.y = newParticleY;
     }
     if (particle.y < 0 || particle.y > canvasDimensions.height) {
@@ -482,7 +501,7 @@ export function animateParticles(
       particle.vx = newVelocity[0];
       particle.vy = newVelocity[1];
       // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
-      particle.x = diffractionWall.x + diffractionWall.wallWidth;
+      particle.x = 0;
       particle.y = newParticleY;
     }
 

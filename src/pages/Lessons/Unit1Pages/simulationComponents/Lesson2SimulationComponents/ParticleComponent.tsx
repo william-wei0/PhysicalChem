@@ -6,7 +6,6 @@ import {
   drawLightIntensityOnWall,
   animateParticles,
   blurIntersectionBetweenWaves,
-  randomVelocityXY,
   drawLightIntensityCurve,
   type AnimationParams,
   type ParticlesOnWall,
@@ -44,14 +43,12 @@ const ParticleComponent = ({ animationParams }: { animationParams: AnimationPara
 
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
-      const newParticlePositionY =
-        diffractionWall.slitSize * (Math.random() - 0.5) + canvasDimensions.height / 2;
-      const speed = randomVelocityXY(5, newParticlePositionY, animationParams);
+
       particles.push({
-        x: diffractionWall.x + diffractionWall.wallWidth,
-        y: newParticlePositionY,
-        vx: speed[0],
-        vy: speed[1],
+        x: 0,
+        y: canvasDimensions.height * Math.random(),
+        vx: 5 * Math.random(),
+        vy: 5 * (Math.random() - 0.5),
         size: particleSize,
         hue: 51,
       });
@@ -67,9 +64,7 @@ const ParticleComponent = ({ animationParams }: { animationParams: AnimationPara
     receptorWall,
     particleCount,
     particleSize,
-    diffractionWall.x,
-    diffractionWall.wallWidth,
-    diffractionWall.slitSize,
+    diffractionWall,
   ]);
 
   useEffect(() => {
