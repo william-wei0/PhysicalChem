@@ -16,8 +16,10 @@ const WavesComponent = ({ animationParams }: { animationParams: AnimationParams 
   const backgroundColor = "rgba(26, 32, 44, 0.4)";
 
   const animationFrameRef = useRef<number>(0);
-
   const currentTime = useRef<number>(0);;
+  const startTime = useRef<number | null>(null);
+  const elapsedTime = useRef<number>(0);
+
   const [isPaused, setIsPaused] = useState(false);
 
 
@@ -29,9 +31,8 @@ const WavesComponent = ({ animationParams }: { animationParams: AnimationParams 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Create animation parameters object
+    // Render waves at 1/4 scale to improve performance
     const scaleFactor = 4;
-    // Initialize the renderer functions
     const drawCircularRipple = makeRippleRenderer(
       scaleFactor,
       receptorWall.x - diffractionWall.x - diffractionWall.wallWidth,
@@ -46,29 +47,21 @@ const WavesComponent = ({ animationParams }: { animationParams: AnimationParams 
       lightColor,
     );
 
-    // Track time properly for pause/resume
-    let startTime: number | null = null;
-    let elapsedTime = 0;
 
     const animate = (timestamp: number) => {
-      // Clear canvas with a slight trail effect
       ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, canvasDimensions.width, canvasDimensions.height);
 
 
       if (!isPaused) {
-        // Initialize start time on first frame or after unpause
-        if (startTime === null) {
-          startTime = timestamp;
+        if (startTime.current === null) {
+          startTime.current = timestamp;
         }
-
-        // Calculate current animation time
-        currentTime.current = elapsedTime + (timestamp - startTime);
+        currentTime.current = elapsedTime.current + (timestamp - startTime.current);
       } else {
-        // When paused, save elapsed time and reset start time
-        if (startTime !== null) {
-          elapsedTime += timestamp - startTime;
-          startTime = null;
+        if (startTime.current !== null) {
+          elapsedTime.current += timestamp - startTime.current;
+          startTime.current = null;
         }
       }
       drawInitialWaveRipple(
@@ -99,10 +92,8 @@ const WavesComponent = ({ animationParams }: { animationParams: AnimationParams 
 
     };
 
-    // Start the animation
     animationFrameRef.current = requestAnimationFrame(animate);
 
-    // Cleanup
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -133,7 +124,6 @@ const WavesComponent = ({ animationParams }: { animationParams: AnimationParams 
         onClick={handleCanvasClick}
         style={{
           border: "2px solid #4A5568",
-          borderRadius: "8px",
           cursor: "pointer",
           backgroundColor: "#1a202c",
           width: "100%",

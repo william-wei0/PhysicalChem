@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo } from "react";
 import "../../styles/canvas.css";
 import Slider from "@/components/simulationControls/Slider";
 import SimulationControls from "@/components/simulationControls/SimulationControls";
-import WavesComponent from "./Lesson2SimulationComponents/wavesComponent";
+import WavesComponent from "./Lesson2SimulationComponents/WavesComponent";
 import ParticleComponent from "./Lesson2SimulationComponents/ParticleComponent";
 import {
   type AnimationParams,
@@ -14,7 +14,7 @@ type CanvasView = "Waves" | "Particles";
 
 const AnimatedCanvas = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [view, _setView] = useState<CanvasView>("Waves")
+  const [view, setView] = useState<CanvasView>("Particles")
   const [wavelength, setWavelength] = useState([50]);
   const [speed, setSpeed] = useState([0.5]);
   const [contrast, setConstrast] = useState([1.0]);
@@ -94,10 +94,14 @@ const AnimatedCanvas = () => {
   ];
 
   return (
-    <div ref={containerRef} className="simulation-container">
-      <SimulationControls controllableSimulationVariables={controllableSimulationVariables} />
-      {view === "Waves" && <WavesComponent animationParams = {animationParams}/>}
-      {view === "Particles" && <ParticleComponent animationParams = {animationParams}/>}
+    <div>
+      <button className="hover:cursor-pointer" onClick={() => {setView("Waves")}}> Waves </button>
+      <button className="hover:cursor-pointer" onClick={() => {setView("Particles")}}> Particles </button>
+      <div ref={containerRef} className="simulation-container">
+        <SimulationControls controllableSimulationVariables={controllableSimulationVariables} />
+        {view === "Waves" && <WavesComponent animationParams = {animationParams}/>}
+        {view === "Particles" && <ParticleComponent animationParams = {animationParams}/>}
+      </div>
     </div>
   );
 };

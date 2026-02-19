@@ -141,7 +141,6 @@ const ParticleComponent = ({ animationParams }: { animationParams: AnimationPara
         onClick={handleCanvasClick}
         style={{
           border: "2px solid #4A5568",
-          borderRadius: "8px",
           cursor: "pointer",
           backgroundColor: "#1a202c",
           width: "100%",
