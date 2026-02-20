@@ -38,7 +38,7 @@ export const AccordionTrigger = ({ className, style, children }: AccordionTrigge
                 style={style}
                 onClick={() => context.handleTrigger(item.id)}
             >
-                {children}
+                <span className="flex-1">{children}</span>
                 <svg
                     viewBox="0 0 24 24"
                     width="24"

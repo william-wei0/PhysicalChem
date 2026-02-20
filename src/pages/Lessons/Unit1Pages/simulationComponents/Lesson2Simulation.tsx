@@ -28,7 +28,9 @@ import {
 type ControlAccordionProps = {
   id: string;
   title: string;
+  triggerClassName?: string;
   content?: React.ReactNode;
+  
 };
 
 const AnimatedCanvas = () => {
@@ -44,12 +46,14 @@ const AnimatedCanvas = () => {
   const elapsedTime = useRef<number>(0);
   const previousTime = useRef<number | null>(null);
 
+
   const [isWaveActive, setIsWavesActive] = useState(true);
   const [isParticleActive, setIsParticleActive] = useState(false);
   const [isWavesPaused, setIsWavesPaused] = useState(false);
   const [isParticlePaused, setisParticlePaused] = useState(true);
   const [showLightGradient, setShowLightGradient] = useState(true);
   const [showLightDistribution, setShowLightDistribution] = useState(false);
+  const [numOfParticlesToHitReceptorWall, setNumOfParticlesHitReceptorWall] = useState([0]);
   const [wavelength, setWavelength] = useState([50]);
   const [waveSpeed, setSpeed] = useState([0.5]);
   const [particleSpeed, setParticleSpeed] = useState([0.5]);
@@ -104,6 +108,7 @@ const AnimatedCanvas = () => {
     {
       id: "1",
       title: "Wave Settings",
+      triggerClassName: "relative w-full text-lg font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 bg-zinc-100",
       content: (
         <>
           <Slider
@@ -130,8 +135,18 @@ const AnimatedCanvas = () => {
     {
       id: "2",
       title: "Particle Settings",
+      triggerClassName: "relative w-full text-lg font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 ",
       content: (
         <>
+          <Slider
+            key={"Number of Particles"}
+            value={numOfParticlesToHitReceptorWall}
+            onValueChange={setNumOfParticlesHitReceptorWall}
+            label="Number of Particles"
+            min={100}
+            max={100000}
+            step={100}
+          />
           <Slider
             key={"Particle Speed"}
             value={particleSpeed}
@@ -173,8 +188,8 @@ const AnimatedCanvas = () => {
     ...generalSimulationSettings,
     <Accordion key="accordion" allowMultiple={true}>
       {WaveParticleSettings.map((setting) => (
-        <AccordionItem id={setting.id} key={setting.id}>
-          <AccordionTrigger>{setting.title}</AccordionTrigger>
+        <AccordionItem id={setting.id} key={setting.id} >
+          <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
           <AccordionContent>{setting.content}</AccordionContent>
         </AccordionItem>
       ))}
@@ -212,7 +227,7 @@ const AnimatedCanvas = () => {
 
     particlesOnWallRef.current.particlePositions.fill(0);
     particlesOnWallRef.current.totalParticles = 0;
-  }, []);
+  }, [diffractionWall.x, canvasDimensions.height, particleCount, particleSize]);
 
   const resetParticles = () => {
     particlesRef.current.forEach((p, i) => {
@@ -428,7 +443,7 @@ const AnimatedCanvas = () => {
         Show Light Distribution
       </button>
       <div ref={containerRef} className="simulation-container">
-        <SimulationControls controllableSimulationVariables={allSettings} />
+        <SimulationControls controllableSimulationVariables={allSettings} onLeft={true}/>
         <canvas
           ref={canvasRef}
           width={canvasDimensions.width}
