@@ -47,6 +47,7 @@ export interface Particle {
   vy: number;
   size: number;
   hue: number;
+  isActive: boolean;
 }
 
 function contrast255(x: number, c: number, mid = 128) {
@@ -85,7 +86,7 @@ const calculateLightIntensity = (y: number, params: AnimationParams) => {
   const { diffractionWall, receptorWall, canvasDimensions, wavelength } = params;
 
   const a = diffractionWall.slitSize;
-  const D = receptorWall.x - diffractionWall.x - diffractionWall.wallWidth; // matches randomVelocityXY
+  const D = receptorWall.x - diffractionWall.x - diffractionWall.wallWidth;
 
   const dy = y - canvasDimensions.height / 2;
   const sinTheta = dy / Math.sqrt(dy * dy + D * D);
@@ -187,6 +188,16 @@ export function drawLightIntensityCurve(ctx: CanvasRenderingContext2D, params: A
   }
 }
 
+export function drawLightIntensityGradient(ctx: CanvasRenderingContext2D, params: AnimationParams) {
+  const { receptorWall, canvasDimensions } = params;
+
+  for (let y = 0; y < canvasDimensions.height; y += 5) {
+    const lightIntensity = calculateLightIntensity(y, params);
+    ctx.fillStyle = `rgba(255, 0, 255, ${Math.min(lightIntensity / 50, 1.0)})`;
+    ctx.fillRect(receptorWall.x, y, receptorWall.width, 5);
+  }
+}
+
 // Precompute functions
 function precomputeInitialRipple(
   width: number,
@@ -233,7 +244,7 @@ export function makeInitialRippleRenderer(
 
   return function draw(
     ctx: CanvasRenderingContext2D,
-    tMs: number,
+    timeMilliseconds: number,
     x0: number,
     y0: number,
     wavelength: number,
@@ -255,7 +266,7 @@ export function makeInitialRippleRenderer(
     }
 
     // Fast per-frame render
-    const time = tMs / 1000;
+    const time = timeMilliseconds / 1000;
     const ot = pre.omega * time;
     const cosine = Math.cos(ot);
     const sine = Math.sin(ot);
@@ -391,7 +402,7 @@ export function makeRippleRenderer(
 
   return function draw(
     ctx: CanvasRenderingContext2D,
-    tMs: number,
+    timeMilliseconds: number,
     x0: number,
     y0: number,
     wavelength: number,
@@ -423,7 +434,7 @@ export function makeRippleRenderer(
     }
 
     // Fast per-frame render
-    const time = tMs / 1000;
+    const time = timeMilliseconds / 1000;
     const ot = pre.omega * time;
     const c = Math.cos(ot);
     const s = Math.sin(ot);
@@ -448,75 +459,111 @@ export function makeRippleRenderer(
   };
 }
 
+function resetParticle(
+  particle: Particle,
+  canvasDimensions: CanvasDimensions,
+): void {
+  particle.vx = 5 * Math.random() + 2;
+  particle.vy = 0;
+  particle.x = 0;
+  particle.y = canvasDimensions.height * Math.random();
+}
+
+function isInSlit(
+  particle: Particle,
+  canvasDimensions: CanvasDimensions,
+  diffractionWall: DiffractionWall,
+): boolean {
+  const center = canvasDimensions.height / 2;
+  return (
+    particle.y >= center - diffractionWall.slitSize / 2 &&
+    particle.y <= center + diffractionWall.slitSize / 2
+  );
+}
+
+function isOutOfBounds(
+  particle: Particle,
+  canvasDimensions: CanvasDimensions,
+  receptorWall: ReceptorWall,
+): boolean {
+  return (
+    particle.x < 0 ||
+    particle.x > receptorWall.x ||
+    particle.y < 0 ||
+    particle.y > canvasDimensions.height
+  );
+}
+
+function handleWallCollision(
+  particle: Particle,
+  canvasDimensions: CanvasDimensions,
+  diffractionWall: DiffractionWall,
+  params: AnimationParams,
+): void {
+
+  if (isInSlit(particle, canvasDimensions, diffractionWall)) {
+    const newVelocity = randomVelocityXY(5, particle.y, params);
+    particle.vx = newVelocity[0];
+    particle.vy = newVelocity[1];
+  } else {
+    resetParticle(particle, canvasDimensions);
+  }
+}
+
 export function animateParticles(
   ctx: CanvasRenderingContext2D,
   particles: Particle[],
   params: AnimationParams,
-  isPaused: boolean,
+  deltaTimeMilliseconds: number,
+  animationSpeed: number
 ): number[] {
   const { receptorWall, diffractionWall, canvasDimensions } = params;
   const yPositionofParticlesOnWall: number[] = [];
 
   particles.forEach((particle) => {
-    if (!isPaused) {
-      particle.x += particle.vx;
-      particle.y += particle.vy;
+    const prevX = particle.x;
+
+    particle.x += particle.vx * (deltaTimeMilliseconds * animationSpeed / 8.333) ;
+    particle.y += particle.vy * (deltaTimeMilliseconds * animationSpeed / 8.333)  ;
+
+    // CCD: check if particle crossed the wall this frame
+    const crossedWall = prevX < diffractionWall.x && particle.x >= diffractionWall.x;
+
+    if (crossedWall) {
+      handleWallCollision(particle, canvasDimensions, diffractionWall, params);
     }
 
-    if (
-      particle.x > diffractionWall.x &&
-      particle.x < diffractionWall.x + diffractionWall.wallWidth
-    ) {
-      if (
-        particle.y > canvasDimensions.height / 2 + diffractionWall.slitSize / 2 ||
-        particle.y < canvasDimensions.height / 2 - diffractionWall.slitSize / 2
-      ) {
-        particle.vx = 5 * Math.random() + 2;
-        particle.vy = 5 * (Math.random() - 0.5);
-        particle.x = 0;
-        particle.y = canvasDimensions.height * Math.random();
-      } else {
-        const newVelocity = randomVelocityXY(5, particle.y, params);
-        particle.vx = newVelocity[0];
-        particle.vy = newVelocity[1];
-      }
-    }
-
-    if (particle.x < 0 || particle.x > receptorWall.x) {
-      if (particle.y > 0 && particle.y < canvasDimensions.height)
+    if (particle.x > receptorWall.x) {
+      if (particle.y > 0 && particle.y < canvasDimensions.height) {
         yPositionofParticlesOnWall.push(particle.y);
-      const newParticleY =
-        diffractionWall.slitSize * (Math.random() - 0.5) + canvasDimensions.height / 2;
-      particle.vx = 5 * Math.random() + 2;
-      particle.vy = 2 * (Math.random() - 0.5);
-      // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
-      particle.x = 0;
-      particle.y = newParticleY;
-    }
-    if (particle.y < 0 || particle.y > canvasDimensions.height) {
-      particle.vx = 5 * Math.random() + 2;
-      particle.vy = 5 * (Math.random() - 0.5);
-      // particle.x = Math.max(0, Math.min(receptorWall.x, particle.x));
-      particle.x = 0;
-      particle.y = canvasDimensions.height * Math.random();
+      }
+      resetParticle(particle, canvasDimensions);
+      return;
     }
 
-    const gradient = ctx.createRadialGradient(
-      particle.x,
-      particle.y,
-      0,
-      particle.x,
-      particle.y,
-      particle.size * 2,
-    );
-    gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.5)`);
-    gradient.addColorStop(0.5, `hsla(${particle.hue}, 80%, 50%, 0.25)`);
-    gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`);
+    if (isOutOfBounds(particle, canvasDimensions, receptorWall)) {
+      resetParticle(particle, canvasDimensions);
+    }
 
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
-    ctx.fill();
+    if (particle.isActive) {
+      const gradient = ctx.createRadialGradient(
+        particle.x,
+        particle.y,
+        0,
+        particle.x,
+        particle.y,
+        particle.size * 2,
+      );
+      gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.8)`); // brighter, more opaque center
+      gradient.addColorStop(0.4, `hsla(${particle.hue}, 80%, 50%, 0.6)`); // hold opacity longer
+      gradient.addColorStop(0.7, `hsla(${particle.hue}, 80%, 40%, 0.1)`); // sharp drop-off here
+      gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`); // fully transparent edge
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
   });
   return yPositionofParticlesOnWall;
 }

@@ -11,6 +11,7 @@ import {
   drawLightIntensityCurve,
   animateParticles,
   drawLightIntensityOnWall,
+  drawLightIntensityGradient,
   type AnimationParams,
   type DiffractionWall,
   type ReceptorWall,
@@ -29,12 +30,15 @@ const AnimatedCanvas = () => {
   const currentTime = useRef<number>(0);
   const startTime = useRef<number | null>(null);
   const elapsedTime = useRef<number>(0);
+  const previousTime = useRef<number | null>(null);
 
   const [isWaveActive, setIsWavesActive] = useState(true);
   const [isParticleActive, setIsParticleActive] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isWavesPaused, setIsWavesPaused] = useState(false);
+  const [isParticlePaused, setisParticlePaused] = useState(true);
   const [wavelength, setWavelength] = useState([50]);
-  const [speed, setSpeed] = useState([0.5]);
+  const [waveSpeed, setSpeed] = useState([0.5]);
+  const [particleSpeed, setParticleSpeed] = useState([0.5]);
   const [contrast, setConstrast] = useState([1.0]);
   const [canvasDimensions, _setDimensions] = useState({
     width: window.innerWidth,
@@ -54,6 +58,7 @@ const AnimatedCanvas = () => {
     color: "rgba(255, 255, 255, 1)",
   });
 
+  const initialPositionsRef = useRef<{ x: number; y: number; vx: number; vy: number }[]>([]);
   const particlesRef = useRef<Particle[]>([]);
   const [particleCount, _setParticleCount] = useState(1500);
   const [particleSize, _setParticleSize] = useState(5);
@@ -62,10 +67,6 @@ const AnimatedCanvas = () => {
     particlePositions: Array(canvasDimensions.height).fill(0),
     totalParticles: 0,
   });
-
-  const handleCanvasClick = () => {
-    setIsPaused(!isPaused);
-  };
 
   const handleDiffractionSlitWidth = (wallWidth: number[]) => {
     setdiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
@@ -80,7 +81,7 @@ const AnimatedCanvas = () => {
       slitMaximum,
       contrast,
       wavelength,
-      speed,
+      speed: waveSpeed,
     }),
     [
       diffractionWall,
@@ -90,7 +91,7 @@ const AnimatedCanvas = () => {
       slitMaximum,
       contrast,
       wavelength,
-      speed,
+      waveSpeed,
     ],
   );
 
@@ -106,19 +107,31 @@ const AnimatedCanvas = () => {
     <Slider
       key={"Wavelength"}
       value={wavelength}
-      onValueChange={setWavelength}
+      onValueChange={(wavelength: number[]) => {
+        setisParticlePaused(true);
+        setWavelength(wavelength);
+      }}
       label="Wavelength"
       min={20}
       max={80}
       step={0.01}
     />,
     <Slider
-      key={"Speed"}
-      value={speed}
+      key={"Wave Speed"}
+      value={waveSpeed}
       onValueChange={setSpeed}
-      label="Speed"
+      label="Wave Speed"
       min={0.1}
       max={4}
+      step={0.01}
+    />,
+    <Slider
+      key={"Particle Speed"}
+      value={particleSpeed}
+      onValueChange={setParticleSpeed}
+      label="Particle Speed"
+      min={0.1}
+      max={1}
       step={0.01}
     />,
     <Slider
@@ -134,23 +147,52 @@ const AnimatedCanvas = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    const hiddenParticleCount = 10000;
     if (!canvas) return;
 
     const particles = [];
+    const initialPositions = [];
+
     for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: diffractionWall.x * Math.random(),
-        y: canvasDimensions.height * Math.random(),
-        vx: 5 * Math.random() + 2,
-        vy: 5 * (Math.random() - 0.5),
-        size: particleSize,
-        hue: 51,
-      });
+      const x = diffractionWall.x * Math.random();
+      const y = canvasDimensions.height * Math.random();
+      const vx = 5 * Math.random() + 2;
+
+      initialPositions.push({ x, y, vx, vy: 0 });
+      particles.push({ x, y, vx, vy: 0, size: particleSize, hue: 51, isActive: true });
     }
+
+    for (let i = 0; i < hiddenParticleCount; i++) {
+      const x = diffractionWall.x * Math.random();
+      const y = canvasDimensions.height * Math.random();
+      const vx = 5 * Math.random() + 2;
+
+      initialPositions.push({ x, y, vx, vy: 0 });
+      particles.push({ x, y, vx, vy: 0, size: particleSize, hue: 51, isActive: false });
+    }
+
     particlesRef.current = particles;
+    initialPositionsRef.current = initialPositions;
 
     particlesOnWallRef.current.particlePositions.fill(0);
     particlesOnWallRef.current.totalParticles = 0;
+  }, []);
+
+  const resetParticles = () => {
+    particlesRef.current.forEach((p, i) => {
+      const init = initialPositionsRef.current[i];
+      p.x = init.x;
+      p.y = init.y;
+      p.vx = init.vx;
+      p.vy = init.vy;
+    });
+
+    particlesOnWallRef.current.particlePositions.fill(0);
+    particlesOnWallRef.current.totalParticles = 0;
+  };
+
+  useEffect(() => {
+    resetParticles();
   }, [
     canvasRef,
     animationParams,
@@ -189,7 +231,8 @@ const AnimatedCanvas = () => {
       ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, canvasDimensions.width, canvasDimensions.height);
 
-      if (!isPaused) {
+      // time logic block
+      if (!isWavesPaused) {
         if (startTime.current === null) {
           startTime.current = timestamp;
         }
@@ -201,6 +244,14 @@ const AnimatedCanvas = () => {
         }
       }
 
+      const MAX_DELTA = 32; // cap at ~2 frames worth
+      const deltaT = Math.min(
+        previousTime.current !== null ? timestamp - previousTime.current : 0,
+        MAX_DELTA,
+      );
+
+      previousTime.current = isParticlePaused ? null : timestamp;
+
       if (isWaveActive) {
         drawInitialWaveRipple(
           ctx,
@@ -208,7 +259,7 @@ const AnimatedCanvas = () => {
           0,
           0,
           (wavelength[0] * 3) / 2,
-          speed[0],
+          waveSpeed[0],
           animationParams,
         );
 
@@ -218,7 +269,7 @@ const AnimatedCanvas = () => {
           diffractionWall.x,
           0,
           wavelength[0],
-          speed[0],
+          waveSpeed[0],
           animationParams,
         );
         blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams);
@@ -229,7 +280,8 @@ const AnimatedCanvas = () => {
           ctx,
           particlesRef.current,
           animationParams,
-          isPaused,
+          deltaT,
+          particleSpeed[0],
         );
 
         yPositionofParticlesOnWall.forEach((index) => {
@@ -238,11 +290,11 @@ const AnimatedCanvas = () => {
         particlesOnWallRef.current.totalParticles += yPositionofParticlesOnWall.length;
       }
 
-
       drawDiffractionWall(ctx, animationParams);
       drawReceptorWall(ctx, animationParams);
       drawLightIntensityOnWall(ctx, particlesOnWallRef.current, animationParams);
       drawLightIntensityCurve(ctx, animationParams);
+      //drawLightIntensityGradient(ctx, animationParams);
 
       animationFrameRef.current = requestAnimationFrame(animate);
     };
@@ -255,6 +307,7 @@ const AnimatedCanvas = () => {
       }
     };
   }, [
+    isParticlePaused,
     isParticleActive,
     isWaveActive,
     canvasRef,
@@ -262,9 +315,10 @@ const AnimatedCanvas = () => {
     receptorWall,
     diffractionWall,
     canvasDimensions,
-    isPaused,
-    speed,
+    isWavesPaused,
+    waveSpeed,
     wavelength,
+    particleSpeed,
     contrast,
   ]);
 
@@ -284,37 +338,63 @@ const AnimatedCanvas = () => {
           setIsParticleActive((prev) => !prev);
         }}
       >
-        Particles
+        Particle
       </button>
+      {isParticleActive ? (
+        isParticlePaused ? (
+          <button
+            className="hover:cursor-pointer"
+            onClick={() => {
+              setisParticlePaused(false);
+            }}
+          >
+            Start Particle Simulation
+          </button>
+        ) : (
+          <button
+            className="hover:cursor-pointer"
+            onClick={() => {
+              setisParticlePaused(true);
+            }}
+          >
+            Pause Particle Simulation
+          </button>
+        )
+      ) : null}
+      {isWaveActive ? (
+        isWavesPaused ? (
+          <button
+            className="hover:cursor-pointer"
+            onClick={() => {
+              setIsWavesPaused(false);
+            }}
+          >
+            Start Wave Simulation
+          </button>
+        ) : (
+          <button
+            className="hover:cursor-pointer"
+            onClick={() => {
+              setIsWavesPaused(true);
+            }}
+          >
+            Pause Wave Simulation
+          </button>
+        )
+      ) : null}
       <div ref={containerRef} className="simulation-container">
         <SimulationControls controllableSimulationVariables={controllableSimulationVariables} />
         <canvas
           ref={canvasRef}
           width={canvasDimensions.width}
           height={canvasDimensions.height}
-          onClick={handleCanvasClick}
           style={{
             border: "2px solid #4A5568",
-            cursor: "pointer",
             backgroundColor: "#1a202c",
             width: "100%",
             height: "100%",
           }}
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "10px",
-            left: "10px",
-            background: "rgba(0, 0, 0, 0.5)",
-            color: "white",
-            padding: "8px 12px",
-            borderRadius: "4px",
-            fontSize: "12px",
-          }}
-        >
-          {isPaused ? "Paused (click to resume)" : "Click to pause"}
-        </div>
       </div>
     </div>
   );

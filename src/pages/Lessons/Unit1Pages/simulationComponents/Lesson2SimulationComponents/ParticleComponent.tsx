@@ -17,7 +17,7 @@ const ParticleComponent = ({ animationParams }: { animationParams: AnimationPara
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { canvasDimensions, diffractionWall, wavelength, contrast, speed } = animationParams;
   const backgroundColor = "rgba(26, 32, 44, 0.4)";
-  const [particleCount, _setParticleCount] = useState(1500);
+  const [particleCount, _setParticleCount] = useState(500);
   const [particleSize, _setParticleSize] = useState(5);
 
   const particlesOnWallRef = useRef<ParticlesOnWall>({
