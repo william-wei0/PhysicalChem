@@ -9,19 +9,18 @@ import {
   blurIntersectionBetweenWaves,
   drawReceptorWall,
   drawLightIntensityCurve,
+  animateParticles,
+  drawLightIntensityOnWall,
   type AnimationParams,
   type DiffractionWall,
   type ReceptorWall,
-  animateParticles,
-  drawLightIntensityOnWall,
   type Particle,
   type ParticlesOnWall,
 } from "./Lesson2SimulationComponents/Lesson2SimulationAnimations";
 
-type CanvasView = "Waves" | "Particles";
-
 const AnimatedCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const backgroundColor = "rgba(26, 32, 44, 0.4)";
   const slitMinimum = 60;
   const slitMaximum = 250;
@@ -31,9 +30,9 @@ const AnimatedCanvas = () => {
   const startTime = useRef<number | null>(null);
   const elapsedTime = useRef<number>(0);
 
+  const [isWaveActive, setIsWavesActive] = useState(true);
+  const [isParticleActive, setIsParticleActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [_view, setView] = useState<CanvasView>("Particles");
   const [wavelength, setWavelength] = useState([50]);
   const [speed, setSpeed] = useState([0.5]);
   const [contrast, setConstrast] = useState([1.0]);
@@ -201,44 +200,51 @@ const AnimatedCanvas = () => {
           startTime.current = null;
         }
       }
-      drawInitialWaveRipple(
-        ctx,
-        currentTime.current,
-        0,
-        0,
-        (wavelength[0] * 3) / 2,
-        speed[0],
-        animationParams,
-      );
 
-      drawCircularRipple(
-        ctx,
-        currentTime.current,
-        diffractionWall.x,
-        0,
-        wavelength[0],
-        speed[0],
-        animationParams,
-      );
+      if (isWaveActive) {
+        drawInitialWaveRipple(
+          ctx,
+          currentTime.current,
+          0,
+          0,
+          (wavelength[0] * 3) / 2,
+          speed[0],
+          animationParams,
+        );
 
-      blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams);
+        drawCircularRipple(
+          ctx,
+          currentTime.current,
+          diffractionWall.x,
+          0,
+          wavelength[0],
+          speed[0],
+          animationParams,
+        );
+        blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams);
+      }
+
+      if (isParticleActive) {
+        const yPositionofParticlesOnWall = animateParticles(
+          ctx,
+          particlesRef.current,
+          animationParams,
+          isPaused,
+        );
+
+        yPositionofParticlesOnWall.forEach((index) => {
+          particlesOnWallRef.current.particlePositions[Math.round(index)] += 1;
+        });
+        particlesOnWallRef.current.totalParticles += yPositionofParticlesOnWall.length;
+      }
+
+
       drawDiffractionWall(ctx, animationParams);
       drawReceptorWall(ctx, animationParams);
-      const yPositionofParticlesOnWall = animateParticles(
-        ctx,
-        particlesRef.current,
-        animationParams,
-        isPaused,
-      );
-
-      yPositionofParticlesOnWall.forEach((index) => {
-        particlesOnWallRef.current.particlePositions[Math.round(index)] += 1;
-      });
-      particlesOnWallRef.current.totalParticles += yPositionofParticlesOnWall.length;
       drawLightIntensityOnWall(ctx, particlesOnWallRef.current, animationParams);
+      drawLightIntensityCurve(ctx, animationParams);
 
       animationFrameRef.current = requestAnimationFrame(animate);
-      drawLightIntensityCurve(ctx, animationParams);
     };
 
     animationFrameRef.current = requestAnimationFrame(animate);
@@ -249,6 +255,8 @@ const AnimatedCanvas = () => {
       }
     };
   }, [
+    isParticleActive,
+    isWaveActive,
     canvasRef,
     animationParams,
     receptorWall,
@@ -260,14 +268,12 @@ const AnimatedCanvas = () => {
     contrast,
   ]);
 
-
-
   return (
     <div>
       <button
         className="hover:cursor-pointer"
         onClick={() => {
-          setView("Waves");
+          setIsWavesActive((prev) => !prev);
         }}
       >
         Waves
@@ -275,7 +281,7 @@ const AnimatedCanvas = () => {
       <button
         className="hover:cursor-pointer"
         onClick={() => {
-          setView("Particles");
+          setIsParticleActive((prev) => !prev);
         }}
       >
         Particles
