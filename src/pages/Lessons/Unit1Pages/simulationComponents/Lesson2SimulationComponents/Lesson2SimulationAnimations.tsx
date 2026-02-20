@@ -526,7 +526,6 @@ export function animateParticles(
     particle.x += particle.vx * (deltaTimeMilliseconds * animationSpeed / 8.333) ;
     particle.y += particle.vy * (deltaTimeMilliseconds * animationSpeed / 8.333)  ;
 
-    // CCD: check if particle crossed the wall this frame
     const crossedWall = prevX < diffractionWall.x && particle.x >= diffractionWall.x;
 
     if (crossedWall) {
@@ -556,7 +555,7 @@ export function animateParticles(
       );
       gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.8)`); // brighter, more opaque center
       gradient.addColorStop(0.4, `hsla(${particle.hue}, 80%, 50%, 0.6)`); // hold opacity longer
-      gradient.addColorStop(0.7, `hsla(${particle.hue}, 80%, 40%, 0.1)`); // sharp drop-off here
+      gradient.addColorStop(0.7, `hsla(${particle.hue}, 80%, 40%, 0.01)`); // sharp drop-off here
       gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`); // fully transparent edge
 
       ctx.fillStyle = gradient;

@@ -1,4 +1,10 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../../../../components/accordion/accordion";
 import "../../styles/canvas.css";
 import Slider from "@/components/simulationControls/Slider";
 import SimulationControls from "@/components/simulationControls/SimulationControls";
@@ -19,6 +25,12 @@ import {
   type ParticlesOnWall,
 } from "./Lesson2SimulationComponents/Lesson2SimulationAnimations";
 
+type ControlAccordionProps = {
+  id: string;
+  title: string;
+  content?: React.ReactNode;
+};
+
 const AnimatedCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,6 +48,8 @@ const AnimatedCanvas = () => {
   const [isParticleActive, setIsParticleActive] = useState(false);
   const [isWavesPaused, setIsWavesPaused] = useState(false);
   const [isParticlePaused, setisParticlePaused] = useState(true);
+  const [showLightGradient, setShowLightGradient] = useState(true);
+  const [showLightDistribution, setShowLightDistribution] = useState(false);
   const [wavelength, setWavelength] = useState([50]);
   const [waveSpeed, setSpeed] = useState([0.5]);
   const [particleSpeed, setParticleSpeed] = useState([0.5]);
@@ -83,19 +97,56 @@ const AnimatedCanvas = () => {
       wavelength,
       speed: waveSpeed,
     }),
-    [
-      diffractionWall,
-      receptorWall,
-      canvasDimensions,
-      slitMinimum,
-      slitMaximum,
-      contrast,
-      wavelength,
-      waveSpeed,
-    ],
+    [diffractionWall, receptorWall, canvasDimensions, slitMinimum, slitMaximum, contrast, wavelength, waveSpeed],
   );
 
-  const controllableSimulationVariables: React.ReactNode[] = [
+  const WaveParticleSettings: ControlAccordionProps[] = [
+    {
+      id: "1",
+      title: "Wave Settings",
+      content: (
+        <>
+          <Slider
+            key={"Wave Speed"}
+            value={waveSpeed}
+            onValueChange={setSpeed}
+            label="Wave Speed"
+            min={0.1}
+            max={4}
+            step={0.01}
+          />
+          <Slider
+            key={"Contrast"}
+            value={contrast}
+            onValueChange={setConstrast}
+            label="Constrast"
+            min={0.1}
+            max={2.5}
+            step={0.01}
+          />
+        </>
+      ),
+    },
+    {
+      id: "2",
+      title: "Particle Settings",
+      content: (
+        <>
+          <Slider
+            key={"Particle Speed"}
+            value={particleSpeed}
+            onValueChange={setParticleSpeed}
+            label="Particle Speed"
+            min={0.1}
+            max={1}
+            step={0.01}
+          />
+        </>
+      ),
+    },
+  ];
+
+  const generalSimulationSettings: React.ReactNode[] = [
     <Slider
       key={"Diffraction"}
       value={[diffractionWall.slitSize]}
@@ -116,33 +167,18 @@ const AnimatedCanvas = () => {
       max={80}
       step={0.01}
     />,
-    <Slider
-      key={"Wave Speed"}
-      value={waveSpeed}
-      onValueChange={setSpeed}
-      label="Wave Speed"
-      min={0.1}
-      max={4}
-      step={0.01}
-    />,
-    <Slider
-      key={"Particle Speed"}
-      value={particleSpeed}
-      onValueChange={setParticleSpeed}
-      label="Particle Speed"
-      min={0.1}
-      max={1}
-      step={0.01}
-    />,
-    <Slider
-      key={"Contrast"}
-      value={contrast}
-      onValueChange={setConstrast}
-      label="Constrast"
-      min={0.1}
-      max={2.5}
-      step={0.01}
-    />,
+  ];
+
+  const allSettings: React.ReactNode[] = [
+    ...generalSimulationSettings,
+    <Accordion key="accordion" allowMultiple={true}>
+      {WaveParticleSettings.map((setting) => (
+        <AccordionItem id={setting.id} key={setting.id}>
+          <AccordionTrigger>{setting.title}</AccordionTrigger>
+          <AccordionContent>{setting.content}</AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>,
   ];
 
   useEffect(() => {
@@ -193,15 +229,7 @@ const AnimatedCanvas = () => {
 
   useEffect(() => {
     resetParticles();
-  }, [
-    canvasRef,
-    animationParams,
-    canvasDimensions,
-    receptorWall,
-    particleCount,
-    particleSize,
-    diffractionWall,
-  ]);
+  }, [canvasRef, animationParams, particleCount, particleSize]);
 
   useEffect(() => {
     const lightColor = [0, 83, 250];
@@ -245,23 +273,14 @@ const AnimatedCanvas = () => {
       }
 
       const MAX_DELTA = 32; // cap at ~2 frames worth
-      const deltaT = Math.min(
-        previousTime.current !== null ? timestamp - previousTime.current : 0,
-        MAX_DELTA,
-      );
+      const deltaT = Math.min(previousTime.current !== null ? timestamp - previousTime.current : 0, MAX_DELTA);
 
       previousTime.current = isParticlePaused ? null : timestamp;
 
       if (isWaveActive) {
-        drawInitialWaveRipple(
-          ctx,
-          currentTime.current,
-          0,
-          0,
-          (wavelength[0] * 3) / 2,
-          waveSpeed[0],
-          animationParams,
-        );
+        if (!isParticleActive) {
+          drawInitialWaveRipple(ctx, currentTime.current, 0, 0, (wavelength[0] * 3) / 2, waveSpeed[0], animationParams);
+        }
 
         drawCircularRipple(
           ctx,
@@ -292,9 +311,11 @@ const AnimatedCanvas = () => {
 
       drawDiffractionWall(ctx, animationParams);
       drawReceptorWall(ctx, animationParams);
-      drawLightIntensityOnWall(ctx, particlesOnWallRef.current, animationParams);
-      drawLightIntensityCurve(ctx, animationParams);
-      //drawLightIntensityGradient(ctx, animationParams);
+      if (showLightGradient) drawLightIntensityGradient(ctx, animationParams);
+      if (showLightDistribution) {
+        drawLightIntensityOnWall(ctx, particlesOnWallRef.current, animationParams);
+        drawLightIntensityCurve(ctx, animationParams);
+      }
 
       animationFrameRef.current = requestAnimationFrame(animate);
     };
@@ -310,6 +331,8 @@ const AnimatedCanvas = () => {
     isParticlePaused,
     isParticleActive,
     isWaveActive,
+    showLightDistribution,
+    showLightGradient,
     canvasRef,
     animationParams,
     receptorWall,
@@ -327,7 +350,10 @@ const AnimatedCanvas = () => {
       <button
         className="hover:cursor-pointer"
         onClick={() => {
-          setIsWavesActive((prev) => !prev);
+          setIsWavesPaused(true);
+          setIsWavesActive((prev) => {
+            return !prev;
+          });
         }}
       >
         Waves
@@ -335,6 +361,7 @@ const AnimatedCanvas = () => {
       <button
         className="hover:cursor-pointer"
         onClick={() => {
+          setisParticlePaused(true);
           setIsParticleActive((prev) => !prev);
         }}
       >
@@ -382,8 +409,26 @@ const AnimatedCanvas = () => {
           </button>
         )
       ) : null}
+      <button
+        className="hover:cursor-pointer"
+        onClick={() => {
+          setShowLightGradient(true);
+          setShowLightDistribution(false);
+        }}
+      >
+        Show Light Gradient
+      </button>
+      <button
+        className="hover:cursor-pointer"
+        onClick={() => {
+          setShowLightDistribution(true);
+          setShowLightGradient(false);
+        }}
+      >
+        Show Light Distribution
+      </button>
       <div ref={containerRef} className="simulation-container">
-        <SimulationControls controllableSimulationVariables={controllableSimulationVariables} />
+        <SimulationControls controllableSimulationVariables={allSettings} />
         <canvas
           ref={canvasRef}
           width={canvasDimensions.width}

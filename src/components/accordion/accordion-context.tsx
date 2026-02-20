@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 
 export const AccordionContext = React.createContext<{
-    activeContent: string | null;
+    activeContent: string[];
     handleTrigger: (id: string | null) => void;
+    allowMultiple: boolean;
 } | null>(null);
 export const AccordionItemContext = React.createContext<{ 
     id: string | null 

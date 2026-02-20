@@ -95,7 +95,6 @@ export default function Sidebar({
     <div className="bg-zinc-50 flex-1 border border-black relative">
       {isOpen && (
         <div className="p-4">
-          {" "}
           <MinimizeSidebarButton
             onClick={onToggle}
             className="absolute right-2 top-2 z-10"
