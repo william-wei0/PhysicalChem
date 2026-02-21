@@ -43,12 +43,16 @@ const AnimatedCanvas = () => {
   const startTime = useRef<number | null>(null);
   const elapsedTime = useRef<number>(0);
   const previousTime = useRef<number | null>(null);
+  const lastUIUpdate = useRef(0);
+
 
   const [waveStatus, setWaveStatus] = useState<Status>("active");
   const [particleStatus, setParticleStatus] = useState<Status>("hidden");
   const [showLightGradient, setShowLightGradient] = useState(true);
   const [showLightDistribution, setShowLightDistribution] = useState(false);
-  const [numOfParticlesToHitReceptorWall, setNumOfParticlesHitReceptorWall] = useState([0]);
+
+  const [totalParticlesHitReceptorWall, setTotalParticlesHitReceptorWall] = useState(0);
+  const [numOfParticlesToHitReceptorWall, setNumOfParticlesHitReceptorWall] = useState([1000]);
   const [wavelength, setWavelength] = useState([50]);
   const [waveSpeed, setSpeed] = useState([2.0]);
   const [particleSpeed, setParticleSpeed] = useState([0.5]);
@@ -81,11 +85,6 @@ const AnimatedCanvas = () => {
     totalParticles: 0,
   });
 
-  const handleDiffractionSlitWidth = (wallWidth: number[]) => {
-    setParticleStatus("new");
-    setdiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
-  };
-
   const animationParams = useMemo<AnimationParams>(
     () => ({
       diffractionWall,
@@ -99,127 +98,6 @@ const AnimatedCanvas = () => {
     }),
     [diffractionWall, receptorWall, canvasDimensions, slitMinimum, slitMaximum, contrast, wavelength, waveSpeed],
   );
-  const accordionTriggerClassName =
-    "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400";
-  const WaveParticleSettings: ControlAccordionProps[] = [
-    {
-      id: "General Settings",
-      title: "General Settings",
-      triggerClassName: accordionTriggerClassName,
-      content: (
-        <>
-          <Slider
-            key={"Diffraction"}
-            value={[diffractionWall.slitSize]}
-            onValueChange={handleDiffractionSlitWidth}
-            label="Diffraction Slit Size (nm)"
-            min={slitMinimum}
-            max={slitMaximum}
-          />
-          <Slider
-            key={"Wavelength"}
-            value={wavelength}
-            onValueChange={(wavelength: number[]) => {
-              setParticleStatus("paused");
-              setWavelength(wavelength);
-            }}
-            label="Wavelength"
-            min={20}
-            max={80}
-            step={0.01}
-          />
-        </>
-      ),
-    },
-    {
-      id: "Wave Settings",
-      title: "Wave Simulation Settings",
-      triggerClassName: accordionTriggerClassName,
-      content: (
-        <>
-          <StartSimulationButton
-            className="mb-2"
-            onClick={() => {
-              setWaveStatus((prev: Status) => {
-                if (prev === "active") return "paused";
-                return "active";
-              });
-            }}
-            ariaPressed={waveStatus === "active"}
-          >
-            {waveStatus === "active"
-              ? "Pause Wave Simulation"
-              : waveStatus === "paused"
-                ? "Resume Wave Simulation"
-                : "Start Wave Simulation"}
-          </StartSimulationButton>
-          <Slider
-            key={"Wave Speed"}
-            value={waveSpeed}
-            onValueChange={setSpeed}
-            label="Wave Speed"
-            min={0.1}
-            max={4}
-            step={0.01}
-          />
-          <Slider
-            key={"Contrast"}
-            value={contrast}
-            onValueChange={setConstrast}
-            label="Constrast"
-            min={0.1}
-            max={2.5}
-            step={0.01}
-          />
-        </>
-      ),
-    },
-    {
-      id: "Particle Settings",
-      title: "Particle Simulation Settings",
-      triggerClassName: accordionTriggerClassName,
-      content: (
-        <>
-          <StartSimulationButton
-            className="mb-2"
-            onClick={() => {
-              setParticleStatus((prev: Status) => {
-                if (prev === "active") return "paused";
-                return "active";
-              });
-            }}
-            ariaPressed={particleStatus === "active"}
-          >
-            {particleStatus === "active"
-              ? "Pause Particle Simulation"
-              : particleStatus === "paused" || particleStatus === "hidden"
-                ? "Resume Particle Simulation"
-                : "Start Particle Simulation"}
-          </StartSimulationButton>
-
-          <Slider
-            key={"Number of Particles "}
-            value={numOfParticlesToHitReceptorWall}
-            onValueChange={setNumOfParticlesHitReceptorWall}
-            label="Number of Particles To Simulate"
-            min={100}
-            max={100000}
-            step={100}
-          />
-
-          <Slider
-            key={"Particle Speed"}
-            value={particleSpeed}
-            onValueChange={setParticleSpeed}
-            label="Particle Speed"
-            min={0.1}
-            max={1}
-            step={0.01}
-          />
-        </>
-      ),
-    },
-  ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -311,10 +189,15 @@ const AnimatedCanvas = () => {
         }
       }
 
-      const MAX_DELTA = 32; // cap at ~2 frames worth
+      const MAX_DELTA = 32;
       const deltaT = Math.min(previousTime.current !== null ? timestamp - previousTime.current : 0, MAX_DELTA);
-
       previousTime.current = particleStatus === "active" ? timestamp : null;
+
+      // Needed to update the progress in control panel since ref cannot be used during render
+      if (timestamp - lastUIUpdate.current > 100) {
+        setTotalParticlesHitReceptorWall(particlesOnWallRef.current.totalParticles);
+        lastUIUpdate.current = timestamp;
+      }
 
       if (waveStatus !== "hidden") {
         if (particleStatus === "hidden") {
@@ -344,8 +227,12 @@ const AnimatedCanvas = () => {
 
         yPositionofParticlesOnWall.forEach((index) => {
           particlesOnWallRef.current.particlePositions[Math.round(index)] += 1;
+          particlesOnWallRef.current.totalParticles += 1;
+          if (particlesOnWallRef.current.totalParticles === numOfParticlesToHitReceptorWall[0]) {
+          setParticleStatus("paused");
+        }
         });
-        particlesOnWallRef.current.totalParticles += yPositionofParticlesOnWall.length;
+
       }
 
       drawDiffractionWall(ctx, animationParams);
@@ -380,7 +267,146 @@ const AnimatedCanvas = () => {
     wavelength,
     particleSpeed,
     contrast,
+    numOfParticlesToHitReceptorWall,
   ]);
+
+  const accordionTriggerClassName =
+    "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400";
+
+  const clampedlParticlesHitReceptorWall = Math.min(totalParticlesHitReceptorWall, numOfParticlesToHitReceptorWall[0])
+  const WaveParticleSettings: ControlAccordionProps[] = [
+    {
+      id: "General Settings",
+      title: "General Settings",
+      triggerClassName: accordionTriggerClassName,
+      content: (
+        <>
+          <Slider
+            key={"Diffraction"}
+            value={[diffractionWall.slitSize]}
+            onValueChange={(wallWidth: number[]) => {
+              resetParticles();
+              resetParticlesOnWall();
+              setdiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
+            }}
+            label="Diffraction Slit Size (nm)"
+            min={slitMinimum}
+            max={slitMaximum}
+          />
+          <Slider
+            key={"Wavelength"}
+            value={wavelength}
+            onValueChange={(wavelength: number[]) => {
+              resetParticles();
+              resetParticlesOnWall();
+              setWavelength(wavelength);
+            }}
+            label="Wavelength"
+            min={20}
+            max={80}
+            step={0.01}
+          />
+        </>
+      ),
+    },
+    {
+      id: "Wave Settings",
+      title: "Wave Simulation Settings",
+      triggerClassName: accordionTriggerClassName,
+      content: (
+        <>
+          <StartSimulationButton
+            className="mb-2"
+            onClick={() => {
+              setWaveStatus((prev: Status) => {
+                if (prev === "active") return "paused";
+                return "active";
+              });
+            }}
+            ariaPressed={waveStatus === "active"}
+          >
+            {waveStatus === "active"
+              ? "Pause Wave Simulation"
+              : waveStatus === "paused"
+                ? "Resume Wave Simulation"
+                : "Start Wave Simulation"}
+          </StartSimulationButton>
+          <Slider
+            key={"Wave Speed"}
+            value={waveSpeed}
+            onValueChange={setSpeed}
+            label="Wave Speed"
+            min={0.1}
+            max={4}
+            step={0.01}
+          />
+          <Slider
+            key={"Contrast"}
+            value={contrast}
+            onValueChange={setConstrast}
+            label="Constrast"
+            min={0.1}
+            max={2.5}
+            step={0.01}
+          />
+        </>
+      ),
+    },
+    {
+      id: "Particle Settings",
+      title: "Particle Simulation Settings",
+      triggerClassName: accordionTriggerClassName,
+      content: (
+        <>
+          <StartSimulationButton
+            className="mb-2"
+            onClick={() => {
+              setParticleStatus((prev: Status) => {
+                if (prev === "active") return "paused";
+                return "active";
+              });
+            }}
+            ariaPressed={particleStatus === "active"}
+          >
+            {particleStatus === "active"
+              ? "Pause Particle Simulation"
+              : particleStatus === "paused" || particleStatus === "hidden"
+                ? "Resume Particle Simulation"
+                : "Start Particle Simulation"}
+          </StartSimulationButton>
+                    <div className="px-4 space-y-2 mb-4 mt-2">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium">Simulating Particles</p>
+                <p className="text-xs text-muted-foreground">{clampedlParticlesHitReceptorWall}/{numOfParticlesToHitReceptorWall[0]}</p>
+              </div>
+              <span className="text-sm font-medium">{Math.round((clampedlParticlesHitReceptorWall / numOfParticlesToHitReceptorWall[0]) * 100)}%</span>
+            </div>
+            <Progress value={Math.round((clampedlParticlesHitReceptorWall / numOfParticlesToHitReceptorWall[0]) * 100)} />
+          </div>
+          <Slider
+            key={"Number of Particles "}
+            value={numOfParticlesToHitReceptorWall}
+            onValueChange={setNumOfParticlesHitReceptorWall}
+            label="Number of Particles To Simulate"
+            min={100}
+            max={100000}
+            step={100}
+          />
+
+          <Slider
+            key={"Particle Speed"}
+            value={particleSpeed}
+            onValueChange={setParticleSpeed}
+            label="Particle Speed"
+            min={0.1}
+            max={1}
+            step={0.01}
+          />
+        </>
+      ),
+    },
+  ];
 
   return (
     <div>
