@@ -27,9 +27,9 @@ export default function SimulationControls({
       >
         <CloseButtonHighlight
           onClick={handleClick}
-          className="right-3 top-3 z-10 absolute"
+          className="right-1 top-3 z-10 absolute"
         />
-        <h2 className="text-center font-bold mt-6 text-[22px]">
+        <h2 className="text-center font-bold mt-6 mb-2 text-[24px]">
           Simulation Controls
         </h2>
         {controllableSimulationVariables}

@@ -21,7 +21,7 @@ export default function Slider({
   };
 
   return (
-    <div className="w-full p-4 bg-transparent rounded-lg">
+    <div className="w-full px-4 pb-2 bg-transparent rounded-lg">
       <h2 className="font-bold text-center text-gray-800">{label}</h2>
       <div className="">
         <div className="relative">
@@ -32,7 +32,7 @@ export default function Slider({
             step={step}
             value={currentValue}
             onChange={(e) => handleSliderChange(Number(e.target.value))}
-            className="w-full h-2 cursor-pointer "
+            className="w-full cursor-pointer "
             style={{
               background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`,
             }}
