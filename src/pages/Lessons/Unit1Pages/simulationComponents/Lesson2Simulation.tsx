@@ -98,6 +98,7 @@ const AnimatedCanvas = () => {
       contrast,
       wavelength,
       speed: waveSpeed,
+      lightColor: [0, 83, 250],
     }),
     [diffractionWall, receptorWall, canvasDimensions, slitMinimum, slitMaximum, contrast, wavelength, waveSpeed],
   );
@@ -111,8 +112,8 @@ const AnimatedCanvas = () => {
     const initialPositions = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const x = diffractionWall.x * Math.random();
-      const y = canvasDimensions.height * Math.random();
+      const x = animationParams.diffractionWall.x * Math.random();
+      const y = animationParams.canvasDimensions.height * Math.random();
       const vx = 5 * Math.random() + 2;
 
       initialPositions.push({ x, y, vx, vy: 0 });
@@ -120,8 +121,8 @@ const AnimatedCanvas = () => {
     }
 
     for (let i = 0; i < hiddenParticleCount; i++) {
-      const x = diffractionWall.x * Math.random();
-      const y = canvasDimensions.height * Math.random();
+      const x = animationParams.diffractionWall.x * Math.random();
+      const y = animationParams.canvasDimensions.height * Math.random();
       const vx = 5 * Math.random() + 2;
 
       initialPositions.push({ x, y, vx, vy: 0 });
@@ -130,7 +131,7 @@ const AnimatedCanvas = () => {
 
     particlesRef.current = particles;
     initialPositionsRef.current = initialPositions;
-  }, [diffractionWall.x, canvasDimensions.height, particleCount, particleSize]);
+  }, [animationParams, particleCount, particleSize]);
 
   const resetParticles = () => {
     particlesRef.current.forEach((p, i) => {
@@ -164,7 +165,6 @@ const AnimatedCanvas = () => {
   }, [animationParams, particleCount, particleSize]);
 
   useEffect(() => {
-    const lightColor = [0, 83, 250];
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -175,21 +175,21 @@ const AnimatedCanvas = () => {
     const scaleFactor = 4;
     const drawCircularRipple = makeRippleRenderer(
       scaleFactor,
-      receptorWall.x - diffractionWall.x,
-      canvasDimensions.height,
-      lightColor,
+      animationParams.receptorWall.x - animationParams.diffractionWall.x,
+      animationParams.canvasDimensions.height,
+      animationParams.lightColor,
     );
 
     const drawInitialWaveRipple = makeInitialRippleRenderer(
       scaleFactor,
-      diffractionWall.x + diffractionWall.wallWidth / 2,
-      canvasDimensions.height,
-      lightColor,
+      animationParams.diffractionWall.x + animationParams.diffractionWall.wallWidth / 2,
+      animationParams.canvasDimensions.height,
+      animationParams.lightColor,
     );
 
     const animate = (timestamp: number) => {
       ctx.fillStyle = backgroundColor;
-      ctx.fillRect(0, 0, canvasDimensions.width, canvasDimensions.height);
+      ctx.fillRect(0, 0, animationParams.canvasDimensions.width, animationParams.canvasDimensions.height);
 
       if (waveStatus === "in_progress") {
         if (startTime.current === null) {
@@ -215,16 +215,24 @@ const AnimatedCanvas = () => {
 
       if (waveStatus !== "hidden") {
         if (particleStatus === "hidden" || particleStatus === "first_load") {
-          drawInitialWaveRipple(ctx, currentTime.current, 0, 0, (wavelength[0] * 3) / 2, waveSpeed[0], animationParams);
+          drawInitialWaveRipple(
+            ctx,
+            currentTime.current,
+            0,
+            0,
+            (animationParams.wavelength[0] * 3) / 2,
+            animationParams.speed[0],
+            animationParams,
+          );
         }
 
         drawCircularRipple(
           ctx,
           currentTime.current,
-          diffractionWall.x,
+          animationParams.diffractionWall.x,
           0,
-          wavelength[0],
-          waveSpeed[0],
+          animationParams.wavelength[0],
+          animationParams.speed[0],
           animationParams,
         );
         blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams);
@@ -260,8 +268,8 @@ const AnimatedCanvas = () => {
       drawReceptorWall(ctx, animationParams);
       if (showLightGradient) drawLightIntensityGradient(ctx, animationParams);
       else {
-        drawLightIntensityOnWall(ctx, particlesOnWallRef.current, animationParams);
         drawLightIntensityCurve(ctx, animationParams);
+        drawLightIntensityOnWall(ctx, particlesOnWallRef.current, animationParams);
       }
 
       animationFrameRef.current = requestAnimationFrame(animate);
@@ -274,27 +282,16 @@ const AnimatedCanvas = () => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [
-    waveStatus,
-    particleStatus,
-    showLightGradient,
-    canvasRef,
-    animationParams,
-    receptorWall,
-    diffractionWall,
-    canvasDimensions,
-    waveSpeed,
-    wavelength,
-    particleSpeed,
-    contrast,
-    numOfParticlesToHitReceptorWall,
-  ]);
+  }, [waveStatus, particleStatus, showLightGradient, animationParams, particleSpeed, numOfParticlesToHitReceptorWall]);
 
   const accordionTriggerClassName =
     "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400 transition-colors duration-200";
 
   const buttonClassName =
-    "px-4 py-2 text-lg font-medium transition-all duration-200 border-b-2 hover:cursor-pointer hover:bg-zinc-200 transition-colors duration-200";
+    "px-4 py-2 text-xl font-medium transition-all duration-200 hover:cursor-pointer hover:bg-zinc-200 transition-colors duration-200";
+
+  const buttonActiveClassName = "text-black bg-zinc-100";
+  const buttonInactiveClassName = "text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200 hover:border-zinc-400";
 
   const clampedParticlesHitReceptorWall = Math.min(totalParticlesOnReceptorWall, numOfParticlesToHitReceptorWall[0]);
   const completionPercent = Math.round((clampedParticlesHitReceptorWall / numOfParticlesToHitReceptorWall[0]) * 100);
@@ -401,7 +398,9 @@ const AnimatedCanvas = () => {
               ? "Pause Particle Simulation"
               : particleStatus === "paused" || particleStatus === "hidden"
                 ? "Resume Particle Simulation"
-                : "Start Particle Simulation"}
+                : particleStatus === "completed"
+                  ? "Continue Simulation?"
+                  : "Start Particle Simulation"}
           </StartSimulationButton>
           <ResetButton
             className="mb-3"
@@ -459,44 +458,47 @@ const AnimatedCanvas = () => {
   return (
     <div className="flex flex-col">
       <div
-        className="grid border-b border-zinc-300 rounded-t-lg"
-        style={{ gridTemplateColumns: `${receptorWall.x * scale + 3}px 1fr` }}
+        className="grid border-x-4 border-t-4 border-black bg-zinc-100"
+        style={{ gridTemplateColumns: `${receptorWall.x * scale}px 1fr` }}
       >
-        <div className="flex">
+        <div className="flex border-black border-r-2">
           <button
-            className={`${buttonClassName}
-      ${
-        waveStatus !== "hidden"
-          ? "border-blue-500 text-blue-600 bg-white"
-          : "border-transparent text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200 hover:border-zinc-400"
-      }`}
+            className={`${buttonClassName} border-black border-r-2
+      ${waveStatus !== "hidden" ? buttonActiveClassName : buttonInactiveClassName}`}
             onClick={() => setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))}
           >
             {waveStatus !== "hidden" ? "Hide Wave Simulation" : "Show Wave Simulation"}
           </button>
           <button
-            className={`${buttonClassName} ml-auto
+            className={`${buttonClassName} border-black border-r-2
       ${
-        particleStatus !== "hidden" && particleStatus !== "first_load"
-          ? "border-blue-500 text-blue-600 bg-white"
-          : "border-transparent text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200 hover:border-zinc-400"
+        particleStatus !== "hidden" && particleStatus !== "first_load" ? buttonActiveClassName : buttonInactiveClassName
       }`}
-            onClick={() => setParticleStatus((prev) => (prev !== "hidden" && prev !== "first_load" ? "hidden" : "paused"))}
+            onClick={() =>
+              setParticleStatus((prev) => (prev !== "hidden" && prev !== "first_load" ? "hidden" : "paused"))
+            }
           >
-            {particleStatus !== "hidden" && particleStatus !== "first_load" ? "Hide Particle Simulation" : "Show Particle Simulation"}
+            {particleStatus !== "hidden" && particleStatus !== "first_load"
+              ? "Hide Particle Simulation"
+              : "Show Particle Simulation"}
           </button>
         </div>
 
         <button
-          className={`${buttonClassName}
-      ${
-        showLightGradient
-          ? "border-blue-500 text-blue-600 bg-white"
-          : "border-transparent text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200 hover:border-zinc-400"
-      }`}
+          className={`${buttonClassName} buttonActiveClassName`}
           onClick={() => setShowLightGradient((prev) => !prev)}
         >
-          {showLightGradient ? "Light Gradient" : "Light Distribution"}
+          {showLightGradient ? (
+            <div>
+              <p className="">Light Wave Gradient</p>
+              <p className="text-xs">Click to show expected light distribution</p>
+            </div>
+          ) : (
+            <div>
+              <p className="">Light Particle Distribution</p>
+              <p className="text-xs">Click to show light gradient</p>
+            </div>
+          )}
         </button>
       </div>
       {/* Canvas + Controls */}
@@ -521,7 +523,7 @@ const AnimatedCanvas = () => {
           width={canvasDimensions.width}
           height={canvasDimensions.height}
           style={{
-            border: "2px solid #4A5568",
+            border: "4px solid black",
             backgroundColor: "#1a202c",
           }}
         />

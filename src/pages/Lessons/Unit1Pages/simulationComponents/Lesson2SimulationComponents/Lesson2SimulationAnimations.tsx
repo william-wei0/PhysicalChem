@@ -38,6 +38,7 @@ export interface AnimationParams {
   contrast: number[];
   wavelength: number[];
   speed: number[];
+  lightColor: [number, number, number];
 }
 
 export interface Particle {
@@ -95,7 +96,7 @@ const calculateLightIntensity = (y: number, params: AnimationParams) => {
 
   if (Math.abs(beta) < 1e-10) return receptorWall.width * 0.8;
 
-  return (receptorWall.width * 0.8) * (Math.sin(beta) / beta) ** 2;
+  return receptorWall.width * 0.8 * (Math.sin(beta) / beta) ** 2;
 };
 
 export function drawLightIntensityOnWall(
@@ -104,7 +105,7 @@ export function drawLightIntensityOnWall(
   params: AnimationParams,
 ) {
   const { receptorWall } = params;
-  ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+  ctx.fillStyle = "rgba(255, 181, 32, 1.0)";
   const maxHeight = receptorWall.width * 0.8;
 
   function gaussianSmooth(histogram: number[], sigma: number) {
@@ -132,7 +133,7 @@ export function drawLightIntensityOnWall(
   }
 
   const { particlePositions } = particlesOnWall;
-  const sigma = Math.min(1 + Math.sqrt(particlesOnWall.totalParticles) * 0.01, 3);
+  const sigma = Math.min(1 + Math.sqrt(particlesOnWall.totalParticles) * 0.005, 1);
   const smoothed = gaussianSmooth(particlePositions, sigma);
 
   let maxBin = 0;
@@ -146,19 +147,34 @@ export function drawLightIntensityOnWall(
   }
 }
 
-export function randomVelocityXY(
-  speed: number,
-  particlePositionY: number,
-  params: AnimationParams,
-) {
+export function drawLightIntensityCurve(ctx: CanvasRenderingContext2D, params: AnimationParams) {
+  const { receptorWall, canvasDimensions } = params;
+
+  ctx.fillStyle = "rgba(0, 0, 220, 1.0)";
+  for (let y = 0; y < canvasDimensions.height; y += 0.5) {
+    const lightIntensity = calculateLightIntensity(y, params);
+    ctx.fillRect(receptorWall.x, y, lightIntensity, 0.5);
+  }
+}
+
+export function drawLightIntensityGradient(ctx: CanvasRenderingContext2D, params: AnimationParams) {
+  const { receptorWall, canvasDimensions } = params;
+
+  for (let y = 0; y < canvasDimensions.height; y += 5) {
+    const lightIntensity = calculateLightIntensity(y, params);
+    ctx.fillStyle = `rgba(0, 65, 206, ${Math.min(lightIntensity / 10, 1.0)})`;
+    ctx.fillRect(receptorWall.x, y, receptorWall.width, 5);
+  }
+}
+
+export function randomVelocityXY(speed: number, particlePositionY: number, params: AnimationParams) {
   const { canvasDimensions, diffractionWall, receptorWall } = params;
   const xMin = 0;
   const xMax = canvasDimensions.height;
   const maxPDF = receptorWall.width * 0.8;
   speed = speed * Math.random() + 2;
   while (true) {
-    const randomHeightOnReceptorWall =
-      (Math.random() - 0.5) * (xMax - xMin + 4000) + canvasDimensions.height / 2;
+    const randomHeightOnReceptorWall = (Math.random() - 0.5) * (xMax - xMin + 4000) + canvasDimensions.height / 2;
     const randomYForCalculation = Math.random() * maxPDF;
 
     let sincSquared;
@@ -175,26 +191,6 @@ export function randomVelocityXY(
       );
       return [speed * Math.cos(angle), speed * Math.sin(angle)];
     }
-  }
-}
-
-export function drawLightIntensityCurve(ctx: CanvasRenderingContext2D, params: AnimationParams) {
-  const { receptorWall, canvasDimensions } = params;
-
-  ctx.fillStyle = "rgba(255, 0, 255, 0.2)";
-  for (let y = 0; y < canvasDimensions.height; y += 0.5) {
-    const lightIntensity = calculateLightIntensity(y, params);
-    ctx.fillRect(receptorWall.x, y, lightIntensity, 0.5);
-  }
-}
-
-export function drawLightIntensityGradient(ctx: CanvasRenderingContext2D, params: AnimationParams) {
-  const { receptorWall, canvasDimensions } = params;
-
-  for (let y = 0; y < canvasDimensions.height; y += 5) {
-    const lightIntensity = calculateLightIntensity(y, params);
-    ctx.fillStyle = `rgba(255, 0, 255, ${Math.min(lightIntensity / 50, 1.0)})`;
-    ctx.fillRect(receptorWall.x, y, receptorWall.width, 5);
   }
 }
 
@@ -222,12 +218,7 @@ function precomputeInitialRipple(
 }
 
 // Renderer factory functions
-export function makeInitialRippleRenderer(
-  scaleFactor: number,
-  outW: number,
-  outH: number,
-  rgb = [255, 231, 0],
-) {
+export function makeInitialRippleRenderer(scaleFactor: number, outW: number, outH: number, rgb = [255, 231, 0]) {
   const simW = Math.round(outW / scaleFactor);
   const simH = Math.round(outH / scaleFactor);
 
@@ -366,12 +357,7 @@ function precomputeWaveAB(
   return { A, B, omega, width, height };
 }
 
-export function makeRippleRenderer(
-  scaleFactor: number,
-  outW: number,
-  outH: number,
-  rgb = [255, 231, 0],
-) {
+export function makeRippleRenderer(scaleFactor: number, outW: number, outH: number, rgb = [255, 231, 0]) {
   const simW = Math.round(outW / scaleFactor);
   const simH = Math.round(outH / scaleFactor);
 
@@ -459,39 +445,20 @@ export function makeRippleRenderer(
   };
 }
 
-function resetParticle(
-  particle: Particle,
-  canvasDimensions: CanvasDimensions,
-): void {
+function resetParticle(particle: Particle, canvasDimensions: CanvasDimensions): void {
   particle.vx = 5 * Math.random() + 2;
   particle.vy = 0;
   particle.x = 0;
   particle.y = canvasDimensions.height * Math.random();
 }
 
-function isInSlit(
-  particle: Particle,
-  canvasDimensions: CanvasDimensions,
-  diffractionWall: DiffractionWall,
-): boolean {
+function isInSlit(particle: Particle, canvasDimensions: CanvasDimensions, diffractionWall: DiffractionWall): boolean {
   const center = canvasDimensions.height / 2;
-  return (
-    particle.y >= center - diffractionWall.slitSize / 2 &&
-    particle.y <= center + diffractionWall.slitSize / 2
-  );
+  return particle.y >= center - diffractionWall.slitSize / 2 && particle.y <= center + diffractionWall.slitSize / 2;
 }
 
-function isOutOfBounds(
-  particle: Particle,
-  canvasDimensions: CanvasDimensions,
-  receptorWall: ReceptorWall,
-): boolean {
-  return (
-    particle.x < 0 ||
-    particle.x > receptorWall.x ||
-    particle.y < 0 ||
-    particle.y > canvasDimensions.height
-  );
+function isOutOfBounds(particle: Particle, canvasDimensions: CanvasDimensions, receptorWall: ReceptorWall): boolean {
+  return particle.x < 0 || particle.x > receptorWall.x || particle.y < 0 || particle.y > canvasDimensions.height;
 }
 
 function handleWallCollision(
@@ -500,7 +467,6 @@ function handleWallCollision(
   diffractionWall: DiffractionWall,
   params: AnimationParams,
 ): void {
-
   if (isInSlit(particle, canvasDimensions, diffractionWall)) {
     const newVelocity = randomVelocityXY(5, particle.y, params);
     particle.vx = newVelocity[0];
@@ -515,7 +481,7 @@ export function animateParticles(
   particles: Particle[],
   params: AnimationParams,
   deltaTimeMilliseconds: number,
-  animationSpeed: number
+  animationSpeed: number,
 ): number[] {
   const { receptorWall, diffractionWall, canvasDimensions } = params;
   const yPositionofParticlesOnWall: number[] = [];
@@ -523,8 +489,8 @@ export function animateParticles(
   particles.forEach((particle) => {
     const prevX = particle.x;
 
-    particle.x += particle.vx * (deltaTimeMilliseconds * animationSpeed / 8.333) ;
-    particle.y += particle.vy * (deltaTimeMilliseconds * animationSpeed / 8.333)  ;
+    particle.x += particle.vx * ((deltaTimeMilliseconds * animationSpeed) / 8.333);
+    particle.y += particle.vy * ((deltaTimeMilliseconds * animationSpeed) / 8.333);
 
     const crossedWall = prevX < diffractionWall.x && particle.x >= diffractionWall.x;
 
@@ -545,17 +511,10 @@ export function animateParticles(
     }
 
     if (particle.isActive) {
-      const gradient = ctx.createRadialGradient(
-        particle.x,
-        particle.y,
-        0,
-        particle.x,
-        particle.y,
-        particle.size * 2,
-      );
+      const gradient = ctx.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.size * 2);
       gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.8)`); // brighter, more opaque center
       gradient.addColorStop(0.4, `hsla(${particle.hue}, 80%, 50%, 0.6)`); // hold opacity longer
-      gradient.addColorStop(0.7, `hsla(${particle.hue}, 80%, 40%, 0.01)`); // sharp drop-off here
+      gradient.addColorStop(0.6, `hsla(${particle.hue}, 80%, 40%, 0.01)`); // sharp drop-off here
       gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`); // fully transparent edge
 
       ctx.fillStyle = gradient;
