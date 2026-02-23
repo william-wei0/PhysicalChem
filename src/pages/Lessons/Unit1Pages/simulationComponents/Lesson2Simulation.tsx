@@ -36,7 +36,7 @@ type ParticleStatus = Status | "completed" | "first_load" | "new";
 
 const AnimatedCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const backgroundColor = "rgba(26, 32, 44, 0.4)";
   const slitMinimum = 60;
@@ -55,18 +55,18 @@ const AnimatedCanvas = () => {
 
   const [totalParticlesOnReceptorWall, setTotalParticlesHitReceptorWall] = useState(0);
   const [numOfParticlesToHitReceptorWall, setNumOfParticlesHitReceptorWall] = useState([10000]);
-  const [wavelength, setWavelength] = useState([50]);
+  const [wavelength, setWavelength] = useState([30]);
   const [waveSpeed, setSpeed] = useState([2.0]);
   const [particleSpeed, setParticleSpeed] = useState([0.5]);
   const [contrast, setConstrast] = useState([1.0]);
   const [canvasDimensions, _setDimensions] = useState<CanvasDimensions>({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 1400,
+    height: 800,
   });
 
   const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
     x: canvasDimensions.width * 0.2,
-    slitSize: 125,
+    slitSize: 150,
     wallWidth: 20,
     color: "rgba(255, 255, 255, 1)",
   });
@@ -79,7 +79,7 @@ const AnimatedCanvas = () => {
 
   const initialPositionsRef = useRef<{ x: number; y: number; vx: number; vy: number }[]>([]);
   const particlesRef = useRef<Particle[]>([]);
-  
+
   const [particleCount, _setParticleCount] = useState(1500);
   const [particleSize, _setParticleSize] = useState(5);
 
@@ -144,6 +144,21 @@ const AnimatedCanvas = () => {
     particlesOnWallRef.current.totalParticles = 0;
   };
 
+  const [canvasRenderedWidth, setCanvasRenderedWidth] = useState(0);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const observer = new ResizeObserver(([entry]) => {
+      setCanvasRenderedWidth(entry.contentRect.width);
+    });
+
+    observer.observe(canvasRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const scale = canvasRenderedWidth / canvasDimensions.width;
+
   useEffect(() => {
     resetParticles();
   }, [animationParams, particleCount, particleSize]);
@@ -160,7 +175,7 @@ const AnimatedCanvas = () => {
     const scaleFactor = 4;
     const drawCircularRipple = makeRippleRenderer(
       scaleFactor,
-      receptorWall.x - diffractionWall.x - diffractionWall.wallWidth,
+      receptorWall.x - diffractionWall.x,
       canvasDimensions.height,
       lightColor,
     );
@@ -199,7 +214,7 @@ const AnimatedCanvas = () => {
       }
 
       if (waveStatus !== "hidden") {
-        if (particleStatus === "hidden") {
+        if (particleStatus === "hidden" || particleStatus === "first_load") {
           drawInitialWaveRipple(ctx, currentTime.current, 0, 0, (wavelength[0] * 3) / 2, waveSpeed[0], animationParams);
         }
 
@@ -215,7 +230,12 @@ const AnimatedCanvas = () => {
         blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams);
       }
 
-      if (particleStatus !== "hidden") {
+      if (
+        particleStatus === "in_progress" ||
+        particleStatus === "paused" ||
+        particleStatus === "new" ||
+        particleStatus === "completed"
+      ) {
         const yPositionofParticlesOnWall = animateParticles(
           ctx,
           particlesRef.current,
@@ -229,7 +249,9 @@ const AnimatedCanvas = () => {
           particlesOnWallRef.current.totalParticles += 1;
           if (particlesOnWallRef.current.totalParticles === numOfParticlesToHitReceptorWall[0]) {
             setParticleStatus("completed");
-            setWaveStatus("paused");
+            if (waveStatus === "in_progress") {
+              setWaveStatus("paused");
+            }
           }
         });
       }
@@ -274,8 +296,6 @@ const AnimatedCanvas = () => {
   const buttonClassName =
     "px-4 py-2 text-lg font-medium transition-all duration-200 border-b-2 hover:cursor-pointer hover:bg-zinc-200 transition-colors duration-200";
 
-    
-
   const clampedParticlesHitReceptorWall = Math.min(totalParticlesOnReceptorWall, numOfParticlesToHitReceptorWall[0]);
   const completionPercent = Math.round((clampedParticlesHitReceptorWall / numOfParticlesToHitReceptorWall[0]) * 100);
   const WaveParticleSettings: ControlAccordionProps[] = [
@@ -290,7 +310,9 @@ const AnimatedCanvas = () => {
             value={[diffractionWall.slitSize]}
             onValueChange={(wallWidth: number[]) => {
               resetParticles();
-              setParticleStatus("new");
+              if (particleStatus !== "hidden" && particleStatus !== "first_load") {
+                setParticleStatus("new");
+              }
               setdiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
             }}
             label="Diffraction Slit Size (nm)"
@@ -302,7 +324,9 @@ const AnimatedCanvas = () => {
             value={wavelength}
             onValueChange={(wavelength: number[]) => {
               resetParticles();
-              setParticleStatus("new");
+              if (particleStatus !== "hidden" && particleStatus !== "first_load") {
+                setParticleStatus("new");
+              }
               setWavelength(wavelength);
             }}
             label="Wavelength"
@@ -436,7 +460,7 @@ const AnimatedCanvas = () => {
     <div className="flex flex-col">
       <div
         className="grid border-b border-zinc-300 rounded-t-lg"
-        style={{ gridTemplateColumns: `${receptorWall.x}px 1fr` }}
+        style={{ gridTemplateColumns: `${receptorWall.x * scale + 3}px 1fr` }}
       >
         <div className="flex">
           <button
@@ -448,18 +472,18 @@ const AnimatedCanvas = () => {
       }`}
             onClick={() => setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))}
           >
-            Waves
+            {waveStatus !== "hidden" ? "Hide Wave Simulation" : "Show Wave Simulation"}
           </button>
           <button
             className={`${buttonClassName} ml-auto
       ${
-        particleStatus !== "hidden"
+        particleStatus !== "hidden" && particleStatus !== "first_load"
           ? "border-blue-500 text-blue-600 bg-white"
           : "border-transparent text-zinc-500 hover:text-zinc-800 hover:bg-zinc-200 hover:border-zinc-400"
       }`}
-            onClick={() => setParticleStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))}
+            onClick={() => setParticleStatus((prev) => (prev !== "hidden" && prev !== "first_load" ? "hidden" : "paused"))}
           >
-            Particles
+            {particleStatus !== "hidden" && particleStatus !== "first_load" ? "Hide Particle Simulation" : "Show Particle Simulation"}
           </button>
         </div>
 
@@ -476,17 +500,19 @@ const AnimatedCanvas = () => {
         </button>
       </div>
       {/* Canvas + Controls */}
-      <div ref={containerRef} className="simulation-container">
+      <div ref={containerRef} className="canvas-container">
         <SimulationControls
           controllableSimulationVariables={
-            <Accordion key="accordion" allowMultiple={true}>
-              {WaveParticleSettings.map((setting) => (
-                <AccordionItem id={setting.id} key={setting.id}>
-                  <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
-                  <AccordionContent>{setting.content}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <div className="scrollContainer max-h-[700px]">
+              <Accordion key="accordion" allowMultiple={true}>
+                {WaveParticleSettings.map((setting) => (
+                  <AccordionItem id={setting.id} key={setting.id}>
+                    <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
+                    <AccordionContent>{setting.content}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
           }
           onLeft={true}
         />
@@ -497,8 +523,6 @@ const AnimatedCanvas = () => {
           style={{
             border: "2px solid #4A5568",
             backgroundColor: "#1a202c",
-            width: "100%",
-            height: "100%",
           }}
         />
       </div>

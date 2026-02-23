@@ -81,7 +81,7 @@ export default function Lesson1SimulationComponent() {
     <>
       <div className="simulation-container">
         <SimulationControls controllableSimulationVariables={controllableSimulationVariables} />
-        <div className="canvas">
+        <div className="three-canvas">
           <Canvas camera={camera}>
             <OrbitControls makeDefault />
             <ambientLight intensity={Math.PI / 2} />

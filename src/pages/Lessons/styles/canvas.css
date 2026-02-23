@@ -1,11 +1,36 @@
 @reference "../../../styles/global.css";
 
-
-.simulation-container{
-    height: calc(100vh - 200px);
-    @apply h-screen flex border-2 border-amber-300 relative overflow-x-hidden;
+.simulation-container {
+  height: calc(100vh - 200px);
+  @apply h-screen flex border-2 border-amber-300 relative overflow-x-hidden;
 }
 
-.canvas{
-    @apply flex-1 w-full z-0;
+.canvas-container {
+  @apply flex relative overflow-x-hidden;
+}
+
+.three-canvas {
+  @apply flex-1 w-full z-0;
+}
+
+.scrollContainer {
+  overflow-y: auto;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollContainer::-webkit-scrollbar-thumb {
+  background: #71717a; /* zinc-500 to match border-zinc-500 */
+  border-radius: 2px;
+}
+
+.scrollContainer::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa; /* zinc-400 to match hover:text-zinc-400 */
+  cursor: pointer;
 }

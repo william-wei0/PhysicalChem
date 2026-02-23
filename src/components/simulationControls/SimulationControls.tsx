@@ -16,7 +16,7 @@ export default function SimulationControls({
   return (
     <>
       <div
-        className={`absolute ${onLeft ? "left-3" : "right-3"} top-3 z-10 rounded-2xl bg-zinc-100 border border-black w-80 transition-all duration-500 ${
+        className={`absolute ${onLeft ? "left-3" : "right-3"} top-3 z-10 rounded-2xl overflow-clip bg-zinc-100 border border-black w-80 transition-all duration-500 ${
           onLeft ?
           isControlsPanelVisible
             ? "translate-x-0 opacity-100"
