@@ -24,7 +24,7 @@ export interface ReceptorWall {
   color: string;
 }
 
-interface CanvasDimensions {
+export interface CanvasDimensions {
   width: number;
   height: number;
 }
@@ -93,9 +93,9 @@ const calculateLightIntensity = (y: number, params: AnimationParams) => {
 
   const beta = (Math.PI * a * sinTheta) / wavelength[0];
 
-  if (Math.abs(beta) < 1e-10) return receptorWall.width - 50;
+  if (Math.abs(beta) < 1e-10) return receptorWall.width * 0.8;
 
-  return (receptorWall.width - 50) * (Math.sin(beta) / beta) ** 2;
+  return (receptorWall.width * 0.8) * (Math.sin(beta) / beta) ** 2;
 };
 
 export function drawLightIntensityOnWall(
@@ -105,7 +105,7 @@ export function drawLightIntensityOnWall(
 ) {
   const { receptorWall } = params;
   ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-  const maxHeight = receptorWall.width - 50;
+  const maxHeight = receptorWall.width * 0.8;
 
   function gaussianSmooth(histogram: number[], sigma: number) {
     const radius = Math.ceil(sigma * 3);
@@ -154,7 +154,7 @@ export function randomVelocityXY(
   const { canvasDimensions, diffractionWall, receptorWall } = params;
   const xMin = 0;
   const xMax = canvasDimensions.height;
-  const maxPDF = receptorWall.width - 50;
+  const maxPDF = receptorWall.width * 0.8;
   speed = speed * Math.random() + 2;
   while (true) {
     const randomHeightOnReceptorWall =

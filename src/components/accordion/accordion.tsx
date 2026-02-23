@@ -58,10 +58,18 @@ export const AccordionTrigger = ({ className, style, children }: AccordionTrigge
 export const AccordionContent = ({ className, style, children }: AccordionContentProps) => {
     const context = useAccordionContext();
     const item = useAccordionItemContext();
+    const isOpen = context?.activeContent.includes(item?.id ?? '');
 
-    return context?.activeContent.includes(item?.id ?? '') ? (
-        <div className={className} style={style}>
-            {children}
+    return (
+        <div
+            className="grid transition-all duration-300 ease-in-out"
+            style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+        >
+            <div className="overflow-hidden">
+                <div className={className} style={style}>
+                    {children}
+                </div>
+            </div>
         </div>
-    ) : null;
+    );
 };
