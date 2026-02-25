@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import type { ComponentType, JSX } from "react";
 
-import Lesson1Page from "./Lessons/Unit1Pages/Lesson1Page";
-import Lesson2Page from "./Lessons/Unit1Pages/Lesson2Page";
+import Lesson1Page from "./Lessons/Unit1Pages/Lesson1_Unit1_Page";
+import Lesson2Page from "./Lessons/Unit1Pages/Lesson2_Unit1_Page";
 
 type LessonRouteParams = {
   lessonId: string;

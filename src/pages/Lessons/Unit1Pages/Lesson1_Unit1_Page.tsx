@@ -1,4 +1,4 @@
-import Lesson2Simulation from "./simulationComponents/Lesson2Simulation";
+import Lesson2Simulation from "./simulationComponents/Lesson1_Unit1_Simulation";
 import LessonSection from "../LessonSection";
 import "../styles/lessons.css";
 import "katex/dist/katex.min.css";

@@ -22,7 +22,7 @@ import {
   type Particle,
   type ParticlesOnWall,
   type CanvasDimensions,
-} from "./Lesson2SimulationComponents/Lesson2SimulationAnimations";
+} from "./Lesson2SimulationComponents/Lesson1_Unit1_SimulationAnimations";
 
 type ControlAccordionProps = {
   id: string;
@@ -36,8 +36,8 @@ type ParticleStatus = Status | "completed" | "first_load" | "new";
 
 const AnimatedCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   const containerRef = useRef<HTMLDivElement>(null);
+
   const BACKGROUND_COLOR = "rgba(26, 32, 44, 0.4)";
   const SLIT_MAXIMUM = 60;
   const SLIT_MINIMUM = 250;
@@ -55,13 +55,23 @@ const AnimatedCanvas = () => {
   const [waveStatus, setWaveStatus] = useState<Status>("in_progress");
   const [particleStatus, setParticleStatus] = useState<ParticleStatus>("first_load");
   const [showLightGradient, setShowLightGradient] = useState(true);
-
   const [totalParticlesOnReceptorWall, setTotalParticlesHitReceptorWall] = useState(0);
   const [numOfParticlesToHitReceptorWall, setNumOfParticlesHitReceptorWall] = useState([10000]);
   const [wavelength, setWavelength] = useState([30]);
   const [waveSpeed, setSpeed] = useState([2.0]);
   const [particleSpeed, setParticleSpeed] = useState([0.5]);
   const [contrast, setContrast] = useState([1.0]);
+
+  const initialPositionsRef = useRef<{ x: number; y: number; vx: number; vy: number }[]>([]);
+  const particlesRef = useRef<Particle[]>([]);
+
+  const [particleCount, _setParticleCount] = useState(1500);
+  const [particleSize, _setParticleSize] = useState(5);
+
+  const particlesOnWallRef = useRef<ParticlesOnWall>({
+    particlePositions: Array(CANVAS_DIMENSIONS.height).fill(0),
+    totalParticles: 0,
+  });
 
   const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
     x: CANVAS_DIMENSIONS.width * 0.2,
@@ -76,16 +86,7 @@ const AnimatedCanvas = () => {
     color: "rgba(255, 255, 255, 1)",
   });
 
-  const initialPositionsRef = useRef<{ x: number; y: number; vx: number; vy: number }[]>([]);
-  const particlesRef = useRef<Particle[]>([]);
 
-  const [particleCount, _setParticleCount] = useState(1500);
-  const [particleSize, _setParticleSize] = useState(5);
-
-  const particlesOnWallRef = useRef<ParticlesOnWall>({
-    particlePositions: Array(CANVAS_DIMENSIONS.height).fill(0),
-    totalParticles: 0,
-  });
 
   const animationParams = useMemo<AnimationParams>(
     () => ({

@@ -1,4 +1,4 @@
-import Lesson1Simulation from "./simulationComponents/Lesson1Simulation";
+import Lesson1Simulation from "./simulationComponents/Lesson2_Unit2_Simulation";
 import LessonSection from "../LessonSection";
 import "../styles/lessons.css"
 
