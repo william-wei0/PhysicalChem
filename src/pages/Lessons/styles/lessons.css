@@ -8,14 +8,27 @@
     @apply font-bold text-4xl m-4;
 }
 
+.lessonPage > .lessonSection:last-of-type{
+    @apply pb-0;
+}
+
 .lessonSection{
     @apply m-6 p-6 bg-white rounded-2xl;
 }
+
 
 .lessonSection h2{
     @apply font-bold text-3xl;
 }
 
 .lessonSection p{
-    @apply mb-4 mt-4;
+    @apply mb-4 mt-4 text-lg;
+}
+
+.figure img{
+ @apply m-auto;
+}
+
+.figure p {
+    @apply text-center;
 }

@@ -37,7 +37,7 @@ export interface AnimationParams {
   slitMaximum: number;
   contrast: number[];
   wavelength: number[];
-  speed: number[];
+  waveSpeed: number[];
   lightColor: [number, number, number];
 }
 
@@ -150,7 +150,7 @@ export function drawLightIntensityOnWall(
 export function drawLightIntensityCurve(ctx: CanvasRenderingContext2D, params: AnimationParams) {
   const { receptorWall, canvasDimensions } = params;
 
-  ctx.fillStyle = "rgba(0, 0, 220, 1.0)";
+  ctx.fillStyle = "rgba(32, 146, 245, 1.0)";
   for (let y = 0; y < canvasDimensions.height; y += 0.5) {
     const lightIntensity = calculateLightIntensity(y, params);
     ctx.fillRect(receptorWall.x, y, lightIntensity, 0.5);
