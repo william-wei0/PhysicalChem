@@ -43,6 +43,7 @@ const AnimatedCanvas = () => {
   const SLIT_MINIMUM = 250;
   const MAX_DELTA = 32;
   const HIDDEN_PARTICLE_COUNT = 5000;
+  const MAX_TRACKED = 100000;
   const CANVAS_DIMENSIONS = useMemo<CanvasDimensions>(() => ({ width: 1400, height: 800 }), []);
 
   const animationFrameRef = useRef<number>(0);
@@ -85,8 +86,6 @@ const AnimatedCanvas = () => {
     width: CANVAS_DIMENSIONS.width - CANVAS_DIMENSIONS.width * 0.8,
     color: "rgba(255, 255, 255, 1)",
   });
-
-
 
   const animationParams = useMemo<AnimationParams>(
     () => ({
@@ -133,15 +132,17 @@ const AnimatedCanvas = () => {
     initialPositionsRef.current = initialPositions;
   }, [animationParams, particleCount, particleSize]);
 
-const resetParticles = useCallback(() => {
-  particlesRef.current.forEach((p, i) => {
-    const init = initialPositionsRef.current[i];
-    p.x = init.x; p.y = init.y;
-    p.vx = init.vx; p.vy = init.vy;
-  });
-  particlesOnWallRef.current.particlePositions.fill(0);
-  particlesOnWallRef.current.totalParticles = 0;
-}, []);
+  const resetParticles = useCallback(() => {
+    particlesRef.current.forEach((p, i) => {
+      const init = initialPositionsRef.current[i];
+      p.x = init.x;
+      p.y = init.y;
+      p.vx = init.vx;
+      p.vy = init.vy;
+    });
+    particlesOnWallRef.current.particlePositions.fill(0);
+    particlesOnWallRef.current.totalParticles = 0;
+  }, []);
 
   const [canvasRenderedWidth, setCanvasRenderedWidth] = useState(0);
 
@@ -195,8 +196,8 @@ const resetParticles = useCallback(() => {
         if (startTime.current === null) {
           startTime.current = timestamp;
         }
-        const raw = elapsedTime.current + (timestamp - startTime.current);
-        currentTime.current = raw % WAVE_PERIOD;
+        const time = (elapsedTime.current + (timestamp - startTime.current)) % WAVE_PERIOD;
+        currentTime.current = time;
       } else {
         if (startTime.current !== null) {
           elapsedTime.current = (elapsedTime.current + (timestamp - startTime.current)) % WAVE_PERIOD;
@@ -253,8 +254,10 @@ const resetParticles = useCallback(() => {
         );
 
         yPositionofParticlesOnWall.forEach((index) => {
-          particlesOnWallRef.current.particlePositions[Math.round(index)] += 1;
-          particlesOnWallRef.current.totalParticles += 1;
+          if (particlesOnWallRef.current.totalParticles < MAX_TRACKED) {
+            particlesOnWallRef.current.particlePositions[Math.round(index)] += 1;
+            particlesOnWallRef.current.totalParticles += 1;
+          }
           if (particlesOnWallRef.current.totalParticles === numOfParticlesToHitReceptorWall[0]) {
             setParticleStatus("completed");
             if (waveStatus === "in_progress") {
