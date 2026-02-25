@@ -1,9 +1,9 @@
 import clsx from "clsx"
 import "./styles/lessons.css"
 
-export default function LessonSection({children, className} : {children? : React.ReactNode, className? : string}) {
+export default function LessonSection({children, className, id} : {children? : React.ReactNode, className? : string, id? :string}) {
     return (
-        <section className={clsx("lessonSection", className)}>
+        <section className={clsx("lessonSection", className)} id={id}>
             {children}
         </section>
     )

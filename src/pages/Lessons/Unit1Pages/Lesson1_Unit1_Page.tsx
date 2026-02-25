@@ -9,7 +9,7 @@ export default function Lesson2Page() {
     <div className="lessonPage">
       <h1>Lesson 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
 
-      <LessonSection>
+      <LessonSection id={"1.1 Single Slit Diffraction"}>
         <h2>1.1 Single Slit Diffraction</h2>
         <p>
           To observe the uncertainty principle, we can explore the single slit diffraction experiment. The experiment
@@ -54,7 +54,7 @@ export default function Lesson2Page() {
           <BlockMath math="\begin{equation} \Delta x \Delta p_{x} = p w \sin{\alpha} \end{equation}"></BlockMath>
         </p>
       </LessonSection>
-      <LessonSection>
+      <LessonSection id={"1.2 The Heisenberg Uncertainty Principle"}>
         <h2>1.2 The Heisenberg Uncertainty Principle</h2>
         <p>
           Working on the equation further, we can relate the angle <InlineMath math="\alpha" /> to the wavelength{" "}
@@ -123,7 +123,7 @@ export default function Lesson2Page() {
           the uncertainity in the photon's momentum.
         </p>
       </LessonSection>
-      <LessonSection>
+      <LessonSection id={"1.3 Single Slit Simulation"}>
         <h2>1.3 Single Slit Simulation</h2>
         <p>
           Below is a simulation of the diagram in Figure 1.1. Click on the "Controls" to control the diffraction slit

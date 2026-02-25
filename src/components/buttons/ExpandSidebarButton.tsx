@@ -20,7 +20,8 @@ export default function ExpandSidebarButton({
         '--arrow-size': "25px",
       } as CSSProperties}
       aria-label="Close"
-    ><span className={clsx(styles.arrow, styles.right)}/>
+    >
+      <span className={clsx(styles.arrow, styles.right)}/>
     </button>
   );
 }

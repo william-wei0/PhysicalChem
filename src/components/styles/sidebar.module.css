@@ -1,10 +1,8 @@
 @reference "../../styles/global.css";
 
 .accordionTrigger {
-    @apply relative w-full text-left border-b-2 border-zinc-500 pl-4 pt-4 pb-1 bg-zinc-100;
+  @apply relative w-full font-semibold text-left border-b-2 border-zinc-500 pl-4 pt-4 pb-1 bg-zinc-100;
 }
-
-
 
 .underlineAnimation::after {
   content: "";
@@ -24,8 +22,13 @@
   width: 100%;
 }
 
-.lessonItem {
-  @apply pl-8 pr-4 py-2 bg-zinc-200 hover:bg-zinc-100
+.linkItem {
+  @apply bg-zinc-200 hover:bg-zinc-100
          cursor-pointer transition-colors duration-150 border-l-3 
-         border-transparent hover:border-zinc-500 border-b-black border-b;
+         border-transparent hover:border-zinc-500 border-b-black border-b
+         text-left relative font-medium;
+}
+
+.linkItem a {
+  @apply block w-full pl-6 pr-4 py-2;
 }
