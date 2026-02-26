@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import type { ComponentType, JSX } from "react";
 
 import Lesson1Page from "./Lessons/Unit1Pages/Lesson1_Unit1_Page";
-import Lesson2Page from "./Lessons/Unit1Pages/Lesson2_Unit1_Page";
+import Lesson2_Unit1_Page from "./Lessons/Unit1Pages/Lesson2_Unit1_Page";
 
 type LessonRouteParams = {
   lessonId: string;
@@ -10,7 +10,7 @@ type LessonRouteParams = {
 
 const lessonMap: Record<string, ComponentType> = {
   lesson1: Lesson1Page,
-  lesson2: Lesson2Page,
+  lesson2: Lesson2_Unit1_Page,
 };
 
 export default function LessonPage(): JSX.Element {

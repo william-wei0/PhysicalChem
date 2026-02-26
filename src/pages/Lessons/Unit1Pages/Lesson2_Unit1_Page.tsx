@@ -1,8 +1,8 @@
-import Lesson1Simulation from "./simulationComponents/Lesson2_Unit2_Simulation";
+import Lesson2_Unit1_Simulation from "./simulationComponents/Lesson2_Unit2_Simulation";
 import LessonSection from "../LessonSection";
 import "../styles/lessons.css"
 
-export default function Lesson1Page() {
+export default function Lesson2_Unit1_Page() {
   return (
     <div className="lessonPage">
       <h1>
@@ -27,7 +27,7 @@ export default function Lesson1Page() {
         <p>Content</p>
       </LessonSection>
 
-      <Lesson1Simulation />
+      <Lesson2_Unit1_Simulation />
       <p>Content</p>
       <p>Content</p>
       <p>Content</p>

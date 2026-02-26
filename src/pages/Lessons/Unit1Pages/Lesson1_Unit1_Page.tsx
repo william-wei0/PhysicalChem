@@ -1,10 +1,10 @@
-import Lesson2Simulation from "./simulationComponents/Lesson1_Unit1_Simulation";
+import Lesson1_Unit1_Simulation from "./simulationComponents/Lesson1_Unit1_Simulation";
 import LessonSection from "../LessonSection";
 import "../styles/lessons.css";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 
-export default function Lesson2Page() {
+export default function Lesson1_Unit1_Page() {
   return (
     <div className="lessonPage">
       <h1>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
@@ -136,7 +136,7 @@ export default function Lesson2Page() {
         </p>
       </LessonSection>
       <div className="flex justify-center-safe">
-        <Lesson2Simulation />
+        <Lesson1_Unit1_Simulation />
       </div>
     </div>
   );
