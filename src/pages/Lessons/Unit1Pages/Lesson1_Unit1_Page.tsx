@@ -7,7 +7,7 @@ import { InlineMath, BlockMath } from "react-katex";
 export default function Lesson2Page() {
   return (
     <div className="lessonPage">
-      <h1>Lesson 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
+      <h1>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
 
       <LessonSection id={"1.1 Single Slit Diffraction"}>
         <h2>1.1 Single Slit Diffraction</h2>

@@ -6,7 +6,7 @@ export default function Lesson1Page() {
   return (
     <div className="lessonPage">
       <h1>
-        Lesson 1. Properties of Atoms
+        Unit 1. Properties of Atoms
       </h1>
       <LessonSection>
         <h2>Defining Motion.</h2>
