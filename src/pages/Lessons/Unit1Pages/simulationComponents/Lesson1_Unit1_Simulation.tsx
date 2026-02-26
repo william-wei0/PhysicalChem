@@ -22,7 +22,7 @@ import {
   type Particle,
   type ParticlesOnWall,
   type CanvasDimensions,
-} from "./Lesson2SimulationComponents/Lesson1_Unit1_SimulationAnimations";
+} from "./Lesson1_Unit1_SimulationAnimations";
 
 type ControlAccordionProps = {
   id: string;
