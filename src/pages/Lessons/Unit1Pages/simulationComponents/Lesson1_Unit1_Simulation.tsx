@@ -34,7 +34,7 @@ type ControlAccordionProps = {
 type Status = "hidden" | "in_progress" | "paused";
 type ParticleStatus = Status | "completed" | "first_load" | "new";
 
-const AnimatedCanvas = () => {
+export default function Lesson1_Unit1_Simulation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -520,7 +520,14 @@ const AnimatedCanvas = () => {
         </button>
       </div>
       {/* Canvas + Controls */}
-      <div ref={containerRef} className="canvas-container">
+      <div
+        ref={containerRef}
+        className="canvas-container"
+        style={{
+          width: CANVAS_DIMENSIONS.width,
+          height: CANVAS_DIMENSIONS.height,
+        }}
+      >
         <SimulationControls
           controllableSimulationVariables={
             <div className="scrollContainer max-h-[700px]">
@@ -548,6 +555,4 @@ const AnimatedCanvas = () => {
       </div>
     </div>
   );
-};
-
-export default AnimatedCanvas;
+}

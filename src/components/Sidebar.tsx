@@ -22,7 +22,7 @@ const section: LinksAccordionProps[] = [
     id: "1",
     title: "Unit 1: The Heisenberg Uncertainty Principle",
     content: [
-      <HashLink to="/lessons/lesson1#1.1 Single Slit Diffraction">1.1: Single Slit Diffraction</HashLink>,
+      <HashLink to="/lessons/lesson1#Lesson 1 Unit 1">1.1: Single Slit Diffraction</HashLink>,
       <HashLink to="/lessons/lesson1#1.2 The Heisenberg Uncertainty Principle">1.2: Heisenberg Uncertainty Principle</HashLink>,
       <HashLink to="/lessons/lesson1#1.3 Single Slit Simulation">1.3: Single Slit Simulation</HashLink>,
     ],
@@ -31,7 +31,7 @@ const section: LinksAccordionProps[] = [
   {
     id: "2",
     title: "Unit 2: Physical Properties of Atoms",
-    content: ["unit2"],
+    content: [<HashLink to="/lessons/lesson2">1.3: Single Slit Simulation</HashLink>,],
   },
   {
     id: "3",
