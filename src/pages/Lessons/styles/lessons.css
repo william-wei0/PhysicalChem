@@ -16,6 +16,9 @@
     @apply m-6 p-6 bg-white rounded-2xl;
 }
 
+.lessonSection .importantEquation{
+    @apply bg-zinc-100 p-2 my-4 border-black border-2
+}
 
 .lessonSection h2{
     @apply font-bold text-3xl;

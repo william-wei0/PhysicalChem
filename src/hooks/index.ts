@@ -1,0 +1,1 @@
+export { useScrollToHash } from './useScrollToHash';

@@ -1,8 +1,8 @@
 import React from "react";
-import styles from "./ResetButton.module.css";
+import styles from "./SimulationButton.module.css";
 import clsx from "clsx";
 
-export default function ResetButton({
+export default function SimulationButton({
   onClick,
   className,
   style,

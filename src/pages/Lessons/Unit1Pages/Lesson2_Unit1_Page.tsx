@@ -1,15 +1,18 @@
-import Lesson2_Unit1_Simulation from "./simulationComponents/Lesson2_Unit1_Simulation";
+import Lesson2_Unit1_1_Simulation from "./simulationComponents/Lesson2_Unit1.1_Simulation";
 import LessonSection from "../LessonSection";
 import "../styles/lessons.css";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
+import Lesson2_Unit1_2_Simulation from "./simulationComponents/Lesson2_Unit1.2_Simulation";
+import LessonLayout from "../LessonLayout";
+
 
 export default function Lesson2_Unit1_Page() {
   return (
-    <div className="lessonPage">
-      <h1>Unit 2. Particles in 1-Dimensional Box</h1>
+    <LessonLayout>
+      <h1 id="Lesson1">Unit 2. Single Particle in 1-Dimensional Box</h1>
       <LessonSection>
-        <h2>2.1 Single Particle in a 1-Dimensional Box</h2>
+        <h2>2.1 The Single Particle in a 1-Dimensional Box</h2>
         <p>
           This section covers the derivation of the probablity density function a single particle in a 1D box with
           length <InlineMath math="l" /> by solving the time-dependent Schrödinger equation. We will focus on the
@@ -20,7 +23,7 @@ export default function Lesson2_Unit1_Page() {
 
         <p>
           In order to derive the probablity density function <InlineMath math="|\Psi(x)|^2"></InlineMath>, we will first
-          need to solve for the state function <InlineMath math="\psi(x)"></InlineMath>, beginning with the general form
+          need to solve for the wavefunction <InlineMath math="\psi(x)"></InlineMath>, beginning with the general form
           of the time-dependent Schrödinger equation..
           <BlockMath math="\left(-\frac{\hbar^2}{2m}\frac{d^2}{dx^2}+V(x)\right)\psi_n(x)=E_n\psi_n(x)"></BlockMath>
           Since we are focusing on the region within the well where <InlineMath math="0<x<l" />, the potential energy is
@@ -59,48 +62,80 @@ export default function Lesson2_Unit1_Page() {
           <BlockMath math="\psi(x)=c_1\cos{\theta}+c_1i\sin{\theta}+c_2\cos{(\theta)}-c_2i\sin{(\theta)}" />
           <BlockMath math="\psi(x)=(c_1+c_2)\cos{\theta}+(c_1i-c_2i)\sin{\theta}" />
           <BlockMath math="\psi(x)=A\cos{\theta}+B\sin{\theta}" />
-          <BlockMath math="\begin{equation}\psi(x)=A\cos{\frac{\sqrt{2mE}}{\hbar}x}+B\sin{\frac{\sqrt{2mE}}{\hbar}x}\end{equation}" />
         </p>
-
         <p>
-          Now to solve for the coefficents <InlineMath math="A" /> and <InlineMath math="B" /> we can apply the boundary
-          conditions. Starting from the left of the well where <InlineMath math="x=0" />, the state function is{" "}
-          <InlineMath math="\psi_{left}=0"></InlineMath> which must be continuous with the state function in the center{" "}
-          <InlineMath math="\psi_{center}"></InlineMath> so:
+          And converting back into our original variables where <InlineMath math="\theta=\frac{\sqrt{2mE}}{\hbar}x" />,
+          we have found an equation for the wavefunction that only depends on the particle's position{" "}
+          <InlineMath math="x"></InlineMath>. However, we still need to solve for the coefficients{" "}
+          <InlineMath math="A"></InlineMath> and <InlineMath math="B"></InlineMath>.
+          <div className="importantEquation">
+            <BlockMath math="\begin{equation}\psi(x)=A\cos{\frac{\sqrt{2mE}}{\hbar}x}+B\sin{\frac{\sqrt{2mE}}{\hbar}x}\end{equation}" />
+          </div>
+        </p>
+      </LessonSection>
+
+      <LessonSection>
+        <h2 id="Lesson2">2.2 Applying Boundary Conditions</h2>
+        <p className="relative">
+          To solve for the coefficents <InlineMath math="A" /> and <InlineMath math="B" />, we can apply the boundary
+          conditions of the well at <InlineMath math="x=0"></InlineMath> and <InlineMath math="x=l"></InlineMath>.
+          Starting from the region to the left of the well where <InlineMath math="x\le 0" />, the wavefunction{" "}
+          <InlineMath math="\psi_{left}=0"></InlineMath> because the potential{" "}
+          <InlineMath math="V(x)=\infty"></InlineMath> which must also be continuous with the wavefunction in the center{" "}
+          <InlineMath math="\psi_{center}"></InlineMath>. So, using this boundary condition, we can solve for{" "}
+          <InlineMath math="A"></InlineMath>:
           <BlockMath
             math="\begin{align*}
                   \lim_{x\to 0}\psi_{left} &= \lim_{x\to 0}\psi_{center}\\[4pt]
-                  0 &= \lim_{x\to 0}\left\{\,A\cos\left[\frac{\sqrt{2mE}}{\hbar}\,x\right]
-                  \;+\;B\sin\left[\frac{\sqrt{2mE}}{\hbar}\,x\right]\,\right\}\\[4pt]
+                  0 &= \lim_{x\to 0}\left\{\,A\cos\left[\frac{\sqrt{2mE}}{\hbar}\,x\right]\;+\;B\sin\left[\frac{\sqrt{2mE}}{\hbar}\,x\right]\,\right\}\\[4pt]
+                  0 &= {\,A\cos\left[\frac{\sqrt{2mE}}{\hbar}\,0\right]\;+\;B\sin\left[\frac{\sqrt{2mE}}{\hbar}\,0\right]\,}\\[4pt]
+                  0 &= {\,A\cos\left[0\right]\;+\;B\sin\left[0\right]\,}\\[4pt]
+                  0 &= {A(1)\;+\;B(0)}\\[4pt]
                   0 &= A\end{align*}"
           ></BlockMath>
-          and the state function can be simplified to
-          <BlockMath math="\begin{equation}\psi(x)=B\sin{\frac{\sqrt{2mE}}{\hbar}x}\end{equation}" />
+        </p>
+
+        <p>
+          Subbing in <InlineMath math="A=0"></InlineMath> into equation <InlineMath math="(3)"></InlineMath>, the
+          wavefunction in the center simplifies to
+          <BlockMath math="\begin{equation}\psi(x)_{center}=B\sin{\frac{\sqrt{2mE}}{\hbar}x}\end{equation}" />
         </p>
 
         <p>
           Now solving for <InlineMath math="B" />, we can start by using the boundary condition on the right wall when{" "}
           <InlineMath math="x=l"></InlineMath>. Similar to the left wall,{" "}
-          <InlineMath math="\psi_{right}=0"></InlineMath> which must be continuous with the state function in the center{" "}
-          <InlineMath math="\psi_{center}"></InlineMath> so:
+          <InlineMath math="\psi_{right}=0"></InlineMath> which also must be continuous with the wavefunction in the
+          center <InlineMath math="\psi_{center}"></InlineMath> so:
         </p>
         <BlockMath
           math="\begin{align*}
                   \lim_{x\to 0}\psi_{right} &= \lim_{x\to 0}\psi_{center}\\[4pt]
-                  0 &= B\sin{\frac{\sqrt{2mE}}{\hbar}l}\end{align*}"
+                  0 &= B\sin\left\{\frac{\sqrt{2mE}}{\hbar}l\right\}\end{align*}"
         />
 
         <p>
-          Since the zeros of the sine function occur at integer multiples of <InlineMath math="\pi" />,
+          Since the zeros of the sine function occur at all integer <InlineMath math="n" /> multiples of{" "}
+          <InlineMath math="\pi" />, we can write that <InlineMath math="\frac{\sqrt{2mE}}{\hbar}l" /> must equal some
+          integer mulitple of <InlineMath math="\pi" />.
+        </p>
+        <p>So:</p>
+        <p>
           <BlockMath math="\frac{\sqrt{2mE}}{\hbar}l=\pm n\pi" />
-          <BlockMath math="\frac{\sqrt{2mE}}{\hbar}=\frac{\pm n\pi}{l}" />
-          and subbing this back into the state function in equation <InlineMath math="(4)" />:
+          <BlockMath math="\begin{equation}\frac{\sqrt{2mE}}{\hbar}=\frac{\pm n\pi}{l}\end{equation}" />
+        </p>
+        <p>
+          where <InlineMath math="n = 1, 2, 3, \ldots" />
+        </p>
+        <p>
+          and subbing equation <InlineMath math="(5)" /> back into equation <InlineMath math="(4)" /> results in a
+          simplified version of equation <InlineMath math="(4)" /> that depends on the length of the box instead of the
+          particle's energy.
           <BlockMath math="\begin{equation}\psi(x)=B\sin{\frac{n\pi}{l}x}\end{equation}" />
         </p>
 
         <p>
           Although is appears as though <InlineMath math="B"></InlineMath> has not yet been solved from our previous
-          work, since the state function now depends on the length of the box <InlineMath math="l" />, we use the
+          work, since the wavefunction now depends on the length of the box <InlineMath math="l" />, we use the
           normalization of the probablity density function to solve for <InlineMath math="B"></InlineMath>.{" "}
           <BlockMath
             math="\begin{align}
@@ -122,7 +157,7 @@ export default function Lesson2_Unit1_Page() {
           \int_{0}^{l}\sin^2\!\left(\frac{n\pi x}{l}\right)\,dx&=\frac{l}{2}
           \end{align}"
           />
-          Thus subbing equation <InlineMath math="(7)" /> into equation <InlineMath math="(6)" />
+          Thus, subbing equation <InlineMath math="(7)" /> into equation <InlineMath math="(6)" />
           <BlockMath
             math="
           \begin{align*}
@@ -131,24 +166,28 @@ export default function Lesson2_Unit1_Page() {
           />
         </p>
         <p>
-          Now the coefficient <InlineMath math="B"></InlineMath> has been found we can finally write the full state
-          function and probablity density function:
-          <BlockMath math="\begin{equation}\large\psi(x)=\sqrt{\frac{2}{l}}\sin{\left(\frac{n\pi x}{l}\right)}\end{equation}" />
-          <BlockMath math="\begin{equation}\large |\bold{\Psi(x)}|^2=\frac{2}{l}\sin^2{\left(\frac{n\pi x}{l}\right)}\end{equation}" />
+          Now the coefficient <InlineMath math="B"></InlineMath> has been found we can finally write the full
+          wavefunction and probablity density function:
+          <div className="importantEquation">
+            <BlockMath math="\begin{equation}\large\psi(x)=\sqrt{\frac{2}{l}}\sin{\left(\frac{n\pi x}{l}\right)}\end{equation}" />
+            <BlockMath math="\begin{equation}\large |\bold{\Psi(x)}|^2=\frac{2}{l}\sin^2{\left(\frac{n\pi x}{l}\right)}\end{equation}" />
+          </div>
           where <InlineMath math="n = 1, 2, 3, \ldots" /> is the quantum number.
         </p>
       </LessonSection>
 
       <LessonSection>
-        <h2>2.2 Simulation of a Particle in a 1-Dimensional Box</h2>
+        <h2 id="Lesson3">2.3 Simulation of a Particle in a 1-Dimensional Box</h2>
         <p>
           In order to better understand the node and antinode locations of the probablity density function, below is an
           interactive simulation of the particle in a box. Observe how modifying the quantum number{" "}
-          <InlineMath math="n" /> changes the shape of the function and identify how the location of the nodes and antinodes move.
+          <InlineMath math="n" /> changes the shape of the function and identify how the location of the nodes and
+          antinodes move.
         </p>
       </LessonSection>
 
-      <Lesson2_Unit1_Simulation />
-    </div>
+      <Lesson2_Unit1_1_Simulation />
+      <Lesson2_Unit1_2_Simulation />
+    </LessonLayout>
   );
 }

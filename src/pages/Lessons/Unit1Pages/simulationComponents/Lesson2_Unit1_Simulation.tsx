@@ -323,7 +323,7 @@ export default function Lesson1_Unit1_Simulation() {
   return (
     <div
       ref={containerRef}
-      className="canvas-container"
+      className="canvas-container my-4"
       style={{
         width: CANVAS_DIMENSIONS.width,
         height: CANVAS_DIMENSIONS.height,

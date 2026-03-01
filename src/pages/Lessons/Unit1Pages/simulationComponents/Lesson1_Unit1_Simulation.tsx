@@ -4,7 +4,7 @@ import "../../styles/canvas.css";
 import Slider from "@/components/simulationControls/Slider";
 import SimulationControls from "@/components/simulationControls/SimulationControls";
 import StartSimulationButton from "@/components/simulationControls/StartSimulationButton";
-import ResetButton from "@/components/simulationControls/ResetButton";
+import ResetButton from "@/components/simulationControls/SimulationButton";
 import { Progress } from "@/components/ui/progress";
 import {
   makeInitialRippleRenderer,

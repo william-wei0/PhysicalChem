@@ -3,13 +3,15 @@ import LessonSection from "../LessonSection";
 import "../styles/lessons.css";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
+import LessonLayout from "../LessonLayout";
 
 export default function Lesson1_Unit1_Page() {
-  return (
-    <div className="lessonPage" id={"Lesson 1 Unit 1"}>
-      <h1>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
 
-      <LessonSection id={"1.1 Single Slit Diffraction"}>
+  return (
+    <LessonLayout>
+      <h1 id={"Lesson1"}>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
+
+      <LessonSection>
         <h2>1.1 Single Slit Diffraction</h2>
         <p>
           To observe the uncertainty principle, we can explore the single slit diffraction experiment. The experiment
@@ -51,11 +53,13 @@ export default function Lesson1_Unit1_Page() {
         <p>
           Combining the uncertainty in the position and x-component of the momentum, we can write the following
           equation:
-          <BlockMath math="\begin{equation} \Delta x \Delta p_{x} = p w \sin{\alpha} \end{equation}"></BlockMath>
+          <div className="importantEquation">
+            <BlockMath math="\begin{equation} \Delta x \Delta p_{x} = p w \sin{\alpha} \end{equation}"></BlockMath>
+          </div>
         </p>
       </LessonSection>
-      <LessonSection id={"1.2 The Heisenberg Uncertainty Principle"}>
-        <h2>1.2 The Heisenberg Uncertainty Principle</h2>
+      <LessonSection>
+        <h2 id={"Lesson2"}>1.2 The Heisenberg Uncertainty Principle</h2>
         <p>
           Working on the equation further, we can relate the angle <InlineMath math="\alpha" /> to the wavelength{" "}
           <InlineMath math="\lambda" /> of the photons. In order for the photons to destructively interfere at the first
@@ -111,7 +115,9 @@ export default function Lesson1_Unit1_Page() {
         </p>
         <p>
           Since the uncertainties were not rigorously defined, the equation is written more correctly as:{" "}
-          <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \approx h \end{equation}"></BlockMath>
+          <div className="importantEquation">
+            <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \approx h \end{equation}"></BlockMath>
+          </div>
         </p>
         <p>
           {" "}
@@ -123,8 +129,8 @@ export default function Lesson1_Unit1_Page() {
           the uncertainity in the photon's momentum.
         </p>
       </LessonSection>
-      <LessonSection id={"1.3 Single Slit Simulation"}>
-        <h2>1.3 Single Slit Simulation</h2>
+      <LessonSection>
+        <h2 id={"Lesson3"}>1.3 Single Slit Simulation</h2>
         <p>
           Below is a simulation of the diagram in Figure 1.1. Click on the "Controls" to control the diffraction slit
           width and observe how making the slit narrower (decreasing the uncertainity in position) causes the
@@ -138,6 +144,6 @@ export default function Lesson1_Unit1_Page() {
       <div className="flex justify-center-safe">
         <Lesson1_Unit1_Simulation />
       </div>
-    </div>
+    </LessonLayout>
   );
 }

@@ -6,7 +6,7 @@
 }
 
 .canvas-container {
-  @apply flex relative overflow-x-hidden;
+  @apply flex relative overflow-x-hidden ;
 }
 
 .three-canvas {

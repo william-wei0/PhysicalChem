@@ -1,5 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion/accordion";
-import { HashLink } from 'react-router-hash-link';
+import { HashLink } from "react-router-hash-link";
 import styles from "./styles/sidebar.module.css";
 import MinimizeSidebarButton from "./buttons/MinimizeSidebarButton";
 import ExpandSidebarButton from "./buttons/ExpandSidebarButton";
@@ -22,16 +22,20 @@ const section: LinksAccordionProps[] = [
     id: "1",
     title: "Unit 1: The Heisenberg Uncertainty Principle",
     content: [
-      <HashLink to="/lessons/lesson1#Lesson 1 Unit 1">1.1: Single Slit Diffraction</HashLink>,
-      <HashLink to="/lessons/lesson1#1.2 The Heisenberg Uncertainty Principle">1.2: Heisenberg Uncertainty Principle</HashLink>,
-      <HashLink to="/lessons/lesson1#1.3 Single Slit Simulation">1.3: Single Slit Simulation</HashLink>,
+      <HashLink to="/lessons/lesson1#Lesson1" >1.1: Single Slit Diffraction</HashLink>,
+      <HashLink to="/lessons/lesson1#Lesson2" >1.2: Heisenberg Uncertainty Principle</HashLink>,
+      <HashLink to="/lessons/lesson1#Lesson3">1.3: Single Slit Simulation</HashLink>,
     ],
     triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation, "border-t"),
   },
   {
     id: "2",
-    title: "Unit 2: Physical Properties of Atoms",
-    content: [<HashLink to="/lessons/lesson2">1.3: Single Slit Simulation</HashLink>,],
+    title: "Unit 2: Single Particle in 1-Dimensional Box",
+    content: [
+      <HashLink to="/lessons/lesson2#Lesson1">2.1 Single Particle in 1-Dimensional Box</HashLink>,
+      <HashLink to="/lessons/lesson2#Lesson2">2.2 Applying Boundary Conditions</HashLink>,
+      <HashLink to="/lessons/lesson2#Lesson3">2.3 Simulation of a Particle in a 1D Box</HashLink>,
+    ],
   },
   {
     id: "3",
@@ -65,26 +69,25 @@ export default function Sidebar({ isOpen, onToggle }: { isOpen: boolean; onToggl
   const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
-  const header = document.querySelector('header');
-  if (!header) return;
+    const header = document.querySelector("header");
+    if (!header) return;
 
-  const intersectionObserver = new IntersectionObserver(
-    ([entry]) => setHeaderVisible(entry.isIntersecting),
-    { threshold: 0 }
-  );
+    const intersectionObserver = new IntersectionObserver(([entry]) => setHeaderVisible(entry.isIntersecting), {
+      threshold: 0,
+    });
 
-  const resizeObserver = new ResizeObserver(([entry]) => {
-    setHeaderHeight(entry.contentRect.height);
-  });
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      setHeaderHeight(entry.contentRect.height);
+    });
 
-  intersectionObserver.observe(header);
-  resizeObserver.observe(header);
+    intersectionObserver.observe(header);
+    resizeObserver.observe(header);
 
-  return () => {
-    intersectionObserver.disconnect();
-    resizeObserver.disconnect();
-  };
-}, []);
+    return () => {
+      intersectionObserver.disconnect();
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   return (
     <div className="bg-zinc-50 flex-1 border border-black relative">

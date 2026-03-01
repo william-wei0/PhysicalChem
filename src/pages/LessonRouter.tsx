@@ -13,7 +13,7 @@ const lessonMap: Record<string, ComponentType> = {
   lesson2: Lesson2_Unit1_Page,
 };
 
-export default function LessonPage(): JSX.Element {
+export default function LessonRouter(): JSX.Element {
     const { lessonId } = useParams<LessonRouteParams>();
 
     const Component = lessonId ? lessonMap[lessonId] : undefined;
