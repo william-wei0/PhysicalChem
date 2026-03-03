@@ -9,8 +9,8 @@ type LessonRouteParams = {
 };
 
 const lessonMap: Record<string, ComponentType> = {
-  lesson1: Lesson1Page,
-  lesson2: Lesson2_Unit1_Page,
+  Unit1: Lesson1Page,
+  Unit2: Lesson2_Unit1_Page,
 };
 
 export default function LessonRouter(): JSX.Element {

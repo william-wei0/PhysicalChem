@@ -22,9 +22,9 @@ const section: LinksAccordionProps[] = [
     id: "1",
     title: "Unit 1: The Heisenberg Uncertainty Principle",
     content: [
-      <HashLink to="/lessons/lesson1#Lesson1" >1.1: Single Slit Diffraction</HashLink>,
-      <HashLink to="/lessons/lesson1#Lesson2" >1.2: Heisenberg Uncertainty Principle</HashLink>,
-      <HashLink to="/lessons/lesson1#Lesson3">1.3: Single Slit Simulation</HashLink>,
+      <HashLink to="/lessons/Unit1#Lesson1" >1.1: Single Slit Diffraction</HashLink>,
+      <HashLink to="/lessons/Unit1#Lesson2" >1.2: Heisenberg Uncertainty Principle</HashLink>,
+      <HashLink to="/lessons/Unit1#Lesson3">1.3: Single Slit Simulation</HashLink>,
     ],
     triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation, "border-t"),
   },
@@ -32,9 +32,9 @@ const section: LinksAccordionProps[] = [
     id: "2",
     title: "Unit 2: Single Particle in 1-Dimensional Box",
     content: [
-      <HashLink to="/lessons/lesson2#Lesson1">2.1 Single Particle in 1-Dimensional Box</HashLink>,
-      <HashLink to="/lessons/lesson2#Lesson2">2.2 Applying Boundary Conditions</HashLink>,
-      <HashLink to="/lessons/lesson2#Lesson3">2.3 Simulation of a Particle in a 1D Box</HashLink>,
+      <HashLink to="/lessons/Unit2#Lesson1">2.1 Single Particle in 1-Dimensional Box</HashLink>,
+      <HashLink to="/lessons/Unit2#Lesson2">2.2 Applying Boundary Conditions</HashLink>,
+      <HashLink to="/lessons/Unit2#Lesson3">2.3 Simulation of a Particle in a 1D Box</HashLink>,
     ],
   },
   {
