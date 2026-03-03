@@ -8,7 +8,7 @@ export default function Navbar() {
           <Link to="/" className="hover:text-zinc-300 transition-colors">
             Home
           </Link>
-          <Link to="/lessons/Unit1" className="hover:text-zinc-300 transition-colors">
+          <Link to="/lessons/chapter1/unit1" className="hover:text-zinc-300 transition-colors">
             Lessons
           </Link>
         </div>

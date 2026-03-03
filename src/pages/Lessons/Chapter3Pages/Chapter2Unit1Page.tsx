@@ -1,16 +1,14 @@
-import Lesson2_Unit1_1_Simulation from "./simulationComponents/Lesson2_Unit1.1_Simulation";
 import LessonSection from "../LessonSection";
 import "../styles/lessons.css";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
-import Lesson2_Unit1_2_Simulation from "./simulationComponents/Lesson2_Unit1.2_Simulation";
 import LessonLayout from "../LessonLayout";
 
 
-export default function Lesson2_Unit1_Page() {
+export default function Chapter2Unit1Page() {
   return (
     <LessonLayout>
-      <h1 id="Lesson1">Unit 2. Single Particle in 1-Dimensional Box</h1>
+      <h1 id="lesson1">Unit 2. Single Particle in 1-Dimensional Box</h1>
       <LessonSection>
         <h2>2.1 The Single Particle in a 1-Dimensional Box</h2>
         <p>
@@ -75,7 +73,7 @@ export default function Lesson2_Unit1_Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="Lesson2">2.2 Applying Boundary Conditions</h2>
+        <h2 id="lesson2">2.2 Applying Boundary Conditions</h2>
         <p className="relative">
           To solve for the coefficents <InlineMath math="A" /> and <InlineMath math="B" />, we can apply the boundary
           conditions of the well at <InlineMath math="x=0"></InlineMath> and <InlineMath math="x=l"></InlineMath>.
@@ -177,7 +175,7 @@ export default function Lesson2_Unit1_Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="Lesson3">2.3 Simulation of a Particle in a 1-Dimensional Box</h2>
+        <h2 id="lesson3">2.3 Simulation of a Particle in a 1-Dimensional Box</h2>
         <p>
           In order to better understand the node and antinode locations of the probablity density function, below is an
           interactive simulation of the particle in a box. Observe how modifying the quantum number{" "}
@@ -186,8 +184,6 @@ export default function Lesson2_Unit1_Page() {
         </p>
       </LessonSection>
 
-      <Lesson2_Unit1_1_Simulation />
-      <Lesson2_Unit1_2_Simulation />
     </LessonLayout>
   );
 }

@@ -158,7 +158,7 @@ function drawWave(
   }
 }
 
-export default function Lesson1_Unit1_Simulation() {
+export default function TwoParticleWellSimulation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 

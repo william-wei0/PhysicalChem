@@ -22,7 +22,7 @@ import {
   type Particle,
   type ParticlesOnWall,
   type CanvasDimensions,
-} from "./Lesson1_Unit1_SimulationAnimations";
+} from "./SingleSlitSimulationAnimations";
 
 type ControlAccordionProps = {
   id: string;
@@ -34,7 +34,7 @@ type ControlAccordionProps = {
 type Status = "hidden" | "in_progress" | "paused";
 type ParticleStatus = Status | "completed" | "first_load" | "new";
 
-export default function Lesson1_Unit1_Simulation() {
+export default function SingleSlitSimulation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 

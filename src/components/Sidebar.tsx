@@ -17,14 +17,26 @@ type LinksAccordionProps = {
   contentStyle?: CSSProperties;
 };
 
+const ROUTE = {
+  lessons: "lessons",
+  chapter: "chapter",
+  unit: "unit",
+  lesson: "lesson",
+} as const;
+
+const lessonLink = (chapterNum: number, unitNum: number, lessonNum?: number) => {
+  return lessonNum == 1
+    ? `/${ROUTE.lessons}/${ROUTE.chapter}${chapterNum}/${ROUTE.unit}${unitNum}#`
+    : `/${ROUTE.lessons}/${ROUTE.chapter}${chapterNum}/${ROUTE.unit}${unitNum}#${ROUTE.lesson}${lessonNum}`
+};
 const section: LinksAccordionProps[] = [
   {
     id: "1",
     title: "Unit 1: The Heisenberg Uncertainty Principle",
     content: [
-      <HashLink to="/lessons/Unit1#Lesson1" >1.1: Single Slit Diffraction</HashLink>,
-      <HashLink to="/lessons/Unit1#Lesson2" >1.2: Heisenberg Uncertainty Principle</HashLink>,
-      <HashLink to="/lessons/Unit1#Lesson3">1.3: Single Slit Simulation</HashLink>,
+      <HashLink to={lessonLink(1, 1, 1)}>1.1: Single Slit Diffraction</HashLink>,
+      <HashLink to={lessonLink(1, 1, 2)}>1.2: Heisenberg Uncertainty Principle</HashLink>,
+      <HashLink to={lessonLink(1, 1, 3)}>1.3: Single Slit Simulation</HashLink>,
     ],
     triggerClassName: clsx(styles.accordionTrigger, styles.underlineAnimation, "border-t"),
   },
@@ -32,15 +44,19 @@ const section: LinksAccordionProps[] = [
     id: "2",
     title: "Unit 2: Single Particle in 1-Dimensional Box",
     content: [
-      <HashLink to="/lessons/Unit2#Lesson1">2.1 Single Particle in 1-Dimensional Box</HashLink>,
-      <HashLink to="/lessons/Unit2#Lesson2">2.2 Applying Boundary Conditions</HashLink>,
-      <HashLink to="/lessons/Unit2#Lesson3">2.3 Simulation of a Particle in a 1D Box</HashLink>,
+      <HashLink to={lessonLink(2, 1, 1)}>2.1 Single Particle in 1-Dimensional Box</HashLink>,
+      <HashLink to={lessonLink(2, 1, 2)}>2.2 Applying Boundary Conditions</HashLink>,
+      <HashLink to={lessonLink(2, 1, 3)}>2.3 Simulation of a Particle in a 1D Box</HashLink>,
     ],
   },
   {
     id: "3",
-    title: "Unit 3: Physical Properties of Atoms",
-    content: [<HashLink to="/">3.3: The Superposition of 1s2pz</HashLink>],
+    title: "Unit 3: Superposition of Two Particles",
+    content: [
+      <HashLink to={lessonLink(3, 1, 1)}>3.1 Single Particle in 1-Dimensional Box</HashLink>,
+      <HashLink to={lessonLink(3, 1, 2)}>3.2 Applying Boundary Conditions</HashLink>,
+      <HashLink to={lessonLink(3, 1, 3)}>3.3 Simulation of a Particle in a 1D Box</HashLink>,
+    ],
   },
   {
     id: "4",

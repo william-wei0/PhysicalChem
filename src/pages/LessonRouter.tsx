@@ -1,25 +1,39 @@
 import { useParams } from "react-router-dom";
 import type { ComponentType, JSX } from "react";
 
-import Lesson1Page from "./Lessons/Unit1Pages/Lesson1_Unit1_Page";
-import Lesson2_Unit1_Page from "./Lessons/Unit1Pages/Lesson2_Unit1_Page";
+import Chapter1Unit1Page from "./Lessons/Chapter1Pages/Chapter1Unit1Page";
+import Chapter2Unit1Page from "./Lessons/Chapter2Pages/Chapter2Unit1Page";
 
 type LessonRouteParams = {
-  lessonId: string;
+  chapterId: string;
+  unitId: string;
 };
 
-const lessonMap: Record<string, ComponentType> = {
-  Unit1: Lesson1Page,
-  Unit2: Lesson2_Unit1_Page,
+const chapterIndexMap: Record<string, ComponentType> = {};
+
+const lessonMap: Record<string, Record<string, ComponentType>> = {
+  chapter1: {
+    unit1: Chapter1Unit1Page,
+  },
+  chapter2: {
+    unit1: Chapter2Unit1Page,
+  },
 };
 
 export default function LessonRouter(): JSX.Element {
-    const { lessonId } = useParams<LessonRouteParams>();
+  const { chapterId, unitId } = useParams<LessonRouteParams>();
 
-    const Component = lessonId ? lessonMap[lessonId] : undefined;
-    if (!Component) {
-        throw new Response("Lesson not found", { status: 404 });
-    }
-
+  if (chapterId && unitId) {
+    const Component = lessonMap[chapterId]?.[unitId];
+    if (!Component) throw new Response("Lesson not found", { status: 404 });
     return <Component />;
+  }
+
+  if (chapterId) {
+    const Component = chapterIndexMap[chapterId];
+    if (!Component) throw new Response("Chapter not found", { status: 404 });
+    return <Component />;
+  }
+
+  throw new Response("Not found", { status: 404 });
 }

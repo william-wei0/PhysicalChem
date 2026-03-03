@@ -77,17 +77,17 @@ function drawGraphLabels(ctx: CanvasRenderingContext2D, animationParams: Animati
   ctx.save();
   ctx.translate(leftBoundary - 25, wellBaseHeight[0] / 2);
   ctx.rotate(-Math.PI / 2);
-  ctx.fillText("Probability Density |ψ|\u00B2", 0, 0);
+  ctx.fillText("Wave Function (ψ)", 0, 0);
 
   ctx.restore();
 }
 
-function drawSimulationTitle(ctx: CanvasRenderingContext2D, animationParams: AnimationParams) {
+function drawSimulationLabel(ctx: CanvasRenderingContext2D, animationParams: AnimationParams) {
   const { canvasDimensions } = animationParams;
   ctx.font = "35px Arial";
   ctx.fillStyle = "white";
   ctx.textAlign = "center";
-  ctx.fillText("Probability Density |ψ|\u00B2", canvasDimensions.width/2, 50);
+  ctx.fillText("Wave Function (ψ)", canvasDimensions.width/2, 50);
 }
 
 function draw_well(ctx: CanvasRenderingContext2D, animationParams: AnimationParams) {
@@ -124,8 +124,8 @@ function drawWave(ctx: CanvasRenderingContext2D, animationParams: AnimationParam
   for (let i = 0; i < points; i++) {
     const x = (i * wellWidth[0]) / points + leftBoundary;
     const y =
-      animationParams.waveAmplitude[0] * 1.25 *
-      ( Math.sin((i / points) * particle.quantumNumber * Math.PI) ** 2);
+      animationParams.waveAmplitude[0] * 0.6 *
+      (Math.sin((i / points) * particle.quantumNumber * Math.PI));
 
     if (isRainbow) {
       const hue = ((y / animationParams.waveAmplitude[0] / 1.8) * 360) % 360;
@@ -141,7 +141,7 @@ function drawWave(ctx: CanvasRenderingContext2D, animationParams: AnimationParam
   }
 }
 
-export default function Lesson2_Unit1_2_Simulation() {
+export default function WavefunctionSimulation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -153,7 +153,7 @@ export default function Lesson2_Unit1_2_Simulation() {
   });
   const [waveAmplitude, setWaveAmplitude] = useState([300]);
   const [wellWidth, _setWellWidth] = useState([(CANVAS_DIMENSIONS.width * 7) / 10]);
-  const [wellBaseHeight, setWellBaseHeight] = useState([700]);
+  const [wellBaseHeight, setWellBaseHeight] = useState([500]);
   const [isFilled, setIsFilled] = useState([true]);
   const animationFrameRef = useRef<number>(0);
 
@@ -190,7 +190,7 @@ export default function Lesson2_Unit1_2_Simulation() {
       draw_well(ctx, animationParams);
       drawGridHorizontal(ctx, animationParams);
       drawGraphLabels(ctx, animationParams);
-      drawSimulationTitle(ctx, animationParams);
+      drawSimulationLabel(ctx, animationParams);
       drawTickMarks(ctx, animationParams);
       animationFrameRef.current = requestAnimationFrame(animate);
     };
@@ -246,7 +246,7 @@ export default function Lesson2_Unit1_2_Simulation() {
               onValueChange={setWellBaseHeight}
               label="Well Height"
               min={200}
-              max={CANVAS_DIMENSIONS.height - 100}
+              max={CANVAS_DIMENSIONS.height - 200}
               step={0.01}
             />
           </div>

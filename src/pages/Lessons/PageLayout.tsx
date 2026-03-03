@@ -4,7 +4,6 @@ import Sidebar from "../../components/Sidebar";
 import { useState } from "react";
 import type { JSX } from "react";
 
-// LessonLayout.tsx
 export default function PageLayout(): JSX.Element {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 

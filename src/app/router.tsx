@@ -1,6 +1,6 @@
 import HomePage from "../pages/HomePage";
 import ErrorPage from "../pages/ErrorPage";
-import LessonsPage from "../pages/LessonRouter";
+import LessonsRouter from "../pages/LessonRouter";
 import LessonIndexPage from "../pages/Lessons/LessonIndexPage";
 import LessonLayout from "../pages/Lessons/PageLayout";
 import SignUpPage from "@/pages/SignUpPage";
@@ -23,7 +23,8 @@ const routes = [
         errorElement: <ErrorPage/>,
         children: [
             { index: true, element: <LessonIndexPage/>},
-            { path: ":lessonId", element: <LessonsPage /> },
+            { path: ":lessonId", element: <LessonsRouter /> },
+            { path: ":chapterId/:unitId", element: <LessonsRouter /> },
         ],
     },
     {   

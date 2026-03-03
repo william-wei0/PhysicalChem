@@ -1,15 +1,15 @@
-import Lesson1_Unit1_Simulation from "./simulationComponents/Lesson1_Unit1_Simulation";
+import SingleSlitSimulation from "./simulationComponents/SingleSlitSimulation";
 import LessonSection from "../LessonSection";
 import "../styles/lessons.css";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 
-export default function Lesson1_Unit1_Page() {
+export default function Chapter1Unit1Page() {
 
   return (
     <LessonLayout>
-      <h1 id={"Lesson1"}>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
+      <h1 id={"lesson1"}>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
 
       <LessonSection>
         <h2>1.1 Single Slit Diffraction</h2>
@@ -59,7 +59,7 @@ export default function Lesson1_Unit1_Page() {
         </p>
       </LessonSection>
       <LessonSection>
-        <h2 id={"Lesson2"}>1.2 The Heisenberg Uncertainty Principle</h2>
+        <h2 id={"lesson2"}>1.2 The Heisenberg Uncertainty Principle</h2>
         <p>
           Working on the equation further, we can relate the angle <InlineMath math="\alpha" /> to the wavelength{" "}
           <InlineMath math="\lambda" /> of the photons. In order for the photons to destructively interfere at the first
@@ -130,7 +130,7 @@ export default function Lesson1_Unit1_Page() {
         </p>
       </LessonSection>
       <LessonSection>
-        <h2 id={"Lesson3"}>1.3 Single Slit Simulation</h2>
+        <h2 id={"lesson3"}>1.3 Single Slit Simulation</h2>
         <p>
           Below is a simulation of the diagram in Figure 1.1. Click on the "Controls" to control the diffraction slit
           width and observe how making the slit narrower (decreasing the uncertainity in position) causes the
@@ -142,7 +142,7 @@ export default function Lesson1_Unit1_Page() {
         </p>
       </LessonSection>
       <div className="flex justify-center-safe">
-        <Lesson1_Unit1_Simulation />
+        <SingleSlitSimulation />
       </div>
     </LessonLayout>
   );
