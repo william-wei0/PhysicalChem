@@ -51,11 +51,13 @@ const section: LinksAccordionProps[] = [
   },
   {
     id: "3",
-    title: "Unit 3: Superposition of Two Particles",
+    title: "Unit 3: Superposition of Energy Eigenstates",
     content: [
-      <HashLink to={lessonLink(3, 1, 1)}>3.1 Single Particle in 1-Dimensional Box</HashLink>,
-      <HashLink to={lessonLink(3, 1, 2)}>3.2 Applying Boundary Conditions</HashLink>,
-      <HashLink to={lessonLink(3, 1, 3)}>3.3 Simulation of a Particle in a 1D Box</HashLink>,
+      <HashLink to={lessonLink(3, 1, 1)}>3.1 Energy Eigenstates vs. Superpositions</HashLink>,
+      <HashLink to={lessonLink(3, 1, 2)}>3.2 Separation of Position & Time Variables</HashLink>,
+      <HashLink to={lessonLink(3, 1, 3)}>3.3 Solving The Temporal Wavefunction</HashLink>,
+      <HashLink to={lessonLink(3, 1, 4)}>3.4 Superposition in the Infinite Square Well</HashLink>,
+      <HashLink to={lessonLink(3, 1, 5)}>3.5 Simulation of Two Energy States</HashLink>,
     ],
   },
   {

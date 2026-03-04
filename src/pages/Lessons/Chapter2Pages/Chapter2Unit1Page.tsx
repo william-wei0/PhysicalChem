@@ -14,15 +14,15 @@ export default function Chapter2Unit1Page() {
       <LessonSection>
         <h2>2.1 The Single Particle in a 1-Dimensional Box</h2>
         <p>
-          This section covers the derivation of the probablity density function a single particle in a 1D box with
+          This section covers the derivation of the probability density function a single particle in a 1D box with
           length <InlineMath math="l" /> by solving the time-independent Schrödinger equation. We will focus on the
-          derivation of the probablity density within the center of the well because it is the most interesting and the
-          probability density outside the well is zero. The derivation of the probablity density
+          derivation of the probability density within the center of the well because it is the most interesting and the
+          probability density outside the well is zero. The derivation of the probability density
           outside the well can found on page 23 in Quantum Chemistry 7th Edition by Ira Levine.
         </p>
 
         <p>
-          In order to derive the probablity density function <InlineMath math="|\Psi(x)|^2"></InlineMath>, we will first
+          In order to derive the probability density function <InlineMath math="|\Psi(x)|^2"></InlineMath>, we will first
           need to solve for the spatial wavefunction <InlineMath math="\psi(x)"></InlineMath>, beginning with the general form
           of the time-independent Schrödinger equation.
           <BlockMath math="\left(-\frac{\hbar^2}{2m}\frac{d^2}{dx^2}+V(x)\right)\psi_n(x)=E_n\psi_n(x)"></BlockMath>
@@ -33,7 +33,7 @@ export default function Chapter2Unit1Page() {
         </p>
         <p>
           Performing further simplifications, we can show that this equation is a linear homogenous second-order
-          differential equation with constant coefficents that follows the form:{" "}
+          differential equation with constant coefficients that follows the form:{" "}
           <InlineMath math="\frac{d^2y}{dx^2}+p\frac{dy}{dx}+qy=0"></InlineMath>.
           <BlockMath math="-\frac{\hbar^2}{2m}\frac{d^2}{dx^2}\psi_n(x)-E_n\psi_n(x)=0"></BlockMath>
           <BlockMath math="\frac{d^2}{dx^2}\psi_n(x)+\frac{2m}{\hbar^2}E_n\psi_n(x)=0"></BlockMath>
@@ -42,13 +42,13 @@ export default function Chapter2Unit1Page() {
           where <InlineMath math="p=0" /> and <InlineMath math="q=\frac{2m}{\hbar^2}E_n" />.
         </p>
         <p>
-          Thus, because the equation is a linear homogenous second-order differential equation with constant coefficents
-          where <InlineMath math="p=0" /> and <InlineMath math="q=\frac{2m}{\hbar^2}E_n" />, we can solve the auxillary
+          Thus, because the equation is a linear homogenous second-order differential equation with constant coefficients
+          where <InlineMath math="p=0" /> and <InlineMath math="q=\frac{2m}{\hbar^2}E_n" />, we can solve the auxiliary
           equation <InlineMath math="s^2+ps+q=0" /> to find <InlineMath math="s_1" /> and <InlineMath math="s_2" />{" "}
           which are:
           <BlockMath math="s=+i\frac{\sqrt{2mE}}{\hbar}, -i\frac{\sqrt{2mE}}{\hbar}"></BlockMath>
           So, using the general solution of a linear homogenous second-order differential equation with constant
-          coefficents and the values for <InlineMath math="s_1" /> and <InlineMath math="s_2" />:
+          coefficients and the values for <InlineMath math="s_1" /> and <InlineMath math="s_2" />:
           <BlockMath math="\begin{equation}\psi(x)=c_1e^{\frac{i\sqrt{2mE}}{\hbar}x}+c_2e^{-i\frac{i\sqrt{2mE}}{\hbar}x}\end{equation}" />
           .
         </p>
@@ -77,7 +77,7 @@ export default function Chapter2Unit1Page() {
       <LessonSection>
         <h2 id="lesson2">2.2 Applying Boundary Conditions</h2>
         <p className="relative">
-          To solve for the coefficents <InlineMath math="A" /> and <InlineMath math="B" />, we can apply the boundary
+          To solve for the coefficients <InlineMath math="A" /> and <InlineMath math="B" />, we can apply the boundary
           conditions of the well at <InlineMath math="x=0"></InlineMath> and <InlineMath math="x=l"></InlineMath>.
           Starting from the region to the left of the well where <InlineMath math="x\le 0" />, the wavefunction{" "}
           <InlineMath math="\psi_{left}=0"></InlineMath> because the potential{" "}
@@ -116,7 +116,7 @@ export default function Chapter2Unit1Page() {
         <p>
           Since the zeros of the sine function occur at all integer <InlineMath math="n" /> multiples of{" "}
           <InlineMath math="\pi" />, we can write that <InlineMath math="\frac{\sqrt{2mE}}{\hbar}l" /> must equal some
-          integer mulitple of <InlineMath math="\pi" />.
+          integer multiple of <InlineMath math="\pi" />.
         </p>
         <p>So:</p>
         <p>
@@ -136,7 +136,7 @@ export default function Chapter2Unit1Page() {
         <p>
           Although is appears as though <InlineMath math="B"></InlineMath> has not yet been solved from our previous
           work, since the wavefunction now depends on the length of the box <InlineMath math="l" />, we use the
-          normalization of the probablity density function to solve for <InlineMath math="B"></InlineMath>.{" "}
+          normalization of the probability density function to solve for <InlineMath math="B"></InlineMath>.{" "}
           <BlockMath
             math="\begin{align}
           \int_{-\infty}^{\infty}|\Psi|^2\,dx&=1\notag\\
@@ -167,7 +167,7 @@ export default function Chapter2Unit1Page() {
         </p>
         <p>
           Now the coefficient <InlineMath math="B"></InlineMath> has been found we can finally write the full spatial
-          wavefunction and probablity density function:
+          wavefunction and probability density function:
           <div className="importantEquation">
             <BlockMath math="\begin{equation}\large\psi(x)=\sqrt{\frac{2}{l}}\sin{\left(\frac{n\pi x}{l}\right)},\quad n=1,2,3,\ldots\end{equation}" />
             <BlockMath math="\begin{equation}\large |\bold{\Psi(x)}|^2=\frac{2}{l}\sin^2{\left(\frac{n\pi x}{l}\right)},\quad n=1,2,3,\ldots\end{equation}" />
@@ -179,7 +179,7 @@ export default function Chapter2Unit1Page() {
       <LessonSection>
         <h2 id="lesson3">2.3 Simulation of a Particle in a 1-Dimensional Box</h2>
         <p>
-          In order to better understand the node and antinode locations of the probablity density function, below is an
+          In order to better understand the node and antinode locations of the probability density function, below is an
           interactive simulation of the particle in a box. Observe how modifying the quantum number{" "}
           <InlineMath math="n" /> changes the shape of the function and identify how the location of the nodes and
           antinodes move.

@@ -13,21 +13,29 @@ export default function Chapter3Unit1Page() {
       <LessonSection>
         <h2>3.1 Energy Eigenstates vs. Superpositions</h2>
         <p>
-          From Chapter 2, by solving the time-independent Schrödinger equation, we have derived the spatial wavefunction{" "}
-          <InlineMath math="\psi(x)"></InlineMath>
+          From Chapter 2, by solving the time-independent Schrödinger equation, we have derived the spatial wavefunction
+          (also known as the stationary state) <InlineMath math="\psi(x)"></InlineMath>
           and showed that probability of finding a particle in a given location in an infinite well is given by a family
-          of equations corresponding to the particle's quantum number <InlineMath math="n"></InlineMath>.
+          of equations according to the particle's quantum number <InlineMath math="n"></InlineMath>.
           <div className="importantEquation">
             <BlockMath math="\psi_n(x)=\sqrt{\frac{2}{a}}\sin\!\left(\frac{n\pi x}{a}\right),\quad n=1,2,3,\ldots" />
           </div>
         </p>
         <p>
-          However, a real quantum particle is not only governed by the spatial wavefunction{" "}
-          <InlineMath math="\psi(x)"></InlineMath> (also known as a stationary state) but also depends on time, as shown
-          in the general form of the time-dependent Schrödinger equation where the full wavefunction is{" "}
-          <InlineMath math="\Psi(x,t)"></InlineMath>.
+          Since these stationary states are solutions to particle's wavefunctions at specific quantum numbers{" "}
+          <InlineMath math="n"></InlineMath>, and because a particle's energy depends on its quantum number, we call the
+          wavefunction at a specific quantum number <InlineMath math="n"></InlineMath>, the energy eigenstate.
+        </p>
+        <p>
+          However, a real quantum particle does not always only exist as one energy eigenstate but rather a
+          superposition of multiple energy eigenstates which is the weighted sum of each of the particle's energy eigenstate.
+          <BlockMath math="\Psi(x,t)=\sum_{k=1}^{\infty} c_k\,\psi_k(x)\phi_k(t)" />
+          Furthermore, real particles are also not only governed by the wavefunction{" "}
+          <InlineMath math="\psi(x)"></InlineMath> but also depends on time, as shown in the general form of the
+          time-dependent Schrödinger equation where the full wavefunction is <InlineMath math="\Psi(x,t)"></InlineMath>.
           <BlockMath math="i\hbar\frac{\partial \Psi(x,t)}{\partial t}=\bm{\hat{H}}\Psi(x,t)" />
         </p>
+
         <p>
           In the following section, we will explore the time-dependence of the particle in a box and why we could both
           separate the wavefunction into separate spatial and temporal wavefunction, and also ignore the temporal
@@ -111,7 +119,7 @@ export default function Chapter3Unit1Page() {
 
       <LessonSection>
         <h2 id="lesson3">
-          3.3 Solving for the Time Factor <InlineMath math="\phi(t)" />
+          3.3 Solving The Temporal Wavefunction <InlineMath math="\phi(t)" />
         </h2>
 
         <p>
