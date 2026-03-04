@@ -15,16 +15,16 @@ export default function Chapter2Unit1Page() {
         <h2>2.1 The Single Particle in a 1-Dimensional Box</h2>
         <p>
           This section covers the derivation of the probablity density function a single particle in a 1D box with
-          length <InlineMath math="l" /> by solving the time-dependent Schrödinger equation. We will focus on the
-          derivation of the probablity density within the center of the well because it is the most interesting, and the
-          the probability density outside the well can be shown to be zero. The derivation of the probablity density
+          length <InlineMath math="l" /> by solving the time-independent Schrödinger equation. We will focus on the
+          derivation of the probablity density within the center of the well because it is the most interesting and the
+          probability density outside the well is zero. The derivation of the probablity density
           outside the well can found on page 23 in Quantum Chemistry 7th Edition by Ira Levine.
         </p>
 
         <p>
           In order to derive the probablity density function <InlineMath math="|\Psi(x)|^2"></InlineMath>, we will first
-          need to solve for the wavefunction <InlineMath math="\psi(x)"></InlineMath>, beginning with the general form
-          of the time-dependent Schrödinger equation..
+          need to solve for the spatial wavefunction <InlineMath math="\psi(x)"></InlineMath>, beginning with the general form
+          of the time-independent Schrödinger equation.
           <BlockMath math="\left(-\frac{\hbar^2}{2m}\frac{d^2}{dx^2}+V(x)\right)\psi_n(x)=E_n\psi_n(x)"></BlockMath>
           Since we are focusing on the region within the well where <InlineMath math="0<x<l" />, the potential energy is
           defined to be 0, so <InlineMath math="V(x)=0"></InlineMath>.
@@ -166,11 +166,11 @@ export default function Chapter2Unit1Page() {
           />
         </p>
         <p>
-          Now the coefficient <InlineMath math="B"></InlineMath> has been found we can finally write the full
+          Now the coefficient <InlineMath math="B"></InlineMath> has been found we can finally write the full spatial
           wavefunction and probablity density function:
           <div className="importantEquation">
-            <BlockMath math="\begin{equation}\large\psi(x)=\sqrt{\frac{2}{l}}\sin{\left(\frac{n\pi x}{l}\right)}\end{equation}" />
-            <BlockMath math="\begin{equation}\large |\bold{\Psi(x)}|^2=\frac{2}{l}\sin^2{\left(\frac{n\pi x}{l}\right)}\end{equation}" />
+            <BlockMath math="\begin{equation}\large\psi(x)=\sqrt{\frac{2}{l}}\sin{\left(\frac{n\pi x}{l}\right)},\quad n=1,2,3,\ldots\end{equation}" />
+            <BlockMath math="\begin{equation}\large |\bold{\Psi(x)}|^2=\frac{2}{l}\sin^2{\left(\frac{n\pi x}{l}\right)},\quad n=1,2,3,\ldots\end{equation}" />
           </div>
           where <InlineMath math="n = 1, 2, 3, \ldots" /> is the quantum number.
         </p>

@@ -28,6 +28,10 @@
     @apply mb-4 mt-4 text-lg;
 }
 
+.lessonSection p.smallNote{
+    @apply text-sm;
+}
+
 .figure img{
  @apply m-auto;
 }
