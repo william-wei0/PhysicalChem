@@ -5,10 +5,10 @@ import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import TwoParticleWellSimulation from "./simulationComponents/TwoParticleWellSimulation";
 
-export default function Chapter3Unit1Page() {
+export default function Chapter4Unit1Page() {
   return (
     <LessonLayout>
-      <h1 id="lesson1">Unit 3. Superposition of Energy Eigenstates in a 1-Dimensional Box</h1>
+      <h1 id="lesson4">Unit 3. Superposition of Energy Eigenstates in a 1-Dimensional Box</h1>
 
       <LessonSection>
         <h2>3.1 Energy Eigenstates vs. Superpositions</h2>
