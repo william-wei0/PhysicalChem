@@ -27,7 +27,7 @@ const ROUTE = {
 const lessonLink = (chapterNum: number, unitNum: number, lessonNum?: number) => {
   return lessonNum == 1
     ? `/${ROUTE.lessons}/${ROUTE.chapter}${chapterNum}/${ROUTE.unit}${unitNum}#`
-    : `/${ROUTE.lessons}/${ROUTE.chapter}${chapterNum}/${ROUTE.unit}${unitNum}#${ROUTE.lesson}${lessonNum}`
+    : `/${ROUTE.lessons}/${ROUTE.chapter}${chapterNum}/${ROUTE.unit}${unitNum}#${ROUTE.lesson}${lessonNum}`;
 };
 const section: LinksAccordionProps[] = [
   {
@@ -62,8 +62,15 @@ const section: LinksAccordionProps[] = [
   },
   {
     id: "4",
-    title: "Unit 4: Physical Properties of Atoms",
-    content: [<HashLink to="/">3.3: The Superposition of 1s2pz</HashLink>],
+    title: "Unit 4: The Two-Particle Rigid Rotor",
+    content: [
+      <HashLink to={lessonLink(4, 1, 1)}>4.1 The Rigid Rotor Model</HashLink>,
+      <HashLink to={lessonLink(4, 1, 2)}>4.2 The Hamiltonian and Reduced Mass</HashLink>,
+      <HashLink to={lessonLink(4, 1, 3)}>4.3 The Reduced Mass Moment of Inertia</HashLink>,
+      <HashLink to={lessonLink(4, 1, 4)}>4.4 Applying Spherical Harmonics</HashLink>,
+      <HashLink to={lessonLink(4, 1, 5)}>4.5 The Discrete Energy Spectrum</HashLink>,
+      <HashLink to={lessonLink(4, 1, 6)}>4.6 Simulation of the Rigid Rotor</HashLink>,
+    ],
   },
   {
     id: "5",

@@ -522,7 +522,7 @@ export default function SingleSlitSimulation() {
       {/* Canvas + Controls */}
       <div
         ref={containerRef}
-        className="canvas-container"
+        className="canvasContainer"
         style={{
           width: CANVAS_DIMENSIONS.width,
           height: CANVAS_DIMENSIONS.height,

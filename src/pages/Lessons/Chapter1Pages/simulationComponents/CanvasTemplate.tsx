@@ -185,7 +185,7 @@ export default function Lesson1_Unit1_Simulation() {
   );
 
   return (
-    <div ref={containerRef} className="canvas-container">
+    <div ref={containerRef} className="canvasContainer">
       <SimulationControls
         controllableSimulationVariables={
           <div className="scrollContainer max-h-[700px]">

@@ -1,15 +1,15 @@
 @reference "../../../styles/global.css";
 
-.simulation-container {
-  height: calc(100vh - 200px);
-  @apply h-screen flex border-2 border-amber-300 relative overflow-x-hidden;
+.simulationContainer {
+  height: 840px;
+  @apply flex border-2 border-black relative overflow-x-hidden;
 }
 
-.canvas-container {
+.canvasContainer {
   @apply flex relative overflow-x-hidden ;
 }
 
-.three-canvas {
+.threeCanvas {
   @apply flex-1 w-full z-0;
 }
 

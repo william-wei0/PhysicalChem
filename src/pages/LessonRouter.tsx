@@ -4,6 +4,7 @@ import type { ComponentType, JSX } from "react";
 import Chapter1Unit1Page from "./Lessons/Chapter1Pages/Chapter1Unit1Page";
 import Chapter2Unit1Page from "./Lessons/Chapter2Pages/Chapter2Unit1Page";
 import Chapter3Unit1Page from "./Lessons/Chapter3Pages/Chapter3Unit1Page";
+import Chapter4Unit1Page from "./Lessons/Chapter4Pages/Chapter4Unit1Page";
 
 type LessonRouteParams = {
   chapterId: string;
@@ -21,6 +22,9 @@ const lessonMap: Record<string, Record<string, ComponentType>> = {
   },
   chapter3: {
     unit1: Chapter3Unit1Page,
+  },
+  chapter4: {
+    unit1: Chapter4Unit1Page,
   },
 };
 

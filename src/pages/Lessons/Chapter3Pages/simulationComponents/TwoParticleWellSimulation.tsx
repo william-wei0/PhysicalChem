@@ -382,7 +382,7 @@ export default function TwoParticleWellSimulation() {
   return (
     <div
       ref={containerRef}
-      className="canvas-container my-4"
+      className="canvasContainer my-4"
       style={{
         width: CANVAS_DIMENSIONS.width,
         height: CANVAS_DIMENSIONS.height,
