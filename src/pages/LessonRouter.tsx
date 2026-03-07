@@ -5,6 +5,8 @@ import Chapter1Unit1Page from "./Lessons/Chapter1Pages/Chapter1Unit1Page";
 import Chapter2Unit1Page from "./Lessons/Chapter2Pages/Chapter2Unit1Page";
 import Chapter3Unit1Page from "./Lessons/Chapter3Pages/Chapter3Unit1Page";
 import Chapter4Unit1Page from "./Lessons/Chapter4Pages/Chapter4Unit1Page";
+import Chapter5Unit1Page from "./Lessons/Chapter5Pages/Chapter5Unit1Page";
+import Chapter6Unit1Page from "./Lessons/Chapter6Pages/Chapter6Unit1Page";
 
 type LessonRouteParams = {
   chapterId: string;
@@ -25,6 +27,12 @@ const lessonMap: Record<string, Record<string, ComponentType>> = {
   },
   chapter4: {
     unit1: Chapter4Unit1Page,
+  },
+  chapter5: {
+    unit1: Chapter5Unit1Page,
+  },
+  chapter6: {
+    unit1: Chapter6Unit1Page,
   },
 };
 

@@ -74,13 +74,19 @@ const section: LinksAccordionProps[] = [
   },
   {
     id: "5",
-    title: "Unit 5: Physical Properties of Atoms",
-    content: [<HashLink to="/">3.3: The Superposition of 1s2pz</HashLink>],
+    title: "Unit 5: Superposition of 1s and 2p1 states",
+    content: [
+      <HashLink to={lessonLink(5, 1, 1)}>5.1 Applying Spherical Harmonics</HashLink>,
+      <HashLink to={lessonLink(5, 1, 2)}>5.2 The Discrete Energy Spectrum</HashLink>,
+    ],
   },
   {
     id: "6",
     title: "Unit 6: Physical Properties of Atoms",
-    content: [<HashLink to="/">3.3: The Superposition of 1s2pz</HashLink>],
+    content: [
+      <HashLink to={lessonLink(6, 1, 1)}>5.1 Applying Spherical Harmonics</HashLink>,
+      <HashLink to={lessonLink(6, 1, 2)}>5.2 The Discrete Energy Spectrum</HashLink>,
+    ],
   },
   {
     id: "7",
