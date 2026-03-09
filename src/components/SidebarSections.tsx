@@ -21,19 +21,12 @@ type SectionItem = {
   contentStyle?: CSSProperties;
 };
 
-const ROUTE = {
-  lessons: "lessons",
-  chapter: "chapter",
-  unit: "unit",
-  lesson: "lesson",
-} as const;
-
 const lessonLink = (chapterNum: number, unitNum: number, lessonNum = 1) =>
-  `/${ROUTE.lessons}/${ROUTE.chapter}${chapterNum}/${ROUTE.unit}${unitNum}#${
-    lessonNum === 1 ? "" : `${ROUTE.lesson}${lessonNum}`
+  `/lessons/chapter${chapterNum}/"unit"${unitNum}#${
+    lessonNum === 1 ? "" : `"lesson"${lessonNum}`
   }`;
 
-const defaultTriggerClass = "accordionTrigger underlineAnimation"
+const defaultTriggerClass = "sidebarAccordionTrigger underlineAnimation"
 const defaultContentClass = "linkItem";
 
 const sections: SectionItem[] = [

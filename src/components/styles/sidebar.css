@@ -1,6 +1,6 @@
 @reference "../../styles/global.css";
 
-.accordionTrigger {
+.sidebarAccordionTrigger {
   @apply relative w-full font-semibold text-left border-b-2 border-zinc-500 pl-4 pt-4 pb-1 bg-zinc-100;
 }
 

@@ -8,6 +8,8 @@ import {
   AccordionProvider,
 } from "./accordion-provider.tsx";
 
+import styles from "./accordion.module.css"
+
 type WithChildren = { children: React.ReactNode };
 type AccordionStyle = { className?: string; style?: CSSProperties };
 type AccordionProps = WithChildren & { allowMultiple?: boolean };
@@ -32,7 +34,7 @@ export const AccordionTrigger = ({ className, style, children }: AccordionTrigge
 
     if (!context || !item) return null;
     return (
-        <div>
+        <div className={styles.accordionTrigger}>
             <button
                 className={`flex items-center justify-between w-full ${className}`}
                 style={style}
@@ -62,7 +64,7 @@ export const AccordionContent = ({ className, style, children }: AccordionConten
 
     return (
         <div
-            className="grid transition-all duration-300 ease-in-out"
+            className={styles.accordionContent}
             style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
         >
             <div className="overflow-hidden">
