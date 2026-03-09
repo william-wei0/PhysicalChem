@@ -22,8 +22,8 @@ type SectionItem = {
 };
 
 const lessonLink = (chapterNum: number, unitNum: number, lessonNum = 1) =>
-  `/lessons/chapter${chapterNum}/"unit"${unitNum}#${
-    lessonNum === 1 ? "" : `"lesson"${lessonNum}`
+  `/lessons/chapter${chapterNum}/unit${unitNum}#${
+    lessonNum === 1 ? "" : `lesson${lessonNum}`
   }`;
 
 const defaultTriggerClass = "sidebarAccordionTrigger underlineAnimation"
