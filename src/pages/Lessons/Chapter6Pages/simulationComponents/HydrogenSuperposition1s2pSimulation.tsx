@@ -17,7 +17,7 @@ interface SimConfig {
   threshold: number;
   speed: number;
   oneSProportion: number;
-  twoPzProportion: number;
+  twoPProportion: number;
   pointSize: number;
   enableAxis: boolean;
   enableGrid: boolean;
@@ -220,13 +220,13 @@ function OrbitalPointCloud({
     const threshold = s.threshold / 20;
     const phase = phaseRef.current;
     const oneS = s.oneSProportion;
-    const twoPz = s.twoPzProportion;
-    const interferenceFactor = 3 * oneS * twoPz;
+    const twoP = s.twoPProportion;
+    const interferenceFactor = 3 * oneS * twoP;
 
     for (let i = 0; i < numPoints; i++) {
       const density =
         oneS * wf1sS[i] +
-        twoPz * wf2pzS[i] +
+        twoP * wf2pzS[i] +
         interferenceFactor * wf1s[i] * wf2pz[i] * Math.cos(phase - phi[i]);
 
       isActive[i] = density > threshold ? 1 : 0;
@@ -326,14 +326,14 @@ export default function HydrogenSuperposition1s2pSimulation() {
 
   const [particleData] = useState<ParticleData>(() => createParticleData(NUM_POINTS));
 
-  const twoPzProportion = [1 - oneSProportion[0]];
+  const twoPProportion = [1 - oneSProportion[0]];
 
   const SPEED_SCALE_FACTOR = 2;
   const sim: SimConfig = {
     threshold: threshold[0],
     speed: speed[0]*SPEED_SCALE_FACTOR,
     oneSProportion: oneSProportion[0],
-    twoPzProportion: twoPzProportion[0],
+    twoPProportion: twoPProportion[0],
     pointSize: pointSize[0],
     enableAxis,
     enableGrid,
@@ -386,7 +386,7 @@ export default function HydrogenSuperposition1s2pSimulation() {
 
             <Slider
               key="two-pz"
-              value={[parseFloat(twoPzProportion[0].toFixed(2))]}
+              value={[parseFloat(twoPProportion[0].toFixed(2))]}
               onValueChange={(value) => setOneSProportion([1 - value[0]])}
               label="2pz Proportion"
               min={0}
