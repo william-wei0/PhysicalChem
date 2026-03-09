@@ -2,15 +2,14 @@ import HomePage from "../pages/HomePage";
 import ErrorPage from "../pages/ErrorPage";
 import LessonsRouter from "../pages/LessonRouter";
 import LessonIndexPage from "../pages/Lessons/LessonIndexPage";
-import LessonLayout from "../pages/Lessons/PageLayout";
+import PageLayout from "../layouts/PageLayout";
 import SignUpPage from "@/pages/SignUpPage";
-import App from "./App";
 import LoginPage from "@/pages/LoginPage";
 
 const routes = [
     {
         path        : "/",
-        element     : <App/>,
+        element     : <PageLayout/>,
         errorElement: <ErrorPage/>,
         children    : [
             {index: true, element: <HomePage/>},
@@ -19,7 +18,7 @@ const routes = [
     },
     {
         path: "/lessons",
-        element: <LessonLayout />,
+        element: <PageLayout />,
         errorElement: <ErrorPage/>,
         children: [
             { index: true, element: <LessonIndexPage/>},
