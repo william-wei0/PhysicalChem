@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 export default function Navbar() {
   return (
-    <nav className="bg-zinc-800 text-white px-6 py-4" id="siteHeader">
+    <nav className="bg-zinc-800 text-white px-6 py-4" >
       <div className="grid grid-cols-3 items-center">
         {/* Left */}
         <div className="flex gap-6">

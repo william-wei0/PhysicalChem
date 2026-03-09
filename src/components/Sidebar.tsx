@@ -13,7 +13,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
-    const header = document.getElementById("siteHeader") ?? document.querySelector("header");
+    const header = document.getElementById("siteHeader");
     if (!(header instanceof HTMLElement)) return;
 
     const intersectionObserver = new IntersectionObserver(
@@ -48,7 +48,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         style={{ top: headerVisible ? headerHeight : 0 }}
       >
         <MinimizeSidebarButton onClick={onToggle} className="absolute right-2 top-2 z-10" />
-        <header className="text-center font-bold text-xl p-2 mb-5">Lesson Overview</header>
+        <header className="text-center font-bold text-2xl p-2 mb-5">Lesson Overview</header>
 
         <div className="bg-zinc-200 rounded-2xl border border-black py-5">
           <SidebarSections />

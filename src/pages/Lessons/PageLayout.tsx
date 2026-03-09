@@ -13,25 +13,19 @@ export default function PageLayout(): JSX.Element {
                 [grid-template-areas:'header_header''sidebar_main''footer_footer']
                 transition-[grid-template-columns] duration-500 ease-in-out"
       style={{
-        gridTemplateColumns: isSidebarOpen ? '400px 1fr' : '52px 1fr'
+        gridTemplateColumns: isSidebarOpen ? "400px 1fr" : "52px 1fr",
       }}
     >
-      <header className="[grid-area:header]">
+      <header className="[grid-area:header]" id="siteHeader">
         <Navbar />
       </header>
       <aside className="[grid-area:sidebar] min-h-0 flex flex-col overflow-hidden">
-        <Sidebar 
-          isOpen={isSidebarOpen} 
-          onToggle={() => setIsSidebarOpen(!isSidebarOpen)} 
-        />
+        <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
       </aside>
       <main className="[grid-area:main] min-h-0 flex flex-col overflow-auto border-t">
         <Outlet />
       </main>
-      <footer className="[grid-area:footer] bg-zinc-900 text-white p-4 rounded">
-        Footer
-      </footer>
+      <footer className="[grid-area:footer] bg-zinc-900 text-white p-4 rounded">Footer</footer>
     </div>
   );
 }
-
