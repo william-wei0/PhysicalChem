@@ -38,7 +38,7 @@ const sections: SectionItem[] = [
       { chapterNum: 1, unitNum: 1, lessonNum: 2, label: "1.2: Heisenberg Uncertainty Principle" },
       { chapterNum: 1, unitNum: 1, lessonNum: 3, label: "1.3: Single Slit Simulation" },
     ],
-    triggerClassName: "border-t",
+    triggerClassName: "border-t-2",
   },
   {
     id: "2",
