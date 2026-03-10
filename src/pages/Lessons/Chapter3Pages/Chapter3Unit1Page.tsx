@@ -11,7 +11,7 @@ export default function Chapter3Unit1Page() {
       <h1 id="lesson1">Unit 3. Superposition of Energy Eigenstates in a 1-Dimensional Box</h1>
 
       <LessonSection>
-        <h2>3.1 Energy Eigenstates vs. Superpositions</h2>
+        <h2>3.1 Energy Eigenstates vs. Energy Superpositions</h2>
         <p>
           From Chapter 2, by solving the time-independent Schrödinger equation, we have derived the spatial wavefunction
           (also known as the stationary state) <InlineMath math="\psi(x)"></InlineMath>
@@ -200,7 +200,7 @@ export default function Chapter3Unit1Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="lesson6">3.5 Superposition of Two Energy States in the Infinite Square Well</h2>
+        <h2 id="lesson5">3.5 Superposition of Two Energy States in the Infinite Square Well</h2>
 
         <p>
           To explore the interference, let's consider a simple superposition of just two energy eigenstates, labeled{" "}
@@ -327,7 +327,7 @@ export default function Chapter3Unit1Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="lesson5">3.5 Simulation of the Superposition of Two Energy States in the Infinite Square Well</h2>
+        <h2 id="lesson6">3.6 A Simulation of the Superposition of Two Energy States in the Infinite Square Well</h2>
 
         <p>
           Below a simulation of the superposition of two energy states in the infinite square well. Observe how changing

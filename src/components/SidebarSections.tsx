@@ -22,11 +22,9 @@ type SectionItem = {
 };
 
 const lessonLink = (chapterNum: number, unitNum: number, lessonNum = 1) =>
-  `/lessons/chapter${chapterNum}/unit${unitNum}#${
-    lessonNum === 1 ? "" : `lesson${lessonNum}`
-  }`;
+  `/lessons/chapter${chapterNum}/unit${unitNum}#${lessonNum === 1 ? "" : `lesson${lessonNum}`}`;
 
-const defaultTriggerClass = "sidebarAccordionTrigger underlineAnimation"
+const defaultTriggerClass = "sidebarAccordionTrigger underlineAnimation";
 const defaultContentClass = "linkItem";
 
 const sections: SectionItem[] = [
@@ -56,8 +54,9 @@ const sections: SectionItem[] = [
       { chapterNum: 3, unitNum: 1, lessonNum: 1, label: "3.1 Energy Eigenstates vs. Superpositions" },
       { chapterNum: 3, unitNum: 1, lessonNum: 2, label: "3.2 Separation of Position & Time Variables" },
       { chapterNum: 3, unitNum: 1, lessonNum: 3, label: "3.3 Solving The Temporal Wavefunction" },
-      { chapterNum: 3, unitNum: 1, lessonNum: 4, label: "3.4 Superposition in the Infinite Square Well" },
-      { chapterNum: 3, unitNum: 1, lessonNum: 5, label: "3.5 Simulation of Two Energy States" },
+      { chapterNum: 3, unitNum: 1, lessonNum: 4, label: "3.4 Superpositions in the Infinite Well" },
+      { chapterNum: 3, unitNum: 1, lessonNum: 5, label: "3.5 Superposition of Two Energy States" },
+      { chapterNum: 3, unitNum: 1, lessonNum: 6, label: "3.6 A Simulation of Two Energy States" },
     ],
   },
   {
@@ -74,12 +73,43 @@ const sections: SectionItem[] = [
   },
   {
     id: "5",
-    title: <p>Unit 5. Superposition of 1s and 2p<sub>z</sub> States</p>,
+    title: (
+      <p>
+        Unit 5. Superposition of 1s and 2p<sub>z</sub> States
+      </p>
+    ),
     lessons: [
       { chapterNum: 5, unitNum: 1, lessonNum: 1, label: "5.1 Deriving the 1s State Function" },
-      { chapterNum: 5, unitNum: 1, lessonNum: 2, label: <p>5.2 Deriving the 2p<sub>z</sub> State Function</p> },
-      { chapterNum: 5, unitNum: 1, lessonNum: 3, label: <p>5.3 Superposition of the 1s and 2p<sub>z</sub> States</p> },
-      { chapterNum: 5, unitNum: 1, lessonNum: 3, label: <p>5.4 Simulation of 1s and 2p<sub>z</sub> Superposition</p> },
+      {
+        chapterNum: 5,
+        unitNum: 1,
+        lessonNum: 2,
+        label: (
+          <p>
+            5.2 Deriving the 2p<sub>z</sub> State Function
+          </p>
+        ),
+      },
+      {
+        chapterNum: 5,
+        unitNum: 1,
+        lessonNum: 3,
+        label: (
+          <p>
+            5.3 Superposition of the 1s and 2p<sub>z</sub> States
+          </p>
+        ),
+      },
+      {
+        chapterNum: 5,
+        unitNum: 1,
+        lessonNum: 4,
+        label: (
+          <p>
+            5.4 Simulation of 1s and 2p<sub>z</sub> Superposition
+          </p>
+        ),
+      },
     ],
   },
   {
@@ -88,12 +118,10 @@ const sections: SectionItem[] = [
     lessons: [
       { chapterNum: 6, unitNum: 1, lessonNum: 1, label: "6.1 Deriving the 1s State Function" },
       { chapterNum: 6, unitNum: 1, lessonNum: 2, label: "6.2 Deriving the 2p State Function" },
-      { chapterNum: 6, unitNum: 1, lessonNum: 2, label: "6.3 Superposition of the 1s and 2p States" },
-      { chapterNum: 6, unitNum: 1, lessonNum: 2, label: "6.4 Simulation of 1s and 2p Superposition" },
-      
+      { chapterNum: 6, unitNum: 1, lessonNum: 3, label: "6.3 Superposition of the 1s and 2p States" },
+      { chapterNum: 6, unitNum: 1, lessonNum: 4, label: "6.4 Simulation of 1s and 2p Superposition" },
     ],
   },
-
 ];
 
 export default function SidebarSections() {
@@ -114,9 +142,7 @@ export default function SidebarSections() {
               className={clsx(defaultContentClass, section.contentClassName)}
               style={section.contentStyle}
             >
-              <HashLink to={lessonLink(lesson.chapterNum, lesson.unitNum, lesson.lessonNum)}>
-                {lesson.label}
-              </HashLink>
+              <HashLink to={lessonLink(lesson.chapterNum, lesson.unitNum, lesson.lessonNum)}>{lesson.label}</HashLink>
             </AccordionContent>
           ))}
         </AccordionItem>

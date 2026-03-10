@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --animate-fade-in: fadeIn 0.7s ease-in-out forwards;
+  --animate-fade-in: fadeIn 0.9s ease-in-out forwards;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

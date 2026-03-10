@@ -201,11 +201,11 @@ export default function HydrogenSuperpositionPage() {
         <div className="importantEquation">
           <BlockMath
             math="|\Psi(\mathbf{r},t)|^2=
-|c_{1s}|^2\frac{1}{\pi}\left(\frac{Z}{a_0}\right)^3e^{-2Zr/a_0}
-+
-|c_{2p_z}|^2\frac{1}{32\pi}\left(\frac{Z}{a_0}\right)^5r^2e^{-Zr/a_0}\cos^2\theta
-+
-\frac{1}{2\sqrt{2}\pi}|c_{1s}||c_{2p_z}|\left(\frac{Z}{a_0}\right)^4re^{-3Zr/(2a_0)}\cos\theta\cos\!\big(\Delta\phi(t)\big)"
+          |c_{1s}|^2\frac{1}{\pi}\left(\frac{Z}{a_0}\right)^3e^{-2Zr/a_0}
+          +
+          |c_{2p_z}|^2\frac{1}{32\pi}\left(\frac{Z}{a_0}\right)^5r^2e^{-Zr/a_0}\cos^2\theta
+          +
+          \frac{1}{2\sqrt{2}\pi}|c_{1s}||c_{2p_z}|\left(\frac{Z}{a_0}\right)^4re^{-3Zr/(2a_0)}\cos\theta\cos\!\big(\Delta\phi(t)\big)"
           />
         </div>
       </LessonSection>

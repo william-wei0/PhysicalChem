@@ -79,7 +79,7 @@ export default function Chapter4Unit1Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="lesson3">4.3 The Moment of Inertia</h2>
+        <h2 id="lesson3">4.3 The The Reduced Mass Moment of Inertia</h2>
         <p>
           Before solving for the energy eigenvalues, it is helpful to introduce the <strong>moment of inertia</strong>{" "}
           <InlineMath math="I" />, which plays the same role in rotational mechanics that mass plays in translational
@@ -119,7 +119,7 @@ export default function Chapter4Unit1Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="lesson4">4.4 Solving the Schrödinger Equation: Spherical Harmonics</h2>
+        <h2 id="lesson4">4.4 Applying the Spherical Harmonics of the Schrödinger Equation</h2>
         <p>
           Since the rigid rotor is constrained to a sphere of radius <InlineMath math="d" />, the wave function depends
           only on <InlineMath math="\theta" /> and <InlineMath math="\phi" />. These angular wave functions are already
@@ -199,7 +199,7 @@ export default function Chapter4Unit1Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="lesson6">4.6 Simulation of the Two-Particle Rigid Rotor</h2>
+        <h2 id="lesson6">4.6 A Simulation of the Two-Particle Rigid Rotor</h2>
         <p>
           The simulation below shows the two-particle rigid rotor in three dimensions. The two atoms (spheres) are held
           at a fixed distance and rotate about the rotor axis, shown by the white arrow. The orientation of the axis in

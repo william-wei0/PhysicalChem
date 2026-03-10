@@ -10,7 +10,7 @@ import LessonLayout from "../LessonLayout";
 export default function Chapter2Unit1Page() {
   return (
     <LessonLayout>
-      <h1 id="lesson1">Unit 2. Single Particle in 1-Dimensional Box</h1>
+      <h1 id="lesson1">Unit 2. A Single Particle in 1-Dimensional Box</h1>
       <LessonSection>
         <h2>2.1 The Single Particle in a 1-Dimensional Box</h2>
         <p>
@@ -177,7 +177,7 @@ export default function Chapter2Unit1Page() {
       </LessonSection>
 
       <LessonSection>
-        <h2 id="lesson3">2.3 Simulation of a Particle in a 1-Dimensional Box</h2>
+        <h2 id="lesson3">2.3 A Simulation of a Particle in a 1-Dimensional Box</h2>
         <p>
           In order to better understand the node and antinode locations of the probability density function, below is an
           interactive simulation of the particle in a box. Observe how modifying the quantum number{" "}

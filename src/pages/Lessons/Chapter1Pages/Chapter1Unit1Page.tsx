@@ -12,7 +12,7 @@ export default function Chapter1Unit1Page() {
       <h1 id={"lesson1"}>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
 
       <LessonSection>
-        <h2>1.1 Single Slit Diffraction</h2>
+        <h2>1.1 The Single Slit Diffraction Pattern</h2>
         <p>
           To observe the uncertainty principle, we can explore the single slit diffraction experiment. The experiment
           begins with a beam of photons traveling in the positive-y direction with a momentum{" "}
@@ -28,11 +28,11 @@ export default function Chapter1Unit1Page() {
           {" "}
           <img
             src="/src/pages/Lessons/assets/Figure1.1-DiffractionOfElectronsBySlit-QuantumChemistry-IraLevine-p6.png"
-            alt="Figure 1.1. Diffraction of electons by a slit. Obtained from Quantum Chemistry 7th Edition (p. 6, Figure
+            alt="Figure 1.1. Diffraction of electrons by a slit. Obtained from Quantum Chemistry 7th Edition (p. 6, Figure
             1.1) by Ira N. Levine"
           />
           <p>
-            Figure 1.1. Diffraction of electons by a slit. Obtained from Quantum Chemistry 7th Edition (p. 6, Figure
+            Figure 1.1. Diffraction of electrons by a slit. Obtained from Quantum Chemistry 7th Edition (p. 6, Figure
             1.1) by Ira N. Levine{" "}
           </p>
         </div>
@@ -40,7 +40,7 @@ export default function Chapter1Unit1Page() {
         <p>
           Since photons have both particle-like and wave-like properties, they are diffracted by the slit resulting in a
           diffraction pattern on the photographic plate. The graph to the right of the photographic plate in Figure 1.1
-          shows the relative probablities a photon hitting a specific location on the plate. Furthermore, because the
+          shows the relative probabilities a photon hitting a specific location on the plate. Furthermore, because the
           photons can be found above and below the slit, the diffraction pattern shows that the slit imparts a momentum
           in the y direction on the particles as they pass through. The momentum in y-direction of a particle deflected
           up by an angle <InlineMath math="\alpha" /> can be calculated as <InlineMath math="p_{x} = p\sin{\alpha}" />{" "}
@@ -63,7 +63,7 @@ export default function Chapter1Unit1Page() {
         <p>
           Working on the equation further, we can relate the angle <InlineMath math="\alpha" /> to the wavelength{" "}
           <InlineMath math="\lambda" /> of the photons. In order for the photons to destructively interfere at the first
-          miniumum, the path length difference between the waves entering at the top of the slit and the center of the
+          minimum, the path length difference between the waves entering at the top of the slit and the center of the
           slit must be <InlineMath math="\frac{1}{2} \lambda" />. Setting point <InlineMath math="A" /> as the origin
           point for waves entering at the top of the slit and point <InlineMath math="B" /> as the origin point for
           waves entering at the center of the slit, we can draw Figure 1.2 below.{" "}
@@ -130,11 +130,11 @@ export default function Chapter1Unit1Page() {
         </p>
       </LessonSection>
       <LessonSection>
-        <h2 id={"lesson3"}>1.3 Single Slit Simulation</h2>
+        <h2 id={"lesson3"}>1.3 A Simulation of the Single Slit Experiment</h2>
         <p>
           Below is a simulation of the diagram in Figure 1.1. Click on the "Controls" to control the diffraction slit
-          width and observe how making the slit narrower (decreasing the uncertainity in position) causes the
-          diffraction pattern to spread out (increasing the uncertainity in momentum) and visa versa.
+          width and observe how making the slit narrower (decreasing the uncertainty in position) causes the
+          diffraction pattern to spread out (increasing the uncertainty in momentum) and visa versa.
         </p>
         <p>
           Click on the "Show Particle Simulation" to show the photons as particles and use the controls to begin a

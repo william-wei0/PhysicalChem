@@ -11,7 +11,7 @@ export default function PageLayout(): JSX.Element {
     <div
       className="min-h-screen grid grid-rows-[auto_minmax(0,1fr)_auto]
                 [grid-template-areas:'header_header''sidebar_main''footer_footer']
-                transition-[grid-template-columns] duration-500 ease-in-out"
+                transition-[grid-template-columns] duration-300 ease-in-out"
       style={{
         gridTemplateColumns: isSidebarOpen ? "400px 1fr" : "52px 1fr",
       }}
