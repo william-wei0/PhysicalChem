@@ -37,7 +37,7 @@ const makeChapterImage = (title: string, accent: string, detail: string) => {
 };
 
 const lessonLink = (chapterNum: number, unitNum: number, lessonNum = 1) =>
-  `/lessons/chapter${chapterNum}/unit${unitNum}#${lessonNum === 1 ? "" : `lesson${lessonNum}`}`;
+  `/lessons/chapter${chapterNum}/unit${unitNum}${lessonNum === 1 ? "" : `#lesson${lessonNum}`}`;
 
 const chapters: Chapter[] = [
   {
@@ -131,7 +131,7 @@ const chapters: Chapter[] = [
 export default function Homepage() {
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
+      <section className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-7xl text-center">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-slate-500"></p>
           <h1 className="text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
@@ -160,7 +160,7 @@ export default function Homepage() {
               key={chapter.id}
               className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
             >
-              <div className="grid gap-0 lg:grid-cols-[1.05fr_1fr]">
+              <div className="grid gap-0 lg:grid-cols-[1fr_1.5fr]">
                 <div className="border-b border-slate-200 bg-slate-50 lg:border-b-0 lg:border-r">
                   <img src={chapter.image} alt={chapter.title} className="h-full min-h-[260px] w-full object-cover" />
                 </div>
@@ -171,18 +171,18 @@ export default function Homepage() {
                   <p className="mt-4 text-base leading-7 text-slate-600">{chapter.description}</p>
 
                   <div className="mt-8">
-                    <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Chapter units</h3>
+                    <h3 className="font-semibold uppercase tracking-[0.18em] text-slate-500">Chapter units</h3>
 
                     <div className="mt-4 grid gap-3 sm:grid-cols-1">
                       {chapter.units.map((unit) => (
                         <a
                           key={unit.title}
                           href={unit.href}
-                          className="group rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm font-medium text-slate-800 transition hover:border-slate-300 hover:bg-slate-50"
+                          className="group rounded-2xl border border-slate-200 bg-white px-4 py-4 font-medium transition hover:border-slate-300 hover:bg-slate-50"
                         >
                           <div className="flex items-center justify-between gap-3">
                             <span>{unit.title}</span>
-                            <span className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-slate-600">
+                            <span className="transition group-hover:translate-x-0.5 group-hover:text-slate-600">
                               →
                             </span>
                           </div>
