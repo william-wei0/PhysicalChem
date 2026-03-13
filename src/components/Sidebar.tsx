@@ -61,23 +61,16 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 <stop offset="40%" stopColor="#ef4444" />
                 <stop offset="100%" stopColor="#7f1d1d" />
               </radialGradient>
-              <defs>
-                {/* gradientUnits="userSpaceOnUse" anchors the gradient to the SVG canvas, not the element */}
-                <radialGradient id="electronGradient" gradientUnits="userSpaceOnUse" cx="83" cy="43" r="14">
-                  <stop offset="0%" stopColor="#93c5fd" />
-                  <stop offset="40%" stopColor="#3b82f6" />
-                  <stop offset="100%" stopColor="#1e3a8a" />
-                </radialGradient>
-              </defs>
             </defs>
-
-            {/* Orbit ring */}
+            <defs>
+              <radialGradient id="electronGradient" gradientUnits="userSpaceOnUse" cx="83" cy="43" r="14">
+                <stop offset="0%" stopColor="#93c5fd" />
+                <stop offset="40%" stopColor="#3b82f6" />
+                <stop offset="100%" stopColor="#1e3a8a" />
+              </radialGradient>
+            </defs>
             <ellipse cx="50" cy="50" rx="42" ry="42" stroke="#94a3b8" strokeWidth="2.5" />
-
-            {/* Red proton with sphere gradient */}
             <circle cx="50" cy="50" r="12" fill="url(#protonGradient)" />
-
-            {/* Electron 1 */}
             <g>
               <animateTransform
                 attributeName="transform"

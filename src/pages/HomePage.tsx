@@ -7,33 +7,8 @@ type Chapter = {
   id: number;
   title: string;
   description: string;
-  topics: string[];
   image: string;
   units: Unit[];
-};
-
-const makeChapterImage = (title: string, accent: string, detail: string) => {
-  const svg = `
-    <svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="1200" height="700" rx="36" fill="white"/>
-      <rect x="40" y="40" width="1120" height="620" rx="30" fill="${accent}" fill-opacity="0.08"/>
-      <circle cx="955" cy="180" r="110" fill="${accent}" fill-opacity="0.2"/>
-      <circle cx="230" cy="540" r="150" fill="${detail}" fill-opacity="0.18"/>
-      <rect x="120" y="120" width="360" height="22" rx="11" fill="${accent}" fill-opacity="0.45"/>
-      <rect x="120" y="168" width="260" height="18" rx="9" fill="${detail}" fill-opacity="0.38"/>
-      <rect x="120" y="240" width="420" height="220" rx="24" fill="white" stroke="${accent}" stroke-opacity="0.25" stroke-width="4"/>
-      <rect x="160" y="280" width="150" height="20" rx="10" fill="${accent}" fill-opacity="0.35"/>
-      <rect x="160" y="320" width="240" height="16" rx="8" fill="${detail}" fill-opacity="0.24"/>
-      <rect x="160" y="352" width="200" height="16" rx="8" fill="${detail}" fill-opacity="0.2"/>
-      <rect x="580" y="240" width="300" height="150" rx="24" fill="white" stroke="${detail}" stroke-opacity="0.3" stroke-width="4"/>
-      <rect x="620" y="286" width="170" height="18" rx="9" fill="${detail}" fill-opacity="0.32"/>
-      <rect x="620" y="322" width="120" height="16" rx="8" fill="${accent}" fill-opacity="0.24"/>
-      <rect x="580" y="420" width="420" height="80" rx="24" fill="white" stroke="${accent}" stroke-opacity="0.2" stroke-width="4"/>
-      <text x="120" y="575" fill="#111827" font-size="54" font-family="Arial, Helvetica, sans-serif" font-weight="700">${title}</text>
-    </svg>
-  `;
-
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 };
 
 const lessonLink = (chapterNum: number, unitNum: number, lessonNum = 1) =>
@@ -45,8 +20,7 @@ const chapters: Chapter[] = [
     title: "Chapter 1: Single Slit Diffraction and the Heisenberg Uncertainty Principle",
     description:
       "Build a strong foundation by exploring the course overview, learning goals, key vocabulary, and the essential concepts introduced at the beginning of the program.",
-    topics: ["Course overview", "Key terms", "Study habits", "Introduction"],
-    image: makeChapterImage("Getting Started", "#2563EB", "#7C3AED"),
+    image: "src/pages/assets/Chapter1Image_SingleSlitDiffraction.png",
     units: [
       { title: "Unit 1.1: The Single Slit Diffraction Pattern", href: lessonLink(1, 1, 1) },
       { title: "Unit 1.2: The Heisenberg Uncertainty Principle", href: lessonLink(1, 1, 2) },
@@ -58,8 +32,7 @@ const chapters: Chapter[] = [
     title: "Chapter 2: A Single Particle in 1-Dimensional Box",
     description:
       "Apply the basics through guided examples, interactive tasks, and real learning scenarios that help students connect ideas and build confidence.",
-    topics: ["Worked examples", "Guided activities", "Problem solving", "Application"],
-    image: makeChapterImage("Skills in Action", "#059669", "#F59E0B"),
+    image: "src/pages/assets/Chapter2Image_Particle1DBox.png",
     units: [
       { title: "Unit 2.1: A Single Particle in a 1-Dimensional Box ", href: lessonLink(2, 1, 1) },
       { title: "Unit 2.2: Applying Boundary Conditions", href: lessonLink(2, 1, 2) },
@@ -71,8 +44,7 @@ const chapters: Chapter[] = [
     title: "Chapter 3: Superposition of Energy Eigenstates in a 1-Dimensional Box",
     description:
       "Revisit the main ideas, test understanding with quick checks, and reflect on progress through summaries, checkpoints, and extension tasks.",
-    topics: ["Review", "Self-checks", "Reflection", "Extension"],
-    image: makeChapterImage("Review and Reflection", "#DC2626", "#0EA5E9"),
+    image: "src/pages/assets/Chapter3Image_Superposition1DBox2.png",
     units: [
       { title: "Unit 3.1: Energy Eigenstates vs.Energy Superpositions", href: lessonLink(3, 1, 1) },
       { title: "Unit 3.2: Separation of Position and Time Variables", href: lessonLink(3, 1, 2) },
@@ -87,8 +59,7 @@ const chapters: Chapter[] = [
     title: "Chapter 4: The Two-Particle Rigid Rotor",
     description:
       "Bring everything together in a project-based unit where learners create, present, and evaluate their understanding using the skills from earlier chapters.",
-    topics: ["Project planning", "Creation", "Presentation", "Evaluation"],
-    image: makeChapterImage("Final Project", "#7C3AED", "#14B8A6"),
+    image: "src/pages/assets/Chapter4Image_RigidRotor.png",
     units: [
       { title: "Unit 4.1: The Rigid Rotor Model", href: lessonLink(4, 1, 1) },
       { title: "Unit 4.2: The Hamiltonian and the Reduced Mass", href: lessonLink(4, 1, 2) },
@@ -103,8 +74,7 @@ const chapters: Chapter[] = [
     title: "Chapter 5: Superposition of the 1s and 2pz States",
     description:
       "Bring everything together in a project-based unit where learners create, present, and evaluate their understanding using the skills from earlier chapters.",
-    topics: ["Project planning", "Creation", "Presentation", "Evaluation"],
-    image: makeChapterImage("Final Project", "#7C3AED", "#14B8A6"),
+    image: "src/pages/assets/Chapter5Image_Superposition1s2pz.png",
     units: [
       { title: "Unit 5.1: Deriving the 1s State Function from the Radial Factor", href: lessonLink(5, 1, 1) },
       { title: "Unit 5.2: Deriving the 2pz State Function from the Radial Factor", href: lessonLink(5, 1, 2) },
@@ -117,8 +87,7 @@ const chapters: Chapter[] = [
     title: "Chapter 6: Superposition of the 1s and 2p States",
     description:
       "Bring everything together in a project-based unit where learners create, present, and evaluate their understanding using the skills from earlier chapters.",
-    topics: ["Project planning", "Creation", "Presentation", "Evaluation"],
-    image: makeChapterImage("Final Project", "#7C3AED", "#14B8A6"),
+    image: "src/pages/assets/Chapter6Image_Superposition1s2p.png",
     units: [
       { title: "Unit 6.1: Deriving the 1s State Function from the Radial Factor", href: lessonLink(6, 1, 1) },
       { title: "Unit 6.2: Deriving the 2p State Function from the Radial Factor", href: lessonLink(6, 1, 2) },
@@ -154,11 +123,14 @@ export default function Homepage() {
       </section>
 
       <section className="mx-auto max-w-8xl px-6 pb-20 sm:px-8 lg:px-10">
+        <h2 className="text-4xl text-center pt-3 pb-10 font-semibold tracking-tight text-slate-950 sm:text-5xl">
+          Chapter Overview
+        </h2>
         <div className="space-y-10">
           {chapters.map((chapter) => (
             <article
               key={chapter.id}
-              className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+              className="overflow-hidden rounded-3xl border border-black bg-white shadow-sm"
             >
               <div className="grid gap-0 lg:grid-cols-[1fr_1.5fr]">
                 <div className="border-b border-slate-200 bg-slate-50 lg:border-b-0 lg:border-r">
@@ -178,13 +150,11 @@ export default function Homepage() {
                         <a
                           key={unit.title}
                           href={unit.href}
-                          className="group rounded-2xl border border-slate-200 bg-white px-4 py-4 font-medium transition hover:border-slate-300 hover:bg-slate-50"
+                          className="group rounded-2xl border border-slate-500 bg-white px-4 py-4 font-medium transition hover:border-slate-400 hover:bg-slate-50"
                         >
                           <div className="flex items-center justify-between gap-3">
                             <span>{unit.title}</span>
-                            <span className="transition group-hover:translate-x-0.5 group-hover:text-slate-600">
-                              →
-                            </span>
+                            <span className="transition group-hover:translate-x-0.5 group-hover:text-slate-600">→</span>
                           </div>
                         </a>
                       ))}

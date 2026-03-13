@@ -6,7 +6,6 @@ import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 
 export default function Chapter1Unit1Page() {
-
   return (
     <LessonLayout>
       <h1 id={"lesson1"}>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
@@ -114,9 +113,17 @@ export default function Chapter1Unit1Page() {
           <BlockMath math="\Delta x \Delta p_{x} = h"></BlockMath>
         </p>
         <p>
-          Since the uncertainties were not rigorously defined, the equation is written more correctly as:{" "}
+          To account for the fact that our uncertainties were not rigorously defined in this experiment, our derived
+          equation should actually be written as:{" "}
+          <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \approx h \end{equation}"></BlockMath>
+          Since we don't actually know if there are any other constants, but we know that the uncertainty depends on{" "}
+          <InlineMath math="h" /> and is roughly on the same order of magnitude as <InlineMath math="h" />.
+        </p>
+        <p>
+          If we perform some more rigorous experiments, we can learn that the correct equation for the Heisenberg Uncertainty
+          Principle is:
           <div className="importantEquation">
-            <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \approx h \end{equation}"></BlockMath>
+            <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \gt \frac{h}{4\pi} = \frac{\hbar}{2} \end{equation}"></BlockMath>
           </div>
         </p>
         <p>
@@ -126,15 +133,15 @@ export default function Chapter1Unit1Page() {
           particle's position is met by a larger uncertainty in the particle's momentum. Thus, in the single slit
           experiment, by imposing a wall with a slit, we measure the photon's position, reducing the uncertainty in the
           photon's position. But, by performing the measurement the system was disturbed, resulting in an increase in
-          the uncertainity in the photon's momentum.
+          the uncertainty in the photon's momentum.
         </p>
       </LessonSection>
       <LessonSection>
         <h2 id={"lesson3"}>1.3 A Simulation of the Single Slit Experiment</h2>
         <p>
           Below is a simulation of the diagram in Figure 1.1. Click on the "Controls" to control the diffraction slit
-          width and observe how making the slit narrower (decreasing the uncertainty in position) causes the
-          diffraction pattern to spread out (increasing the uncertainty in momentum) and visa versa.
+          width and observe how making the slit narrower (decreasing the uncertainty in position) causes the diffraction
+          pattern to spread out (increasing the uncertainty in momentum) and visa versa.
         </p>
         <p>
           Click on the "Show Particle Simulation" to show the photons as particles and use the controls to begin a

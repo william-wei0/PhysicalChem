@@ -80,7 +80,7 @@ function draw_labels(ctx: CanvasRenderingContext2D, animationParams: AnimationPa
   ctx.font = "30px Arial";
   ctx.fillStyle = "white";
   ctx.textAlign = "center";
-  ctx.fillText("Position", canvasDimensions.width / 2, wellBaseHeight + 40);
+  ctx.fillText("Position (x)", canvasDimensions.width / 2, wellBaseHeight + 40);
   ctx.fillText("0", leftBoundary, wellBaseHeight + 40);
   ctx.fillText("L", leftBoundary + wellWidth, wellBaseHeight + 40);
 
@@ -125,7 +125,7 @@ function drawWave(
   const { wellWidth, leftBoundary, isRainbow, isFilled, wellBaseHeight, animationSpeed, waveColor, waveThickness } =
     animationParams;
   const points = 4500;
-  const SPEED_FACTOR = 0.0000003;
+  const SPEED_FACTOR = 0.0000009;
 
   ctx.strokeStyle = `rgba(${waveColor[0]},${waveColor[1]},${waveColor[2]},1.0)`;
   ctx.lineWidth = waveThickness;
@@ -146,8 +146,7 @@ function drawWave(
             Math.min(Math.abs(particle2.quantumNumber ** 2 - particle1.quantumNumber ** 2), 10) *
               currentTime *
               SPEED_FACTOR *
-              animationSpeed *
-              Math.PI,
+              animationSpeed,
           ));
 
     if (isRainbow) {
@@ -168,7 +167,7 @@ export default function TwoParticleWellSimulation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const WAVE_PERIOD = 100000;
+  const WAVE_PERIOD = 1000000;
   const BACKGROUND_COLOR = "rgba(26, 32, 44, 1)";
   const CANVAS_DIMENSIONS = useMemo<CanvasDimensions>(() => ({ width: 1400, height: 800 }), []);
 
