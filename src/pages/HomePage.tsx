@@ -99,39 +99,39 @@ const chapters: Chapter[] = [
 
 export default function Homepage() {
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <section className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
+    <main className="min-h-screen bg-white text-slate-900 p-4">
+      <section className="mx-auto max-w-7xl px-6 pb-15 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-7xl text-center">
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-slate-500"></p>
           <h1 className="text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
             CM-UY 3113: Physical Chemistry I
           </h1>
 
-          <p className="mt-5 leading-7 text-slate-600 sm:text-lg">
+          <p className="mt-5 leading-7 text-slate-900 sm:text-lg">
             This course provides a molecular approach of physical chemistry, covering quantum mechanics and its
             applications to atomic and molecular structure and to molecular spectroscopy. In this course, we cover the
             Schrödinger equation, the quantum mechanical treatment of harmonic oscillators, hydrogen atomic orbitals,
             perturbation theory, electron spin, and a short introduction to statistical thermodynamics.
           </p>
-          <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg">
+          <p className="mt-5 text-base leading-7 text-slate-900 sm:text-lg">
             This website contains derivations of some key equations and interactive simulations of quantum mechanical
             concepts. Since this website is intended to be used while taking New York University's CM-UY 3113: Physical
-            Chemistry I course, please also obtain the courses's textbook (Quantum Chemistry 7th Edition, by Ira
+            Chemistry I course, please also obtain the courses's textbook (Quantum Chemistry 7th Edition, by Ira N.
             Levine.) to follow along with each chapter.
           </p>
+          <div className="flex justify-center-safe pt-12">
+            <img src="src/pages/assets/Quantum Chemistry 7th Edition by Ira Levine.jpg" alt="An image of the cover of Quantum Chemistry 7th Edition by Ira Levine"></img>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-8xl px-6 pb-20 sm:px-8 lg:px-10">
-        <h2 className="text-4xl text-center pt-3 pb-10 font-semibold tracking-tight text-slate-950 sm:text-5xl">
-          Chapter Overview
+      <section className="mx-auto max-w-8xl px-6 pb-10 sm:px-8 lg:px-10 bg-zinc-100 rounded-2xl border-black border-2">
+        <h2 className="text-4xl text-center pt-8 pb-10 font-semibold tracking-tight text-slate-950 sm:text-5xl">
+          CM-UY 3113: Physical Chemistry I: Chapter Overview
         </h2>
         <div className="space-y-10">
           {chapters.map((chapter) => (
-            <article
-              key={chapter.id}
-              className="overflow-hidden rounded-3xl border border-black bg-white shadow-sm"
-            >
+            <article key={chapter.id} className="overflow-hidden rounded-3xl border border-black bg-white shadow-sm">
               <div className="grid gap-0 lg:grid-cols-[1fr_1.5fr]">
                 <div className="border-b border-slate-200 bg-slate-50 lg:border-b-0 lg:border-r">
                   <img src={chapter.image} alt={chapter.title} className="h-full min-h-[260px] w-full object-cover" />
