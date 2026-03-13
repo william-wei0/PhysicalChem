@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "../../../../components/simulationControls/SimulationControls";
-import "../../styles/canvas.css";
+import "../../styles/simulation.css";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/accordion/accordion";
 
 type CanvasDimensions = {
@@ -379,37 +379,42 @@ export default function TwoParticleWellSimulation() {
   );
 
   return (
-    <div
-      ref={containerRef}
-      className="canvasContainer my-4"
-      style={{
-        width: CANVAS_DIMENSIONS.width,
-        height: CANVAS_DIMENSIONS.height,
-      }}
-    >
-      <SimulationControls
-        controllableSimulationVariables={
-          <div className="scrollContainer max-h-[700px]">
-            <Accordion key="accordion" allowMultiple={true}>
-              {WaveParticleSettings.map((setting) => (
-                <AccordionItem id={setting.id} key={setting.id}>
-                  <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
-                  <AccordionContent>{setting.content}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-        }
-      />
-      <canvas
-        ref={canvasRef}
-        width={CANVAS_DIMENSIONS.width}
-        height={CANVAS_DIMENSIONS.height}
+    <div className="simulationCanvasLayout">
+      <div
+        ref={containerRef}
+        className="canvasContainer my-4"
         style={{
-          border: "3px solid black",
-          backgroundColor: "#1a202c",
+          width: CANVAS_DIMENSIONS.width,
+          height: CANVAS_DIMENSIONS.height,
         }}
-      />
+      >
+        <SimulationControls
+          controllableSimulationVariables={
+            <div className="scrollContainer max-h-[700px]">
+              <Accordion key="accordion" allowMultiple={true}>
+                {WaveParticleSettings.map((setting) => (
+                  <AccordionItem id={setting.id} key={setting.id}>
+                    <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
+                    <AccordionContent>{setting.content}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          }
+        />
+        <div className="canvasScrollPane">
+          {/*-6 to account for the extra border space*/}
+          <canvas
+            ref={canvasRef}
+            width={CANVAS_DIMENSIONS.width - 6}
+            height={CANVAS_DIMENSIONS.height}
+            style={{
+              border: "3px solid black",
+              backgroundColor: "#1a202c",
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

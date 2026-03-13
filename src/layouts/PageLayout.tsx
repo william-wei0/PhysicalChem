@@ -19,7 +19,7 @@ export default function PageLayout(): JSX.Element {
       <header className="[grid-area:header]" id="siteHeader">
         <Navbar />
       </header>
-      <aside className="[grid-area:sidebar] min-h-0 flex flex-col overflow-hidden">
+      <aside className="[grid-area:sidebar] min-h-0 flex flex-col">
         <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
       </aside>
       <main className="[grid-area:main] min-h-0 flex flex-col overflow-auto border-t">

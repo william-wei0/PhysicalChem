@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/accordion/accordion";
-import "../../styles/canvas.css";
+import "../../styles/simulation.css";
 import Slider from "@/components/simulationControls/Slider";
 import SimulationControls from "@/components/simulationControls/SimulationControls";
 import StartSimulationButton from "@/components/simulationControls/StartSimulationButton";
@@ -74,7 +74,7 @@ export default function SingleSlitSimulation() {
     totalParticles: 0,
   });
 
-  const [diffractionWall, setdiffractionWall] = useState<DiffractionWall>({
+  const [diffractionWall, setDiffractionWall] = useState<DiffractionWall>({
     x: CANVAS_DIMENSIONS.width * 0.2,
     slitSize: 150,
     wallWidth: 20,
@@ -245,7 +245,7 @@ export default function SingleSlitSimulation() {
         particleStatus === "new" ||
         particleStatus === "completed"
       ) {
-        const yPositionofParticlesOnWall = animateParticles(
+        const yPositionOfParticlesOnWall = animateParticles(
           ctx,
           particlesRef.current,
           animationParams,
@@ -253,7 +253,7 @@ export default function SingleSlitSimulation() {
           particleSpeed[0],
         );
 
-        yPositionofParticlesOnWall.forEach((index) => {
+        yPositionOfParticlesOnWall.forEach((index) => {
           if (particlesOnWallRef.current.totalParticles < MAX_TRACKED) {
             particlesOnWallRef.current.particlePositions[Math.round(index)] += 1;
             particlesOnWallRef.current.totalParticles += 1;
@@ -314,7 +314,7 @@ export default function SingleSlitSimulation() {
                 if (particleStatus !== "hidden" && particleStatus !== "first_load") {
                   setParticleStatus("new");
                 }
-                setdiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
+                setDiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
               }}
               label="Diffraction Slit Size (nm)"
               min={SLIT_MAXIMUM}
@@ -373,7 +373,7 @@ export default function SingleSlitSimulation() {
               key={"Contrast"}
               value={contrast}
               onValueChange={setContrast}
-              label="Constrast"
+              label="Contrast"
               min={0.1}
               max={2.5}
               step={0.01}
@@ -474,84 +474,89 @@ export default function SingleSlitSimulation() {
   );
 
   return (
-    <div className="flex flex-col">
-      <div
-        className="grid border-x-3 border-t-3 border-black bg-zinc-100"
-        style={{ gridTemplateColumns: `${receptorWall.x * scale}px 1fr` }}
-      >
-        <div className="flex border-black border-r-2">
-          <button
-            className={`${buttonClassName} border-black border-r-2
+    <div className="simulationCanvasLayout">
+      <div className="flex flex-col">
+        <div
+          className="grid border-x-3 border-t-3 border-black bg-zinc-100 "
+          style={{ gridTemplateColumns: `${receptorWall.x * scale}px 1fr` }}
+        >
+          <div className="flex border-black border-r-2">
+            <button
+              className={`${buttonClassName} border-black border-r-2
       ${waveStatus !== "hidden" ? buttonActiveClassName : buttonInactiveClassName}`}
-            onClick={() => setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))}
-          >
-            {waveStatus !== "hidden" ? "Hide Wave Simulation" : "Show Wave Simulation"}
-          </button>
-          <button
-            className={`${buttonClassName} border-black border-r-2
+              onClick={() => setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))}
+            >
+              {waveStatus !== "hidden" ? "Hide Wave Simulation" : "Show Wave Simulation"}
+            </button>
+            <button
+              className={`${buttonClassName} border-black border-r-2
       ${
         particleStatus !== "hidden" && particleStatus !== "first_load" ? buttonActiveClassName : buttonInactiveClassName
       }`}
-            onClick={() =>
-              setParticleStatus((prev) => (prev !== "hidden" && prev !== "first_load" ? "hidden" : "paused"))
-            }
+              onClick={() =>
+                setParticleStatus((prev) => (prev !== "hidden" && prev !== "first_load" ? "hidden" : "paused"))
+              }
+            >
+              {particleStatus !== "hidden" && particleStatus !== "first_load"
+                ? "Hide Particle Simulation"
+                : "Show Particle Simulation"}
+            </button>
+          </div>
+
+          <button
+            className={`${buttonClassName} buttonActiveClassName`}
+            onClick={() => setShowLightGradient((prev) => !prev)}
           >
-            {particleStatus !== "hidden" && particleStatus !== "first_load"
-              ? "Hide Particle Simulation"
-              : "Show Particle Simulation"}
+            {showLightGradient ? (
+              <div>
+                <p className="">Light Wave Gradient</p>
+                <p className="text-xs">Click to show expected light distribution</p>
+              </div>
+            ) : (
+              <div>
+                <p className="">Light Particle Distribution</p>
+                <p className="text-xs">Click to show light gradient</p>
+              </div>
+            )}
           </button>
         </div>
-
-        <button
-          className={`${buttonClassName} buttonActiveClassName`}
-          onClick={() => setShowLightGradient((prev) => !prev)}
-        >
-          {showLightGradient ? (
-            <div>
-              <p className="">Light Wave Gradient</p>
-              <p className="text-xs">Click to show expected light distribution</p>
-            </div>
-          ) : (
-            <div>
-              <p className="">Light Particle Distribution</p>
-              <p className="text-xs">Click to show light gradient</p>
-            </div>
-          )}
-        </button>
-      </div>
-      {/* Canvas + Controls */}
-      <div
-        ref={containerRef}
-        className="canvasContainer"
-        style={{
-          width: CANVAS_DIMENSIONS.width,
-          height: CANVAS_DIMENSIONS.height,
-        }}
-      >
-        <SimulationControls
-          controllableSimulationVariables={
-            <div className="scrollContainer max-h-[700px]">
-              <Accordion key="accordion" allowMultiple={true}>
-                {WaveParticleSettings.map((setting) => (
-                  <AccordionItem id={setting.id} key={setting.id}>
-                    <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
-                    <AccordionContent>{setting.content}</AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          }
-          onLeft={true}
-        />
-        <canvas
-          ref={canvasRef}
-          width={CANVAS_DIMENSIONS.width}
-          height={CANVAS_DIMENSIONS.height}
+        <div
+          ref={containerRef}
+          className="canvasContainer"
           style={{
+            width: CANVAS_DIMENSIONS.width,
+            height: CANVAS_DIMENSIONS.height,
             border: "3px solid black",
-            backgroundColor: "#1a202c",
+            boxSizing: "border-box",
           }}
-        />
+        >
+          <SimulationControls
+            controllableSimulationVariables={
+              <div className="scrollContainer max-h-[700px]">
+                <Accordion key="accordion" allowMultiple={true}>
+                  {WaveParticleSettings.map((setting) => (
+                    <AccordionItem id={setting.id} key={setting.id}>
+                      <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
+                      <AccordionContent>{setting.content}</AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            }
+            onLeft={true}
+          />
+          <div className="">
+            {/*-6 to account for the extra border space*/}
+            <canvas
+              ref={canvasRef}
+              width={CANVAS_DIMENSIONS.width}
+              height={CANVAS_DIMENSIONS.height - 6}
+              style={{
+                backgroundColor: "#1a202c",
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -120,8 +120,8 @@ export default function Chapter1Unit1Page() {
           <InlineMath math="h" /> and is roughly on the same order of magnitude as <InlineMath math="h" />.
         </p>
         <p>
-          If we perform some more rigorous experiments, we can learn that the correct equation for the Heisenberg Uncertainty
-          Principle is:
+          If we perform some more rigorous experiments, we can learn that the correct equation for the Heisenberg
+          Uncertainty Principle is:
           <div className="importantEquation">
             <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \gt \frac{h}{4\pi} = \frac{\hbar}{2} \end{equation}"></BlockMath>
           </div>
@@ -148,9 +148,7 @@ export default function Chapter1Unit1Page() {
           particle simulation to observe the distribution of photons on the photographic plate.
         </p>
       </LessonSection>
-      <div className="flex justify-center-safe">
-        <SingleSlitSimulation />
-      </div>
+      <SingleSlitSimulation />
     </LessonLayout>
   );
 }

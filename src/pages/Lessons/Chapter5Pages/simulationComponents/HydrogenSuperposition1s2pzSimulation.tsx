@@ -412,7 +412,7 @@ export default function HydrogenSuperposition1s2pzSimulation() {
   );
 
   return (
-    <div className="simulationContainer">
+    <div className="threeSimulationContainer">
       <SimulationControls controllableSimulationVariables={controllableVariables} />
       <div className="threeCanvas">
         <Canvas camera={camera} scene={{ background: new THREE.Color(0x000000) }}>

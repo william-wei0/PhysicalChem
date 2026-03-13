@@ -456,7 +456,7 @@ export default function RigidRotorSimulation2() {
   );
 
   return (
-    <div className="simulationContainer">
+    <div className="threeSimulationContainer">
       <SimulationControls controllableSimulationVariables={controllableVariables} />
       <div className="threeCanvas">
         <Canvas camera={camera} scene={{ background: new THREE.Color(0x000000) }}>

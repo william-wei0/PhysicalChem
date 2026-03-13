@@ -217,7 +217,6 @@ function precomputeInitialRipple(
   return { A, B, omega, width, height };
 }
 
-// Renderer factory functions
 export function makeInitialRippleRenderer(scaleFactor: number, outW: number, outH: number, rgb = [255, 231, 0]) {
   const simW = Math.round(outW / scaleFactor);
   const simH = Math.round(outH / scaleFactor);
@@ -228,6 +227,17 @@ export function makeInitialRippleRenderer(scaleFactor: number, outW: number, out
   const simCtx = simCanvas.getContext("2d", { willReadFrequently: true })!;
 
   const phase = 0.785398;
+
+  // Allocate once and pre-fill RGB channels
+  const img = new ImageData(simW, simH);
+  const data = img.data;
+  for (let p = 0; p < simW * simH; p++) {
+    const i = p * 4;
+    data[i]     = rgb[0];
+    data[i + 1] = rgb[1];
+    data[i + 2] = rgb[2];
+    data[i + 3] = 255;
+  }
 
   let pre: WavePrecomp | null = null;
   let lastSlitWidth = NaN;
@@ -242,21 +252,15 @@ export function makeInitialRippleRenderer(scaleFactor: number, outW: number, out
     speed: number,
     params: AnimationParams,
   ) {
-    const imageData = simCtx.createImageData(simW, simH);
-    const data = imageData.data;
-
     const canvasH = params.canvasDimensions.height;
     const slitWidth = params.diffractionWall.slitSize;
 
-    // Rebuild precompute if needed
     if (!pre || slitWidth !== lastSlitWidth || canvasH !== lastCanvasH) {
       lastSlitWidth = slitWidth;
       lastCanvasH = canvasH;
-
       pre = precomputeInitialRipple(simW, simH, wavelength / scaleFactor, 1 / speed, phase);
     }
 
-    // Fast per-frame render
     const time = timeMilliseconds / 1000;
     const ot = pre.omega * time;
     const cosine = Math.cos(ot);
@@ -266,23 +270,21 @@ export function makeInitialRippleRenderer(scaleFactor: number, outW: number, out
     const B = pre.B;
     const brightness = 150;
 
+    // Only update alpha channel each frame
     for (let x = 0; x < simW; x++) {
       let v = (A[x] * cosine + B[x] * sine) * brightness;
       if (v < 0) v = 0;
       else if (v > 255) v = 255;
       v = gamma255(v, params.contrast[0]);
       v = contrast255(v, 1.3, 80);
+      const alpha = v | 0;
 
       for (let y = 0; y < simH; y++) {
-        const index = (y * simW + x) * 4;
-        data[index] = rgb[0];
-        data[index + 1] = rgb[1];
-        data[index + 2] = rgb[2];
-        data[index + 3] = v | 0;
+        data[(y * simW + x) * 4 + 3] = alpha;
       }
     }
 
-    simCtx.putImageData(imageData, 0, 0);
+    simCtx.putImageData(img, 0, 0);
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(simCanvas, x0, y0, outW, outH);
   };
@@ -484,7 +486,7 @@ export function animateParticles(
   animationSpeed: number,
 ): number[] {
   const { receptorWall, diffractionWall, canvasDimensions } = params;
-  const yPositionofParticlesOnWall: number[] = [];
+  const yPositionOfParticlesOnWall: number[] = [];
 
   particles.forEach((particle) => {
     const prevX = particle.x;
@@ -500,7 +502,7 @@ export function animateParticles(
 
     if (particle.x > receptorWall.x) {
       if (particle.y > 0 && particle.y < canvasDimensions.height) {
-        yPositionofParticlesOnWall.push(particle.y);
+        yPositionOfParticlesOnWall.push(particle.y);
       }
       resetParticle(particle, canvasDimensions);
       return;
@@ -523,7 +525,7 @@ export function animateParticles(
       ctx.fill();
     }
   });
-  return yPositionofParticlesOnWall;
+  return yPositionOfParticlesOnWall;
 }
 
 export function blurIntersectionBetweenWaves(

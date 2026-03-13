@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "../../../../components/simulationControls/SimulationControls";
-import "../../styles/canvas.css";
+import "../../styles/lessons.css";
 import SimulationButton from "@/components/simulationControls/SimulationButton";
 
 type CanvasDimensions = {
@@ -87,7 +87,7 @@ function drawSimulationLabel(ctx: CanvasRenderingContext2D, animationParams: Ani
   ctx.font = "35px Arial";
   ctx.fillStyle = "white";
   ctx.textAlign = "center";
-  ctx.fillText("Wave Function (ψ)", canvasDimensions.width/2, 50);
+  ctx.fillText("Wave Function (ψ)", canvasDimensions.width / 2, 50);
 }
 
 function draw_well(ctx: CanvasRenderingContext2D, animationParams: AnimationParams) {
@@ -123,9 +123,7 @@ function drawWave(ctx: CanvasRenderingContext2D, animationParams: AnimationParam
 
   for (let i = 0; i < points; i++) {
     const x = (i * wellWidth[0]) / points + leftBoundary;
-    const y =
-      animationParams.waveAmplitude[0] * 0.6 *
-      (Math.sin((i / points) * particle.quantumNumber * Math.PI));
+    const y = animationParams.waveAmplitude[0] * 0.6 * Math.sin((i / points) * particle.quantumNumber * Math.PI);
 
     if (isRainbow) {
       const hue = ((y / animationParams.waveAmplitude[0] / 1.8) * 360) % 360;
@@ -148,7 +146,7 @@ export default function WavefunctionSimulation() {
   const BACKGROUND_COLOR = "rgba(26, 32, 44, 1)";
   const CANVAS_DIMENSIONS = useMemo<CanvasDimensions>(() => ({ width: 1400, height: 800 }), []);
 
-  const [particle, setparticle] = useState<Particle>({
+  const [particle, setParticle] = useState<Particle>({
     quantumNumber: 5,
   });
   const [waveAmplitude, setWaveAmplitude] = useState([300]);
@@ -205,62 +203,68 @@ export default function WavefunctionSimulation() {
   }, [CANVAS_DIMENSIONS, animationParams, particle]);
 
   return (
-    <div
-      ref={containerRef}
-      className="canvasContainer my-4"
-      style={{
-        width: CANVAS_DIMENSIONS.width,
-        height: CANVAS_DIMENSIONS.height,
-      }}
-    >
-      <SimulationControls
-        controllableSimulationVariables={
-          <div className="scrollContainer max-h-[700px]">
-            <SimulationButton onClick={() => setIsFilled((prev) => [!prev[0]])} className="mx-4 mb-4 mt-2">
-              {isFilled[0] ? "Hide Filled Wave" : "Show Filled Wave"}
-            </SimulationButton>
-            <Slider
-              key={"Quantum Number (n)"}
-              value={[particle.quantumNumber]}
-              onValueChange={(energy: number[]) => {
-                setparticle((prev: Particle) => {
-                  return { ...prev, quantumNumber: energy[0] };
-                });
-              }}
-              label="Quantum Number (n)"
-              min={1}
-              max={10}
-            />
-            <Slider
-              key={"Wave Amplitude"}
-              value={waveAmplitude}
-              onValueChange={setWaveAmplitude}
-              label="Wave Amplitude"
-              min={100}
-              max={500}
-              step={1}
-            />
-            <Slider
-              key={"Well Height"}
-              value={wellBaseHeight}
-              onValueChange={setWellBaseHeight}
-              label="Well Height"
-              min={200}
-              max={CANVAS_DIMENSIONS.height - 200}
-              step={0.01}
-            />
-          </div>
-        }
-      />
-      <canvas
-        ref={canvasRef}
-        width={CANVAS_DIMENSIONS.width}
-        height={CANVAS_DIMENSIONS.height}
+    <div className="simulationCanvasLayout">
+      <div
+        ref={containerRef}
+        className="canvasContainer my-4"
         style={{
-          border: "3px solid black",
-          backgroundColor: "#1a202c",
+          width: CANVAS_DIMENSIONS.width,
+          height: CANVAS_DIMENSIONS.height,
         }}
-      />
+      >
+        <SimulationControls
+          controllableSimulationVariables={
+            <div className="scrollContainer max-h-[700px]">
+              <SimulationButton onClick={() => setIsFilled((prev) => [!prev[0]])} className="mx-4 mb-4 mt-2">
+                {isFilled[0] ? "Hide Filled Wave" : "Show Filled Wave"}
+              </SimulationButton>
+              <Slider
+                key={"Quantum Number (n)"}
+                value={[particle.quantumNumber]}
+                onValueChange={(energy: number[]) => {
+                  setParticle((prev: Particle) => {
+                    return { ...prev, quantumNumber: energy[0] };
+                  });
+                }}
+                label="Quantum Number (n)"
+                min={1}
+                max={10}
+              />
+              <Slider
+                key={"Wave Amplitude"}
+                value={waveAmplitude}
+                onValueChange={setWaveAmplitude}
+                label="Wave Amplitude"
+                min={100}
+                max={500}
+                step={1}
+              />
+              <Slider
+                key={"Well Height"}
+                value={wellBaseHeight}
+                onValueChange={setWellBaseHeight}
+                label="Well Height"
+                min={200}
+                max={CANVAS_DIMENSIONS.height - 200}
+                step={0.01}
+              />
+            </div>
+          }
+        />
+        <div className="canvasScrollPane">
+          {/*-6 to account for the extra border space*/}
+          <canvas
+            ref={canvasRef}
+            width={CANVAS_DIMENSIONS.width - 6}
+            
+            height={CANVAS_DIMENSIONS.height}
+            style={{
+              border: "3px solid black",
+              backgroundColor: "#1a202c",
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
