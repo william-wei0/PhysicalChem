@@ -96,7 +96,7 @@ const chapters: Chapter[] = [
     ],
   },
 ];
-
+ 
 export default function Homepage() {
   return (
     <main className="min-h-screen bg-white text-slate-900 p-4">
