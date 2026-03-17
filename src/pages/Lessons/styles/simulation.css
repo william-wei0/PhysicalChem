@@ -1,7 +1,7 @@
 @reference "../../../styles/global.css";
 
 .simulationCanvasLayout {
-  @apply flex justify-center-safe pl-10;
+  @apply flex justify-center-safe;
 }
 
 .threeSimulationContainer {
@@ -28,7 +28,8 @@
 }
 
 .scrollContainer {
-  overflow-y: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .scrollContainer::-webkit-scrollbar {
@@ -40,11 +41,11 @@
 }
 
 .scrollContainer::-webkit-scrollbar-thumb {
-  background: #71717a; /* zinc-500 to match border-zinc-500 */
+  background: #71717a;
   border-radius: 2px;
 }
 
 .scrollContainer::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa; /* zinc-400 to match hover:text-zinc-400 */
+  background: #a1a1aa;
   cursor: pointer;
 }

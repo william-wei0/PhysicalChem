@@ -15,11 +15,12 @@ datasource db {
 }
 
 model User {
-  id           Int    @id @default(autoincrement())
-  username     String @unique
-  email        String @unique
-  passwordHash String
-  posts        Post[]
+  id               Int              @id @default(autoincrement())
+  username         String           @unique
+  email            String           @unique
+  passwordHash     String
+  posts            Post[]
+  lessonProgresses LessonProgress[]
 
   @@map("user")
 }
@@ -33,4 +34,16 @@ model Post {
   authorId  Int
 
   @@map("posts")
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      Int
+  lessonId    String
+  taskId      String
+  completedAt DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, lessonId, taskId]) // idempotent — no duplicate completions
+  @@map("lesson_progress")
 }

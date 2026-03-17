@@ -4,8 +4,41 @@ import "../styles/lessons.css";
 import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
+import { TasksPanel } from "@/components/TasksPanel";
+import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
+import { type TaskSection } from "@/context/LessonTasks/LessonTasksContext";
 
 export default function Chapter1Unit1Page() {
+
+  const LESSON_SECTIONS: TaskSection[] = [
+    {
+      id: "Section 1.3.1 Light as a Wave",
+      title: "Section 1.3.1: Light as a Wave",
+      tasks: [
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+      ],
+    },
+        {
+      id: "Section 1.3.2 Light as a Particle",
+      title: "Section 1.3.2: Light as a Wave",
+      tasks: [
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
+        
+      ],
+    },
+    {
+      id: "submit",
+      title: "Setup",
+      tasks: [{ id: "submit-answer", label: "Submit your answer", completed: false }],
+    },
+  ];
+
   return (
     <LessonLayout>
       <h1 id={"lesson1"}>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
@@ -148,7 +181,10 @@ export default function Chapter1Unit1Page() {
           particle simulation to observe the distribution of photons on the photographic plate.
         </p>
       </LessonSection>
-      <SingleSlitSimulation />
+      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS}>
+        <TasksPanel />
+        <SingleSlitSimulation />
+      </LessonTasksProvider>
     </LessonLayout>
   );
 }

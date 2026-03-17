@@ -24,6 +24,8 @@ import {
   type CanvasDimensions,
 } from "./SingleSlitSimulationAnimations";
 
+import { useLessonTasks } from "@/context/LessonTasks/useLessonTasks";
+
 type ControlAccordionProps = {
   id: string;
   title: string;
@@ -35,6 +37,8 @@ type Status = "hidden" | "in_progress" | "paused";
 type ParticleStatus = Status | "completed" | "first_load" | "new";
 
 export default function SingleSlitSimulation() {
+  const {completeTask} = useLessonTasks();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -484,7 +488,10 @@ export default function SingleSlitSimulation() {
             <button
               className={`${buttonClassName} border-black border-r-2
       ${waveStatus !== "hidden" ? buttonActiveClassName : buttonInactiveClassName}`}
-              onClick={() => setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))}
+              onClick={() => {
+                completeTask("clickWaveStatus");
+                setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))
+              }}
             >
               {waveStatus !== "hidden" ? "Hide Wave Simulation" : "Show Wave Simulation"}
             </button>

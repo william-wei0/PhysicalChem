@@ -96,7 +96,7 @@ const chapters: Chapter[] = [
     ],
   },
 ];
- 
+
 export default function Homepage() {
   return (
     <main className="min-h-screen bg-white text-slate-900 p-4">
@@ -128,45 +128,51 @@ export default function Homepage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-8xl px-6 pb-10 sm:px-8 lg:px-10 bg-zinc-100 rounded-2xl border-black border-2">
-        <h2 className="text-4xl text-center pt-8 pb-10 font-semibold tracking-tight text-slate-950 sm:text-5xl">
-          CM-UY 3113: Physical Chemistry I: Chapter Overview
-        </h2>
-        <div className="space-y-10">
-          {chapters.map((chapter) => (
-            <article key={chapter.id} className="overflow-hidden rounded-3xl border border-black bg-white shadow-sm">
-              <div className="grid gap-0 lg:grid-cols-[1fr_1.5fr]">
-                <div className="border-b border-slate-200 bg-slate-50 lg:border-b-0 lg:border-r">
-                  <img src={chapter.image} alt={chapter.title} className="h-full min-h-[260px] w-full object-cover" />
-                </div>
+      <section className="mx-auto max-w-8xl px-6 py-8 sm:px-8 lg:px-10 bg-blue-500/40 rounded-2xl border-black border-2">
+        <div className="bg-white p-10 pt-4 rounded-2xl border-black border">
+          <h2 className="text-4xl text-center pt-8 pb-12 font-semibold tracking-tight text-slate-950 sm:text-5xl">
+            CM-UY 3113: Physical Chemistry I: Chapter Overview
+          </h2>
+          <div className="space-y-10">
+            {chapters.map((chapter) => (
+              <article key={chapter.id} className="overflow-hidden rounded-3xl border border-black bg-white shadow-sm">
+                <div className="grid gap-0 lg:grid-cols-[1fr_1.5fr]">
+                  <div className="border-b border-slate-200 bg-slate-50 lg:border-b-0 lg:border-r">
+                    <img src={chapter.image} alt={chapter.title} className="h-full min-h-[260px] w-full object-cover" />
+                  </div>
 
-                <div className="p-8 sm:p-10">
-                  <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">{chapter.title}</h2>
+                  <div className="p-8 sm:p-10">
+                    <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                      {chapter.title}
+                    </h2>
 
-                  <p className="mt-4 text-base leading-7 text-slate-600">{chapter.description}</p>
+                    <p className="mt-4 text-base leading-7 text-slate-600">{chapter.description}</p>
 
-                  <div className="mt-8">
-                    <h3 className="font-semibold uppercase tracking-[0.18em] text-slate-500">Chapter units</h3>
+                    <div className="mt-8">
+                      <h3 className="font-semibold uppercase tracking-[0.18em] text-slate-500">Chapter units</h3>
 
-                    <div className="mt-4 grid gap-3 sm:grid-cols-1">
-                      {chapter.units.map((unit) => (
-                        <a
-                          key={unit.title}
-                          href={unit.href}
-                          className="group rounded-2xl border border-slate-500 bg-white px-4 py-4 font-medium transition hover:border-slate-400 hover:bg-slate-50"
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <span>{unit.title}</span>
-                            <span className="transition group-hover:translate-x-0.5 group-hover:text-slate-600">→</span>
-                          </div>
-                        </a>
-                      ))}
+                      <div className="mt-4 grid gap-3 sm:grid-cols-1">
+                        {chapter.units.map((unit) => (
+                          <a
+                            key={unit.title}
+                            href={unit.href}
+                            className="group rounded-2xl border border-slate-500 bg-white px-4 py-4 font-medium transition hover:border-slate-400 hover:bg-slate-50"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <span>{unit.title}</span>
+                              <span className="transition group-hover:translate-x-0.5 group-hover:text-slate-600">
+                                →
+                              </span>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))}
+          </div>
         </div>
       </section>
     </main>
