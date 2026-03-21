@@ -1,5 +1,5 @@
-import { prisma } from "../../lib/prisma";
-import { Request, Response, NextFunction } from "express";
+import { prisma } from "../lib/prisma";
+import type { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import { validateUserInput, validateUniqueUser } from "../utils/validation";
 
@@ -30,11 +30,12 @@ export const createUser = async (
   }
 };
 
-export const getUsers = async (_req: Request, _res: Response) => {
+export const getUsers = async (_req: Request, res: Response) => {
   const allUsers = await prisma.user.findMany({
     select: {
       username: true,
     },
   });
   console.log("All users:", JSON.stringify(allUsers, null, 2));
+  return res.status(201).json({ message: "Users page"});
 };

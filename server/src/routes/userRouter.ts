@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser } from "../controllers/userController";
+import { createUser, getUsers } from "../controllers/userController";
 import rateLimit from "express-rate-limit";
 
 const userSignupLimiter = rateLimit({
@@ -10,6 +10,8 @@ const userSignupLimiter = rateLimit({
 
 const userRouter = Router();
 
+userRouter.get("/", userSignupLimiter, (req, res)=>{ return res.status(500).json({ error: "Internal server error." })});
+userRouter.get("/signup", userSignupLimiter, getUsers);
 userRouter.post("/signup", userSignupLimiter, createUser);
 
 export default userRouter;

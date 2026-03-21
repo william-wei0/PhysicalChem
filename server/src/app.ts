@@ -1,14 +1,14 @@
 import express from "express";
 import userRouter from "./routes/userRouter";
 import AppError from "./errors/AppError";
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 const app = express();
 
 app.use(express.json())
 app.use("/api/users", userRouter);
 
-app.use((req: Request, res: Response) => {
+app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Route not found." });
 });
 
