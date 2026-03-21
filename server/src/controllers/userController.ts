@@ -19,7 +19,7 @@ export const createUser = async (
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
+    const user = await prisma.users.create({
       data: { username, passwordHash, email },
       select: { id: true, username: true, createdAt: true },
     });
@@ -31,7 +31,7 @@ export const createUser = async (
 };
 
 export const getUsers = async (_req: Request, res: Response) => {
-  const allUsers = await prisma.user.findMany({
+  const allUsers = await prisma.users.findMany({
     select: {
       username: true,
     },
