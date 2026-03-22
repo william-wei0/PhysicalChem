@@ -13,11 +13,11 @@
 }
 
 .lessonSection {
-  @apply m-6 p-6 bg-white rounded-2xl;
+  @apply m-6 p-6 bg-white rounded-2xl text-lg;
 }
 
 .lessonSection .importantEquation {
-  @apply bg-zinc-100 p-2 my-4 border-black border-2 overflow-auto;
+  @apply bg-zinc-100 p-2 my-4 border-black border-2 overflow-auto ;
 }
 
 .lessonSection h2 {
@@ -25,7 +25,7 @@
 }
 
 .lessonSection p {
-  @apply mb-4 mt-4 text-lg;
+  @apply mb-4 mt-4;
 }
 
 .lessonSection p.smallNote {

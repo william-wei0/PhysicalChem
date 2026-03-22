@@ -9,7 +9,6 @@ import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
 import { type TaskSection } from "@/context/LessonTasks/LessonTasksContext";
 
 export default function Chapter1Unit1Page() {
-
   const LESSON_SECTIONS: TaskSection[] = [
     {
       id: "Section 1.3.1 Light as a Wave",
@@ -22,14 +21,13 @@ export default function Chapter1Unit1Page() {
         { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
       ],
     },
-        {
+    {
       id: "Section 1.3.2 Light as a Particle",
       title: "Section 1.3.2: Light as a Wave",
       tasks: [
         { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
         { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
         { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
-        
       ],
     },
     {
@@ -85,10 +83,10 @@ export default function Chapter1Unit1Page() {
         <p>
           Combining the uncertainty in the position and x-component of the momentum, we can write the following
           equation:
-          <div className="importantEquation">
-            <BlockMath math="\begin{equation} \Delta x \Delta p_{x} = p w \sin{\alpha} \end{equation}"></BlockMath>
-          </div>
         </p>
+        <div className="importantEquation">
+          <BlockMath math="\begin{equation} \Delta x \Delta p_{x} = p w \sin{\alpha} \end{equation}"></BlockMath>
+        </div>
       </LessonSection>
       <LessonSection>
         <h2 id={"lesson2"}>1.2 The Heisenberg Uncertainty Principle</h2>
@@ -117,8 +115,9 @@ export default function Chapter1Unit1Page() {
           Now, we draw a point <InlineMath math="C" /> such that <InlineMath math="AD = CD" /> and we can now calculate
           the path length difference as <InlineMath math="BC" />. From the earlier condition that the path length
           difference must be equal to <InlineMath math="\frac{1}{2} \lambda" />, we can write the path length difference
-          as: <BlockMath math="\begin{equation} BC = \frac{1}{2} \lambda \end{equation}" />
+          as:
         </p>
+        <BlockMath math="\begin{equation} BC = \frac{1}{2} \lambda \end{equation}" />
 
         <p>
           Since the diffraction wall is placed far away compared to the width of the slit, the lines{" "}
@@ -126,39 +125,43 @@ export default function Chapter1Unit1Page() {
           <InlineMath math="\angle ACB \approx 90 \degree" />. This means that <InlineMath math="\triangle ABC" /> is a
           right triangle and using some trigonometry and the right triangle sine identity, we can notice that angle{" "}
           <InlineMath math="\angle CAB = \alpha" /> resulting in:
-          <BlockMath math="\begin{equation} BC = \frac{1}{2} w \sin{\alpha} \end{equation}" /> Combining our equations
-          of <InlineMath math="BC" /> we can now write the following:
-          <BlockMath math="BC = BC"></BlockMath>
-          <BlockMath math="\frac{1}{2} \lambda = \frac{1}{2} w \sin{\alpha}"></BlockMath>
-          <BlockMath math="\begin{equation} \lambda = w \sin{\alpha} \end{equation}"></BlockMath>
         </p>
+        <BlockMath math="\begin{equation} BC = \frac{1}{2} w \sin{\alpha} \end{equation}" />
+        <p>
+          Combining our equations of <InlineMath math="BC" /> we can now write the following:
+        </p>
+        <BlockMath math="BC = BC"></BlockMath>
+        <BlockMath math="\frac{1}{2} \lambda = \frac{1}{2} w \sin{\alpha}"></BlockMath>
+        <BlockMath math="\begin{equation} \lambda = w \sin{\alpha} \end{equation}"></BlockMath>
 
         <p>
           {" "}
           Combining equation <InlineMath math="(1)" /> with equation <InlineMath math="(4)" />, we now have:{" "}
-          <BlockMath math="\Delta x \Delta p_{x} = p \lambda"></BlockMath>
         </p>
+        <BlockMath math="\Delta x \Delta p_{x} = p \lambda"></BlockMath>
 
         <p>
           {" "}
           And substituting in the de Broglie relation: <InlineMath math="\lambda = h / p" />{" "}
-          <BlockMath math="\Delta x \Delta p_{x} = p \frac{h}{p}"></BlockMath>
-          <BlockMath math="\Delta x \Delta p_{x} = h"></BlockMath>
         </p>
+        <BlockMath math="\Delta x \Delta p_{x} = p \frac{h}{p}"></BlockMath>
+        <BlockMath math="\Delta x \Delta p_{x} = h"></BlockMath>
         <p>
           To account for the fact that our uncertainties were not rigorously defined in this experiment, our derived
           equation should actually be written as:{" "}
-          <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \approx h \end{equation}"></BlockMath>
+        </p>
+        <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \approx h \end{equation}"></BlockMath>
+        <p>
           Since we don't actually know if there are any other constants, but we know that the uncertainty depends on{" "}
           <InlineMath math="h" /> and is roughly on the same order of magnitude as <InlineMath math="h" />.
         </p>
         <p>
           If we perform some more rigorous experiments, we can learn that the correct equation for the Heisenberg
           Uncertainty Principle is:
-          <div className="importantEquation">
-            <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \gt \frac{h}{4\pi} = \frac{\hbar}{2} \end{equation}"></BlockMath>
-          </div>
         </p>
+        <div className="importantEquation">
+          <BlockMath math="\begin{equation} \Delta x \Delta p_{x} \gt \frac{h}{4\pi} = \frac{\hbar}{2} \end{equation}"></BlockMath>
+        </div>
         <p>
           {" "}
           This relation shows that the product of the uncertainties in the particle's position and momentum is

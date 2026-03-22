@@ -5,7 +5,7 @@ import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import HydrogenSuperposition1s2pzSimulation from "./simulationComponents/HydrogenSuperposition1s2pzSimulation";
 
-export default function HydrogenSuperpositionPage() {
+export default function Chapter5Unit1Page() {
   return (
     <LessonLayout>
       <h1 id="lesson1">
