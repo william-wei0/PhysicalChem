@@ -5,10 +5,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { EyeIcon, EyeOffIcon, CheckCircle2, CircleAlertIcon, TriangleAlertIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
 import Navbar from "@/components/Navbar";
 
 export default function SignUpPage() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -76,6 +78,7 @@ export default function SignUpPage() {
     try {
       const res = await fetch("/api/users/signup", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: formData.username,
           password: formData.password,
@@ -96,6 +99,7 @@ export default function SignUpPage() {
         password: "",
         confirmPassword: "",
       });
+      navigate("/");
     } catch {
       setFormError("Something went wrong. Please try again.");
     }

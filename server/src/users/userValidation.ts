@@ -51,8 +51,8 @@ export const validateUserInput = (username: string, password: string, email: str
 
 export const validateUniqueUser = async (username: string, email: string) => {
   const [existingUsername, existingEmail] = await Promise.all([
-    prisma.user.findUnique({ where: { username } }),
-    prisma.user.findUnique({ where: { email } }),
+    prisma.users.findUnique({ where: { username } }),
+    prisma.users.findUnique({ where: { email } }),
   ]);
 
   if (existingUsername) {

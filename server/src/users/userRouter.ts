@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getUsers } from "../controllers/userController";
+import { createUser, getUsers } from "./userController";
 import rateLimit from "express-rate-limit";
 
 const userSignupLimiter = rateLimit({

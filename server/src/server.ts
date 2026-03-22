@@ -1,7 +1,7 @@
 import app from "./app";
 import "dotenv/config";
 
-const PORT = 5173;
+const PORT = 3000;
 
 app.listen(PORT, (error) => {
     if (error) {

@@ -1,16 +1,15 @@
-import '../styles/App.css'
-import Navbar from '../components/Navbar'
+import routes from "./router.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { AuthProvider } from "@/context/auth/authProvider.tsx";
 
-import { Outlet } from 'react-router'
-
+const router = createBrowserRouter(routes);
 
 function App() {
-    return (
-      <>
-        <Navbar/>
-        <Outlet/>
-      </>
-    )
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
