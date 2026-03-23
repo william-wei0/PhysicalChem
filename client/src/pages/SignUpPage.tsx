@@ -6,11 +6,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { EyeIcon, EyeOffIcon, CheckCircle2, CircleAlertIcon, TriangleAlertIcon } from "lucide-react";
 import { useNavigate } from "react-router";
+import { validateEmail, validatePassword, validateUsername } from "@/utils/userValidation";
 
 import Navbar from "@/components/Navbar";
 
 export default function SignUpPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -25,40 +26,16 @@ export default function SignUpPage() {
   const [formError, setFormError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const validateUsername = (username: string): string => {
-    if (username.length < 3) return "Username must be at least 3 characters.";
-    if (username.length > 30) return "Username must be under 30 characters.";
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Username can only contain letters, numbers, and underscores.";
-    return "";
-  };
-
-  const validateEmail = (email: string): string => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email.length > 254) return "Email address is too long.";
-    if (!emailRegex.test(email)) return "Invalid email format.";
-    return "";
-  };
-
-  const validatePassword = (password: string): string => {
-    let errors = "";
-    if (password.length < 8) errors += "• Must be at least 8 characters.\n";
-    if (password.length > 72) errors += "• Must be under 72 characters.\n";
-    if (!/[a-zA-Z]/.test(password)) errors += "• Must contain at least one letter. (A-Z)\n";
-    if (!/[0-9]/.test(password)) errors += "• Must contain at least one digit. (0-9)\n";
-    if (!/[^a-zA-Z0-9]/.test(password)) errors += "• Must contain at least one special character.\n";
-    return errors;
-  };
-
   const validateForm = () => {
     const usernameErr = validateUsername(formData.username.trim());
     const emailErr = validateEmail(formData.email.trim().toLowerCase());
-    const passwordErr = validatePassword(formData.password);
+    const passwordErrors = validatePassword(formData.password);
 
     setUsernameError(usernameErr);
     setEmailError(emailErr);
-    setPasswordError(passwordErr);
+    setPasswordError(passwordErrors);
 
-    if (usernameErr || emailErr || passwordErr) return false;
+    if (usernameErr || emailErr || passwordErrors) return false;
 
     if (formData.password !== formData.confirmPassword) {
       setFormError("Passwords do not match.");
@@ -108,7 +85,7 @@ export default function SignUpPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (name === "username") setUsernameError(validateUsername(value.trim()));
     if (name === "email") setEmailError(validateEmail(value.trim().toLowerCase()));

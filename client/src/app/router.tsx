@@ -5,6 +5,8 @@ import LessonIndexPage from "../pages/Lessons/LessonIndexPage";
 import PageLayout from "../layouts/PageLayout";
 import SignUpPage from "@/pages/SignUpPage";
 import LoginPage from "@/pages/LoginPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
+import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import { ProtectedRoute } from "@/context/auth/ProtectedRoute";
 
 const routes = [
@@ -32,6 +34,16 @@ const routes = [
   {
     path: "/login",
     element: <LoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
     errorElement: <ErrorPage />,
   },
   {
