@@ -1,7 +1,7 @@
 // server/src/controllers/userController.ts
 import { Request, Response, NextFunction } from "express";
 import * as userService from "./userService";
-import { validateUserInput, validateUniqueUser } from "./userValidation";
+import { validateUserInput, validateUniqueUser } from "../utils/userValidation";
 import AppError from "../errors/AppError";
 
 export const createUser = async (

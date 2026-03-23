@@ -27,3 +27,23 @@ export type Users = Prisma.UsersModel
  * 
  */
 export type LessonProgress = Prisma.LessonProgressModel
+/**
+ * Model Role
+ * 
+ */
+export type Role = Prisma.RoleModel
+/**
+ * Model UserRole
+ * 
+ */
+export type UserRole = Prisma.UserRoleModel
+/**
+ * Model Group
+ * 
+ */
+export type Group = Prisma.GroupModel
+/**
+ * Model UserGroup
+ * 
+ */
+export type UserGroup = Prisma.UserGroupModel

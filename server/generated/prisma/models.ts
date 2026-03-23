@@ -10,4 +10,8 @@
  */
 export type * from './models/Users'
 export type * from './models/LessonProgress'
+export type * from './models/Role'
+export type * from './models/UserRole'
+export type * from './models/Group'
+export type * from './models/UserGroup'
 export type * from './commonInputTypes'
