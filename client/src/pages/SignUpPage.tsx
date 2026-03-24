@@ -7,8 +7,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { EyeIcon, EyeOffIcon, CheckCircle2, CircleAlertIcon, TriangleAlertIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import { validateEmail, validatePassword, validateUsername } from "@/utils/userValidation";
-
-import Navbar from "@/components/Navbar";
+import { Link } from "react-router";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -95,7 +94,6 @@ export default function SignUpPage() {
 
   return (
     <>
-      <Navbar></Navbar>
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 p-4">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1">
@@ -114,6 +112,7 @@ export default function SignUpPage() {
                   value={formData.username}
                   onChange={handleChange}
                   className="w-full"
+                  autoComplete="username"
                 />
                 {usernameError && <p className="text-sm text-red-500">{usernameError}</p>}
               </div>
@@ -128,6 +127,7 @@ export default function SignUpPage() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full"
+                  autoComplete="email"
                 />
                 {emailError && <p className="text-sm text-red-500">{emailError}</p>}
               </div>
@@ -143,6 +143,7 @@ export default function SignUpPage() {
                     value={formData.password}
                     onChange={handleChange}
                     className="w-full pr-10"
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"
@@ -177,6 +178,7 @@ export default function SignUpPage() {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     className="w-full pr-10"
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"
@@ -210,9 +212,9 @@ export default function SignUpPage() {
           <CardFooter className="flex justify-center">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <a href="login" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
                 Sign in
-              </a>
+              </Link>
             </p>
           </CardFooter>
         </Card>

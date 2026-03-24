@@ -11,19 +11,17 @@ declare global {
 }
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies.accessToken;
 
-  if (!authHeader?.startsWith("Bearer ")) {
-    throw new AppError("No token provided.", 401);
+  if (!token) {
+    return next(new AppError("No token provided.", 401));
   }
-
-  const token = authHeader.split(" ")[1];
 
   try {
     const payload = verifyAccessToken(token);
     req.userId = payload.userId;
     next();
   } catch {
-    throw new AppError("Invalid or expired token.", 401);
+    return next(new AppError("Invalid or expired token.", 401));
   }
 };

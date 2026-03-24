@@ -7,54 +7,36 @@ import SignUpPage from "@/pages/SignUpPage";
 import LoginPage from "@/pages/LoginPage";
 import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
-import { ProtectedRoute } from "@/context/auth/ProtectedRoute";
+import AuthLayout from "../layouts/AuthLayout";
+import { UnauthenticatedRoute } from "@/context/auth/UnauthenticatedRoute";
 
 const routes = [
   {
+
     path: "/",
-    element: <PageLayout />,
-    errorElement: <ErrorPage />,
-    children: [{ index: true, element: <HomePage /> }],
-  },
-  {
-    path: "/lessons",
-    element: <PageLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <LessonIndexPage /> },
-      { path: ":lessonId", element: <LessonsRouter /> },
-      { path: ":chapterId/:unitId", element: <LessonsRouter /> },
+      {
+        element: <PageLayout />,
+        children: [
+          { index: true,                        element: <HomePage /> },
+          { path: "lessons",                    element: <LessonIndexPage /> },
+          { path: "lessons/:lessonId",          element: <LessonsRouter /> },
+          { path: "lessons/:chapterId/:unitId", element: <LessonsRouter /> },
+        ],
+      },
+
+      {
+        element: <UnauthenticatedRoute><AuthLayout /></UnauthenticatedRoute>,
+        children: [
+          { path: "signup",          element: <SignUpPage /> },
+          { path: "login",           element: <LoginPage /> },
+          { path: "forgot-password", element: <ForgotPasswordPage /> },
+          { path: "reset-password",  element: <ResetPasswordPage /> },
+        ],
+      },
     ],
   },
-  {
-    path: "/signup",
-    element: <SignUpPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPasswordPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/reset-password",
-    element: <ResetPasswordPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/dashboard",
-    element: (
-      <ProtectedRoute>
-        <p>This is a protected route.</p>
-      </ProtectedRoute>
-    ),
-    errorElement: <ErrorPage />,
-  },
-];
+]
 
 export default routes;

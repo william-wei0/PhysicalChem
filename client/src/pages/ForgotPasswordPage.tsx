@@ -1,4 +1,3 @@
-// src/pages/ForgotPasswordPage.tsx
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { Link } from "react-router";
-import Navbar from "@/components/Navbar";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -45,7 +43,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <>
-      <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 p-4">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1">
@@ -88,7 +85,7 @@ export default function ForgotPasswordPage() {
                 )}
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send reset link"}
+                  {isLoading ? "Sending..." : "Send Reset Password Link"}
                 </Button>
 
                 <p className="text-center text-sm text-gray-600">

@@ -5,9 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { EyeIcon, EyeOffIcon, AlertCircle } from "lucide-react";
-import Navbar from "@/components/Navbar";
 import { useAuth } from "@/context/auth/useAuth";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -18,6 +17,7 @@ export default function LoginPage() {
     password: "",
     rememberMe: false,
   });
+
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState("");
@@ -37,7 +37,7 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password);
-      setSuccess(true)
+      setSuccess(true);
       navigate("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -50,9 +50,9 @@ export default function LoginPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  
   return (
     <>
-      <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 p-4">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1">
@@ -72,15 +72,16 @@ export default function LoginPage() {
                   onChange={handleChange}
                   className="w-full"
                   disabled={isLoading}
+                  autoComplete="username"
                 />
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
+                  <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
                 <div className="relative">
                   <Input
@@ -92,6 +93,7 @@ export default function LoginPage() {
                     onChange={handleChange}
                     className="w-full pr-10"
                     disabled={isLoading}
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
@@ -125,9 +127,9 @@ export default function LoginPage() {
           <CardFooter className="flex justify-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
                 Sign up
-              </a>
+              </Link>
             </p>
           </CardFooter>
         </Card>

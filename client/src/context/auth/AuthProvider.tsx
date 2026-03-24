@@ -1,17 +1,30 @@
 import { useState, useEffect } from "react";
-import { AuthContext } from "./authContext";
+import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // prevents flash of wrong UI
+  const [isLoading, setIsLoading] = useState(true);
 
-  // check if user is already logged in on mount
   useEffect(() => {
     const checkIfAlreadyLoggedIn = async () => {
       try {
-        const res = await fetch("/api/auth/me", {
-          credentials: "include", // sends cookie automatically
+        let res = await fetch("/api/auth/me", {
+          credentials: "include",
         });
+
+        if (res.status === 401) {
+          const refreshRes = await fetch("/api/auth/refresh", {
+            method: "POST",
+            credentials: "include",
+          });
+
+          if (!refreshRes.ok) {
+            setIsLoading(false);
+            return;
+          }
+
+          res = await fetch("/api/auth/me", { credentials: "include" });
+        }
 
         if (res.ok) {
           const data = await res.json();
@@ -23,7 +36,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsLoading(false);
       }
     };
-
     checkIfAlreadyLoggedIn();
   }, []);
 
@@ -31,14 +43,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // receives httpOnly cookies from server
+      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.error); // bubble up to the login page to display
+      throw new Error(data.error);
     }
 
     setUser(data.user);
@@ -48,10 +60,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await fetch("/api/auth/logout", {
         method: "POST",
-        credentials: "include", // sends cookie so server can clear it
+        credentials: "include",
       });
     } finally {
-      setUser(null); // always clear local state even if request fails
+      setUser(null);
     }
   };
 

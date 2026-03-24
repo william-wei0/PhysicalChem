@@ -1,4 +1,3 @@
-// server/src/controllers/authController.ts
 import { Request, Response, NextFunction } from "express";
 import * as authService from "./authService";
 import { verifyRefreshToken, generateAccessToken } from "../utils/tokens";
@@ -8,17 +7,24 @@ import { validatePassword } from "@/utils/userValidation";
 export const loginUser = async (
   req: Request<{}, {}, { email: string; password: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const email = req.body.email?.trim().toLowerCase();
-    const password = req.body.password?.trim();
+    const password = req.body.password;
 
     if (!email || !password) {
       throw new AppError("Please fill in all fields.", 400);
     }
 
     const { accessToken, refreshToken, user } = await authService.loginUser(email, password);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -27,18 +33,13 @@ export const loginUser = async (
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.status(200).json({ accessToken, user });
-
+    return res.status(200).json({ user });
   } catch (error) {
     next(error);
   }
 };
 
-export const refreshToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.refreshToken;
 
@@ -49,23 +50,35 @@ export const refreshToken = async (
     const payload = verifyRefreshToken(token);
     const accessToken = generateAccessToken(payload.userId);
 
-    return res.status(200).json({ accessToken });
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
 
+    return res.status(200).json({ message: "Token refreshed." }); // no token in body
   } catch {
-    throw new AppError("Invalid or expired refresh token.", 401);
+    next(new AppError("Invalid or expired refresh token.", 401));
   }
 };
 
 export const logoutUser = (req: Request, res: Response) => {
-  res.clearCookie("refreshToken");
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+  });
   return res.status(200).json({ message: "Logged out." });
 };
 
-export const forgotPassword = async (
-  req: Request<{}, {}, { email: string }>,
-  res: Response,
-  next: NextFunction
-) => {
+export const forgotPassword = async (req: Request<{}, {}, { email: string }>, res: Response, next: NextFunction) => {
   try {
     const email = req.body.email?.trim().toLowerCase();
 
@@ -75,11 +88,9 @@ export const forgotPassword = async (
 
     await authService.requestPasswordReset(email);
 
-    // always return 200 — don't reveal if email exists
     return res.status(200).json({
       message: "If that email exists you will receive a reset link shortly.",
     });
-
   } catch (error) {
     next(error);
   }
@@ -88,7 +99,7 @@ export const forgotPassword = async (
 export const resetPassword = async (
   req: Request<{}, {}, { token: string; password: string }>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { token, password } = req.body;
@@ -97,15 +108,23 @@ export const resetPassword = async (
       throw new AppError("Token and password are required.", 400);
     }
 
-    validatePassword(password)
+    validatePassword(password);
 
     await authService.resetPassword(token, password);
 
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
 
     return res.status(200).json({ message: "Password reset successfully." });
-
   } catch (error) {
     next(error);
   }

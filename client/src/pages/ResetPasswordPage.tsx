@@ -1,4 +1,3 @@
-// src/pages/ResetPasswordPage.tsx
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, AlertCircle, EyeIcon, EyeOffIcon } from "lucide-react";
-import Navbar from "@/components/Navbar";
 import { validatePassword } from "@/utils/userValidation";
 
 export default function ResetPasswordPage() {
@@ -76,7 +74,6 @@ export default function ResetPasswordPage() {
 
   return (
     <>
-      <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100 p-4">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1">

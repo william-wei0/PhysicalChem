@@ -15,19 +15,12 @@ export default function Chapter1Unit1Page() {
       title: "Section 1.3.1: Light as a Wave",
       tasks: [
         { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
-        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
-        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
-        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
-        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
       ],
     },
     {
       id: "Section 1.3.2 Light as a Particle",
       title: "Section 1.3.2: Light as a Wave",
       tasks: [
-        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
-        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
-        { id: "clickWaveStatus", label: 'Click on "Show Wave Simulation" to view the wave form.', completed: false },
       ],
     },
     {

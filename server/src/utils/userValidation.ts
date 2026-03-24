@@ -18,6 +18,11 @@ export const validatePassword = (password: string) => {
   if (password.length < 8) {
     throw new AppError("Password must be at least 8 characters long.", 400);
   }
+
+  if (password.length > 72) {
+    throw new AppError("Password must be must be under 72 characters", 400);
+  }
+
   if (!/[a-zA-Z]/.test(password)) {
     throw new AppError("Password must contain at least one letter.", 400);
   }
