@@ -1,4 +1,3 @@
-// server/src/controllers/userController.ts
 import { Request, Response, NextFunction } from "express";
 import * as userService from "./userService";
 import { validateUserInput, validateUniqueUser } from "../utils/userValidation";

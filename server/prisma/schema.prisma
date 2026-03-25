@@ -12,6 +12,17 @@ datasource db {
   provider = "postgresql"
 }
 
+model loginSession {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("loginSessions")
+}
+
 model Users {
   id                   Int              @id @default(autoincrement())
   username             String           @unique
@@ -23,6 +34,7 @@ model Users {
   lessonProgresses     LessonProgress[]
   userRoles            UserRole[]
   userGroups           UserGroup[]
+  loginSessions        loginSession[]
 
   @@map("users")
 }

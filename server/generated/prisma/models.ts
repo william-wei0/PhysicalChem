@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/loginSession'
 export type * from './models/Users'
 export type * from './models/LessonProgress'
 export type * from './models/Role'

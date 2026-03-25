@@ -6,17 +6,19 @@ import AppError from "./errors/AppError";
 import type { Request, Response, NextFunction } from "express";
 import cors from "cors";
 
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://your-frontend.onrender.com",
 ];
+
+
 
 const app = express();
 app.set("trust proxy", 1);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // allow requests with no origin (mobile apps, curl, Postman)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {

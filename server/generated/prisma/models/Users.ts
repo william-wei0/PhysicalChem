@@ -235,6 +235,7 @@ export type UsersWhereInput = {
   lessonProgresses?: Prisma.LessonProgressListRelationFilter
   userRoles?: Prisma.UserRoleListRelationFilter
   userGroups?: Prisma.UserGroupListRelationFilter
+  loginSessions?: Prisma.LoginSessionListRelationFilter
 }
 
 export type UsersOrderByWithRelationInput = {
@@ -248,6 +249,7 @@ export type UsersOrderByWithRelationInput = {
   lessonProgresses?: Prisma.LessonProgressOrderByRelationAggregateInput
   userRoles?: Prisma.UserRoleOrderByRelationAggregateInput
   userGroups?: Prisma.UserGroupOrderByRelationAggregateInput
+  loginSessions?: Prisma.loginSessionOrderByRelationAggregateInput
 }
 
 export type UsersWhereUniqueInput = Prisma.AtLeast<{
@@ -264,6 +266,7 @@ export type UsersWhereUniqueInput = Prisma.AtLeast<{
   lessonProgresses?: Prisma.LessonProgressListRelationFilter
   userRoles?: Prisma.UserRoleListRelationFilter
   userGroups?: Prisma.UserGroupListRelationFilter
+  loginSessions?: Prisma.LoginSessionListRelationFilter
 }, "id" | "username" | "email">
 
 export type UsersOrderByWithAggregationInput = {
@@ -304,6 +307,7 @@ export type UsersCreateInput = {
   lessonProgresses?: Prisma.LessonProgressCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   userGroups?: Prisma.UserGroupCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateInput = {
@@ -317,6 +321,7 @@ export type UsersUncheckedCreateInput = {
   lessonProgresses?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   userGroups?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersUpdateInput = {
@@ -329,6 +334,7 @@ export type UsersUpdateInput = {
   lessonProgresses?: Prisma.LessonProgressUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   userGroups?: Prisma.UserGroupUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateInput = {
@@ -342,6 +348,7 @@ export type UsersUncheckedUpdateInput = {
   lessonProgresses?: Prisma.LessonProgressUncheckedUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   userGroups?: Prisma.UserGroupUncheckedUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateManyInput = {
@@ -371,6 +378,11 @@ export type UsersUncheckedUpdateManyInput = {
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UsersScalarRelationFilter = {
+  is?: Prisma.UsersWhereInput
+  isNot?: Prisma.UsersWhereInput
 }
 
 export type UsersCountOrderByAggregateInput = {
@@ -411,13 +423,18 @@ export type UsersSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type UsersScalarRelationFilter = {
-  is?: Prisma.UsersWhereInput
-  isNot?: Prisma.UsersWhereInput
+export type UsersCreateNestedOneWithoutLoginSessionsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutLoginSessionsInput, Prisma.UsersUncheckedCreateWithoutLoginSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutLoginSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type UsersUpdateOneRequiredWithoutLoginSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutLoginSessionsInput, Prisma.UsersUncheckedCreateWithoutLoginSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutLoginSessionsInput
+  upsert?: Prisma.UsersUpsertWithoutLoginSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutLoginSessionsInput, Prisma.UsersUpdateWithoutLoginSessionsInput>, Prisma.UsersUncheckedUpdateWithoutLoginSessionsInput>
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -426,18 +443,6 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type UsersCreateNestedOneWithoutLessonProgressesInput = {
@@ -482,6 +487,72 @@ export type UsersUpdateOneRequiredWithoutUserGroupsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutUserGroupsInput, Prisma.UsersUpdateWithoutUserGroupsInput>, Prisma.UsersUncheckedUpdateWithoutUserGroupsInput>
 }
 
+export type UsersCreateWithoutLoginSessionsInput = {
+  username: string
+  email: string
+  passwordHash: string
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  createdAt?: Date | string
+  lessonProgresses?: Prisma.LessonProgressCreateNestedManyWithoutUserInput
+  userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  userGroups?: Prisma.UserGroupCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutLoginSessionsInput = {
+  id?: number
+  username: string
+  email: string
+  passwordHash: string
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  createdAt?: Date | string
+  lessonProgresses?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutUserInput
+  userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  userGroups?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutLoginSessionsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutLoginSessionsInput, Prisma.UsersUncheckedCreateWithoutLoginSessionsInput>
+}
+
+export type UsersUpsertWithoutLoginSessionsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutLoginSessionsInput, Prisma.UsersUncheckedUpdateWithoutLoginSessionsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutLoginSessionsInput, Prisma.UsersUncheckedCreateWithoutLoginSessionsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutLoginSessionsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutLoginSessionsInput, Prisma.UsersUncheckedUpdateWithoutLoginSessionsInput>
+}
+
+export type UsersUpdateWithoutLoginSessionsInput = {
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lessonProgresses?: Prisma.LessonProgressUpdateManyWithoutUserNestedInput
+  userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  userGroups?: Prisma.UserGroupUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutLoginSessionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lessonProgresses?: Prisma.LessonProgressUncheckedUpdateManyWithoutUserNestedInput
+  userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  userGroups?: Prisma.UserGroupUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UsersCreateWithoutLessonProgressesInput = {
   username: string
   email: string
@@ -491,6 +562,7 @@ export type UsersCreateWithoutLessonProgressesInput = {
   createdAt?: Date | string
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   userGroups?: Prisma.UserGroupCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutLessonProgressesInput = {
@@ -503,6 +575,7 @@ export type UsersUncheckedCreateWithoutLessonProgressesInput = {
   createdAt?: Date | string
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   userGroups?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutLessonProgressesInput = {
@@ -530,6 +603,7 @@ export type UsersUpdateWithoutLessonProgressesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   userGroups?: Prisma.UserGroupUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutLessonProgressesInput = {
@@ -542,6 +616,7 @@ export type UsersUncheckedUpdateWithoutLessonProgressesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   userGroups?: Prisma.UserGroupUncheckedUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutUserRolesInput = {
@@ -553,6 +628,7 @@ export type UsersCreateWithoutUserRolesInput = {
   createdAt?: Date | string
   lessonProgresses?: Prisma.LessonProgressCreateNestedManyWithoutUserInput
   userGroups?: Prisma.UserGroupCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutUserRolesInput = {
@@ -565,6 +641,7 @@ export type UsersUncheckedCreateWithoutUserRolesInput = {
   createdAt?: Date | string
   lessonProgresses?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutUserInput
   userGroups?: Prisma.UserGroupUncheckedCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutUserRolesInput = {
@@ -592,6 +669,7 @@ export type UsersUpdateWithoutUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lessonProgresses?: Prisma.LessonProgressUpdateManyWithoutUserNestedInput
   userGroups?: Prisma.UserGroupUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutUserRolesInput = {
@@ -604,6 +682,7 @@ export type UsersUncheckedUpdateWithoutUserRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lessonProgresses?: Prisma.LessonProgressUncheckedUpdateManyWithoutUserNestedInput
   userGroups?: Prisma.UserGroupUncheckedUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutUserGroupsInput = {
@@ -615,6 +694,7 @@ export type UsersCreateWithoutUserGroupsInput = {
   createdAt?: Date | string
   lessonProgresses?: Prisma.LessonProgressCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutUserGroupsInput = {
@@ -627,6 +707,7 @@ export type UsersUncheckedCreateWithoutUserGroupsInput = {
   createdAt?: Date | string
   lessonProgresses?: Prisma.LessonProgressUncheckedCreateNestedManyWithoutUserInput
   userRoles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  loginSessions?: Prisma.loginSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutUserGroupsInput = {
@@ -654,6 +735,7 @@ export type UsersUpdateWithoutUserGroupsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lessonProgresses?: Prisma.LessonProgressUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutUserGroupsInput = {
@@ -666,6 +748,7 @@ export type UsersUncheckedUpdateWithoutUserGroupsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lessonProgresses?: Prisma.LessonProgressUncheckedUpdateManyWithoutUserNestedInput
   userRoles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  loginSessions?: Prisma.loginSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -677,12 +760,14 @@ export type UsersCountOutputType = {
   lessonProgresses: number
   userRoles: number
   userGroups: number
+  loginSessions: number
 }
 
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lessonProgresses?: boolean | UsersCountOutputTypeCountLessonProgressesArgs
   userRoles?: boolean | UsersCountOutputTypeCountUserRolesArgs
   userGroups?: boolean | UsersCountOutputTypeCountUserGroupsArgs
+  loginSessions?: boolean | UsersCountOutputTypeCountLoginSessionsArgs
 }
 
 /**
@@ -716,6 +801,13 @@ export type UsersCountOutputTypeCountUserGroupsArgs<ExtArgs extends runtime.Type
   where?: Prisma.UserGroupWhereInput
 }
 
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountLoginSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.loginSessionWhereInput
+}
+
 
 export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -728,6 +820,7 @@ export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   lessonProgresses?: boolean | Prisma.Users$lessonProgressesArgs<ExtArgs>
   userRoles?: boolean | Prisma.Users$userRolesArgs<ExtArgs>
   userGroups?: boolean | Prisma.Users$userGroupsArgs<ExtArgs>
+  loginSessions?: boolean | Prisma.Users$loginSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
@@ -766,6 +859,7 @@ export type UsersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   lessonProgresses?: boolean | Prisma.Users$lessonProgressesArgs<ExtArgs>
   userRoles?: boolean | Prisma.Users$userRolesArgs<ExtArgs>
   userGroups?: boolean | Prisma.Users$userGroupsArgs<ExtArgs>
+  loginSessions?: boolean | Prisma.Users$loginSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -777,6 +871,7 @@ export type $UsersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     lessonProgresses: Prisma.$LessonProgressPayload<ExtArgs>[]
     userRoles: Prisma.$UserRolePayload<ExtArgs>[]
     userGroups: Prisma.$UserGroupPayload<ExtArgs>[]
+    loginSessions: Prisma.$loginSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1183,6 +1278,7 @@ export interface Prisma__UsersClient<T, Null = never, ExtArgs extends runtime.Ty
   lessonProgresses<T extends Prisma.Users$lessonProgressesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$lessonProgressesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userRoles<T extends Prisma.Users$userRolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userGroups<T extends Prisma.Users$userGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$userGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loginSessions<T extends Prisma.Users$loginSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$loginSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$loginSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1681,6 +1777,30 @@ export type Users$userGroupsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.UserGroupScalarFieldEnum | Prisma.UserGroupScalarFieldEnum[]
+}
+
+/**
+ * Users.loginSessions
+ */
+export type Users$loginSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the loginSession
+   */
+  select?: Prisma.loginSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the loginSession
+   */
+  omit?: Prisma.loginSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.loginSessionInclude<ExtArgs> | null
+  where?: Prisma.loginSessionWhereInput
+  orderBy?: Prisma.loginSessionOrderByWithRelationInput | Prisma.loginSessionOrderByWithRelationInput[]
+  cursor?: Prisma.loginSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoginSessionScalarFieldEnum | Prisma.LoginSessionScalarFieldEnum[]
 }
 
 /**

@@ -384,6 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  loginSession: 'loginSession',
   Users: 'Users',
   LessonProgress: 'LessonProgress',
   Role: 'Role',
@@ -405,10 +406,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "users" | "lessonProgress" | "role" | "userRole" | "group" | "userGroup"
+    modelProps: "loginSession" | "users" | "lessonProgress" | "role" | "userRole" | "group" | "userGroup"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    loginSession: {
+      payload: Prisma.$loginSessionPayload<ExtArgs>
+      fields: Prisma.loginSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.loginSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.loginSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.loginSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.loginSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>
+        }
+        findMany: {
+          args: Prisma.loginSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>[]
+        }
+        create: {
+          args: Prisma.loginSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>
+        }
+        createMany: {
+          args: Prisma.loginSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.loginSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.loginSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>
+        }
+        update: {
+          args: Prisma.loginSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.loginSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.loginSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.loginSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.loginSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$loginSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.LoginSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoginSession>
+        }
+        groupBy: {
+          args: Prisma.loginSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.loginSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginSessionCountAggregateOutputType> | number
+        }
+      }
+    }
     Users: {
       payload: Prisma.$UsersPayload<ExtArgs>
       fields: Prisma.UsersFieldRefs
@@ -892,6 +967,17 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const LoginSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginSessionScalarFieldEnum = (typeof LoginSessionScalarFieldEnum)[keyof typeof LoginSessionScalarFieldEnum]
+
+
 export const UsersScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -1134,6 +1220,7 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
+  loginSession?: Prisma.loginSessionOmit
   users?: Prisma.UsersOmit
   lessonProgress?: Prisma.LessonProgressOmit
   role?: Prisma.RoleOmit

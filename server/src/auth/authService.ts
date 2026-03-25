@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import {prisma} from "../lib/prisma"
+import { prisma } from "../lib/prisma";
 import crypto from "crypto";
 import AppError from "../errors/AppError";
 import { getUserByEmail } from "../users/userService";
@@ -16,6 +16,14 @@ export const loginUser = async (email: string, password: string) => {
   const accessToken = generateAccessToken(user.id);
   const refreshToken = generateRefreshToken(user.id);
 
+  await prisma.loginSession.create({
+    data: {
+      userId: user.id,
+      refreshToken,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    },
+  });
+
   return {
     accessToken,
     refreshToken,
@@ -25,6 +33,37 @@ export const loginUser = async (email: string, password: string) => {
       email: user.email,
     },
   };
+};
+
+export const rotateRefreshToken = async (oldToken: string) => {
+  const session = await prisma.loginSession.findUnique({
+    where: { refreshToken: oldToken },
+  });
+
+  if (!session || session.expiresAt < new Date()) {
+    // if expired, delete it
+    if (session) await prisma.loginSession.delete({ where: { id: session.id } });
+    throw new AppError("Invalid or expired refresh token.", 401);
+  }
+
+  const accessToken = generateAccessToken(session.userId);
+  const newRefreshToken = generateRefreshToken(session.userId);
+
+  // swap old token for new one atomically
+  await prisma.loginSession.update({
+    where: { id: session.id },
+    data: {
+      refreshToken: newRefreshToken,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    },
+  });
+
+  return { accessToken, refreshToken: newRefreshToken };
+};
+
+
+export const logoutUser = async (refreshToken: string) => {
+  await prisma.loginSession.deleteMany({ where: { refreshToken } });
 };
 
 export const requestPasswordReset = async (email: string) => {
@@ -51,7 +90,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
     where: {
       resetPasswordToken: token,
       resetPasswordExpires: {
-        gt: new Date()
+        gt: new Date(),
       },
     },
   });
@@ -62,12 +101,17 @@ export const resetPassword = async (token: string, newPassword: string) => {
 
   const passwordHash = await bcrypt.hash(newPassword, 10);
 
-  await prisma.users.update({
-    where: { id: user.id },
-    data: {
-      passwordHash,
-      resetPasswordToken: null,
-      resetPasswordExpires: null,
-    },
-  });
+  await prisma.$transaction([
+    prisma.users.update({
+      where: { id: user.id },
+      data: {
+        passwordHash,
+        resetPasswordToken: null,
+        resetPasswordExpires: null,
+      },
+    }),
+    prisma.loginSession.deleteMany({
+      where: { userId: user.id },
+    }),
+  ]);
 };

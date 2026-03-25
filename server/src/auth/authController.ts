@@ -42,13 +42,11 @@ export const loginUser = async (
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.refreshToken;
+    if (!token) throw new AppError("No refresh token.", 401);
 
-    if (!token) {
-      throw new AppError("No refresh token.", 401);
-    }
+    verifyRefreshToken(token);
 
-    const payload = verifyRefreshToken(token);
-    const accessToken = generateAccessToken(payload.userId);
+    const { accessToken, refreshToken: newRefreshToken } = await authService.rotateRefreshToken(token);
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
@@ -57,25 +55,36 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
       maxAge: 15 * 60 * 1000,
     });
 
-    return res.status(200).json({ message: "Token refreshed." }); // no token in body
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({ message: "Token refreshed." });
   } catch {
     next(new AppError("Invalid or expired refresh token.", 401));
   }
 };
 
-export const logoutUser = (req: Request, res: Response) => {
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-  });
-
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "production",
-  });
-  return res.status(200).json({ message: "Logged out." });
+export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token = req.cookies.refreshToken;
+    if (token) await authService.logoutUser(token);
+  } finally {
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+    return res.status(200).json({ message: "Logged out." });
+  }
 };
 
 export const forgotPassword = async (req: Request<{}, {}, { email: string }>, res: Response, next: NextFunction) => {
