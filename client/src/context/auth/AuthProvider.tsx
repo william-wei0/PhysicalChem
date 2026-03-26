@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
+import { Notification } from "@/components/Notification";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showLogoutNotif, setShowLogoutNotif] = useState(false);
 
   useEffect(() => {
     const checkIfAlreadyLoggedIn = async () => {
@@ -62,6 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         method: "POST",
         credentials: "include",
       });
+      setShowLogoutNotif(true);
     } finally {
       setUser(null);
     }
@@ -70,6 +73,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   if (isLoading) return null;
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout }}>
+      {showLogoutNotif && (
+        <Notification
+          message="Logged out"
+          description="You have been successfully logged out."
+          type="success"
+          timeout={4000}
+          theme="light"
+          onClose={() => setShowLogoutNotif(false)}
+        />
+      )}
+      {children}
+    </AuthContext.Provider>
   );
 };

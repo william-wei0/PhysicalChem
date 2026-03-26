@@ -78,13 +78,11 @@ export const Notification = ({
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
         .n-wrap {
           position: fixed; top: 0; left: 50%;
           transform: translateX(-50%) translateY(-110%);
           transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
           z-index: 9999; pointer-events: none;
-          font-family: 'IBM Plex Mono', monospace;
         }
         .n-wrap.in  { transform: translateX(-50%) translateY(0); pointer-events: all; }
         .n-wrap.out { transform: translateX(-50%) translateY(-110%); transition: transform 0.35s cubic-bezier(0.4,0,0.6,1); pointer-events: none; }
@@ -99,8 +97,8 @@ export const Notification = ({
         .n-accent { width: 3px; align-self: stretch; border-radius: 0 2px 2px 0; flex-shrink: 0; margin-right: 2px; }
         .n-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
         .n-body { flex: 1; }
-        .n-title { font-size: 13px; font-weight: 500; margin: 0 0 2px; }
-        .n-desc  { font-size: 12px; margin: 0; }
+        .n-title { font-size: 16px; font-weight: 500; margin: 0 0 2px; }
+        .n-desc  { font-size: 14px; margin: 0; }
         .n-close { width: 22px; height: 22px; border-radius: 4px; border: none; cursor: pointer; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; transition: background 0.15s; padding: 0; margin-right: 2px; }
         .n-bar { position: absolute; bottom: 0; left: 0; height: 2px; transition: width 0.016s linear; }
       `}</style>

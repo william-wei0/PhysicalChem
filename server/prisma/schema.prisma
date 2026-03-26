@@ -42,12 +42,13 @@ model Users {
 model LessonProgress {
   id          String   @id @default(cuid())
   userId      Int
-  lessonId    String
+  chapterId   Int
+  unitId      Int
   taskId      String
   completedAt DateTime @default(now())
   user        Users    @relation(fields: [userId], references: [id])
 
-  @@unique([userId, lessonId, taskId])
+  @@unique([userId, chapterId, unitId, taskId])
   @@map("lesson_progress")
 }
 

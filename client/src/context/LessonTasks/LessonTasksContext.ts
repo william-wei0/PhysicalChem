@@ -14,7 +14,7 @@ export type TaskSection = {
 
 type LessonTasksContext = {
   sections: TaskSection[];
-  completeTask: (id: string) => void;
+  completeTask: (taskId: string) => void;
   resetTasks: () => void;
   allComplete: boolean;
 };

@@ -5,6 +5,7 @@ import authRouter from "./auth/authRouter"
 import AppError from "./errors/AppError";
 import type { Request, Response, NextFunction } from "express";
 import cors from "cors";
+import lessonRoutes from "./lessons/lessonRouter";
 
 
 const allowedOrigins = [
@@ -37,6 +38,7 @@ app.use(express.json())
 app.use(cookieParser());
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/lessonProgress", lessonRoutes);
 
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Route not found." });

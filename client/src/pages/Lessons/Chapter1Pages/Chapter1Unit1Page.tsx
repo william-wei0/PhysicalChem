@@ -177,7 +177,7 @@ export default function Chapter1Unit1Page() {
           particle simulation to observe the distribution of photons on the photographic plate.
         </p>
       </LessonSection>
-      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS}>
+      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS} chapterId={1} unitId={1}>
         <TasksPanel />
         <SingleSlitSimulation />
       </LessonTasksProvider>

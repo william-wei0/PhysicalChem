@@ -1,30 +1,15 @@
-import { useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "@/context/auth/useAuth";
-import { Notification } from "./Notification";
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
-  const [showLogoutNotif, setShowLogoutNotif] = useState(false);
 
   const handleLogout = async () => {
     await logout();
-    setShowLogoutNotif(true);
   };
 
   return (
     <>
-      {showLogoutNotif && (
-        <Notification
-          message="Logged out"
-          description="You have been successfully logged out."
-          type="success"
-          timeout={4000}
-          theme="light"
-          onClose={() => setShowLogoutNotif(false)}
-        />
-      )}
-
       <nav className="bg-zinc-800 text-white px-6 py-4">
         <div className="grid grid-cols-3 items-center">
           {/* Left */}
@@ -45,10 +30,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <span className="text-zinc-300 text-sm">{user?.username}</span>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-1 hover:text-zinc-300 transition-colors"
-                >
+                <button onClick={handleLogout} className="px-4 py-1 hover:text-zinc-300 transition-colors">
                   Logout
                 </button>
               </>
