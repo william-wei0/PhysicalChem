@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 export type Task = {
   id: string;
-  label: string;
+  label: React.ReactNode;
   completed: boolean;
 };
 
@@ -13,8 +13,11 @@ export type TaskSection = {
 };
 
 type LessonTasksContext = {
+  chapterId: number;
+  unitId: number;
   sections: TaskSection[];
   completeTask: (taskId: string) => void;
+  hasBeenCompleted: (taskId: string) => boolean;
   resetTasks: () => void;
   allComplete: boolean;
 };

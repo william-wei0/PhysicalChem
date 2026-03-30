@@ -3,6 +3,7 @@ import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "../../../../components/simulationControls/SimulationControls";
 import "../../styles/simulation.css";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/accordion/accordion";
+import { useLessonTasks } from "@/context/LessonTasks/useLessonTasks";
 
 type CanvasDimensions = {
   width: number;
@@ -16,7 +17,7 @@ type ControlAccordionProps = {
   content?: React.ReactNode;
 };
 
-type Particle = {
+type Eigenstate = {
   quantumNumber: number;
   proportion: number;
   sqrtProportion: number;
@@ -39,19 +40,13 @@ type AnimationParams = {
 };
 
 function drawGridHorizontal(ctx: CanvasRenderingContext2D, animationParams: AnimationParams) {
-  const {
-    horizontalGridLines: horizontal_lines,
-    leftBoundary: left_boundary,
-    rightBoundary: right_boundary,
-    wellBaseHeight,
-  } = animationParams;
+  const { horizontalGridLines, leftBoundary, rightBoundary, wellBaseHeight } = animationParams;
   ctx.lineWidth = 1;
 
-  for (let i = 0; i < horizontal_lines; i++) {
+  for (let i = 0; i < horizontalGridLines; i++) {
     ctx.beginPath();
-    ctx.moveTo(left_boundary, (wellBaseHeight * i) / horizontal_lines);
-    ctx.lineTo(right_boundary, (wellBaseHeight * i) / horizontal_lines);
-
+    ctx.moveTo(leftBoundary, (wellBaseHeight * i) / horizontalGridLines);
+    ctx.lineTo(rightBoundary, (wellBaseHeight * i) / horizontalGridLines);
     ctx.strokeStyle = `rgba(200, 200, 200, 0.5)`;
     ctx.stroke();
   }
@@ -68,10 +63,10 @@ function drawTickMarks(ctx: CanvasRenderingContext2D, animationParams: Animation
     ctx.beginPath();
     ctx.moveTo(x, wellBaseHeight - 8);
     ctx.lineTo(x, wellBaseHeight + 8);
-
     ctx.strokeStyle = `rgba(200, 200, 200, 1)`;
     ctx.stroke();
   }
+
   ctx.lineWidth = 1.0;
 }
 
@@ -88,7 +83,6 @@ function draw_labels(ctx: CanvasRenderingContext2D, animationParams: AnimationPa
   ctx.translate(leftBoundary - 25, wellBaseHeight / 2);
   ctx.rotate(-Math.PI / 2);
   ctx.fillText("Probability Density |ψ|\u00B2", 0, 0);
-
   ctx.restore();
 }
 
@@ -111,17 +105,9 @@ function drawWave(
   ctx: CanvasRenderingContext2D,
   currentTime: number,
   animationParams: AnimationParams,
-  particle1: Particle,
-  particle2: Particle,
+  eigenstate1: Eigenstate,
+  eigenstate2: Eigenstate,
 ) {
-  function drawFilledWaveLine(x: number, y: number, ctx: CanvasRenderingContext2D, animationParams: AnimationParams) {
-    const { wellBaseHeight } = animationParams;
-    ctx.beginPath();
-    ctx.moveTo(x, wellBaseHeight);
-    ctx.lineTo(x, wellBaseHeight - y);
-    ctx.stroke();
-  }
-
   const { wellWidth, leftBoundary, isRainbow, isFilled, wellBaseHeight, animationSpeed, waveColor, waveThickness } =
     animationParams;
   const points = 4500;
@@ -130,20 +116,20 @@ function drawWave(
   ctx.strokeStyle = `rgba(${waveColor[0]},${waveColor[1]},${waveColor[2]},1.0)`;
   ctx.lineWidth = waveThickness;
   ctx.beginPath();
-  ctx.moveTo(animationParams.leftBoundary, animationParams.wellBaseHeight);
+  ctx.moveTo(leftBoundary, wellBaseHeight);
 
   for (let i = 0; i < points; i++) {
     const x = (i * wellWidth) / points + leftBoundary;
     const y =
       animationParams.waveAmplitude *
-      (particle1.proportion * Math.sin((i / points) * particle1.quantumNumber * Math.PI) ** 2 +
-        particle2.proportion * Math.sin((i / points) * particle2.quantumNumber * Math.PI) ** 2 +
-        particle1.sqrtProportion *
-          particle2.sqrtProportion *
-          Math.sin((i / points) * particle1.quantumNumber * Math.PI) *
-          Math.sin((i / points) * particle2.quantumNumber * Math.PI) *
+      (eigenstate1.proportion * Math.sin((i / points) * eigenstate1.quantumNumber * Math.PI) ** 2 +
+        eigenstate2.proportion * Math.sin((i / points) * eigenstate2.quantumNumber * Math.PI) ** 2 +
+        eigenstate1.sqrtProportion *
+          eigenstate2.sqrtProportion *
+          Math.sin((i / points) * eigenstate1.quantumNumber * Math.PI) *
+          Math.sin((i / points) * eigenstate2.quantumNumber * Math.PI) *
           Math.cos(
-            Math.min(Math.abs(particle2.quantumNumber ** 2 - particle1.quantumNumber ** 2), 10) *
+            Math.min(Math.abs(eigenstate2.quantumNumber ** 2 - eigenstate1.quantumNumber ** 2), 10) *
               currentTime *
               SPEED_FACTOR *
               animationSpeed,
@@ -154,16 +140,25 @@ function drawWave(
       ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
     }
 
-    if (isFilled) drawFilledWaveLine(x, y, ctx, animationParams);
-    else ctx.lineTo(x, wellBaseHeight - y);
+    if (isFilled) {
+      ctx.beginPath();
+      ctx.moveTo(x, wellBaseHeight);
+      ctx.lineTo(x, wellBaseHeight - y);
+      ctx.stroke();
+    } else {
+      ctx.lineTo(x, wellBaseHeight - y);
+    }
   }
 
-  if (!isFilled) {
-    ctx.stroke();
-  }
+  if (!isFilled) ctx.stroke();
 }
 
-export default function TwoParticleWellSimulation() {
+function makeEigenstate(quantumNumber: number, proportion: number): Eigenstate {
+  return { quantumNumber, proportion, sqrtProportion: Math.sqrt(proportion) };
+}
+
+export default function TwoEigenstateWellSimulation() {
+  const { completeTask, hasBeenCompleted } = useLessonTasks();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -175,18 +170,9 @@ export default function TwoParticleWellSimulation() {
   const currentTime = useRef<number>(0);
   const startTime = useRef<number | null>(null);
   const elapsedTime = useRef<number>(0);
-  const previousTime = useRef<number | null>(null);
 
-  const [particle1, setParticle1] = useState<Particle>({
-    quantumNumber: 1,
-    proportion: 0.5,
-    sqrtProportion: 1 / Math.SQRT2,
-  });
-  const [particle2, setParticle2] = useState<Particle>({
-    quantumNumber: 2,
-    proportion: 0.5,
-    sqrtProportion: 1 / Math.SQRT2,
-  });
+  const [eigenstate1, setEigenstate1] = useState<Eigenstate>(() => makeEigenstate(1, 0.5));
+  const [eigenstate2, setEigenstate2] = useState<Eigenstate>(() => makeEigenstate(2, 0.5));
   const [animationSpeed, setAnimationSpeed] = useState([0.5]);
   const [waveAmplitude, setWaveAmplitude] = useState([300]);
   const [wellWidth, setWellWidth] = useState([(CANVAS_DIMENSIONS.width * 7) / 10]);
@@ -227,12 +213,11 @@ export default function TwoParticleWellSimulation() {
       elapsedTime.current = (elapsedTime.current + (timestamp - startTime.current)) % WAVE_PERIOD;
       currentTime.current = elapsedTime.current;
       startTime.current = timestamp;
-      previousTime.current = timestamp;
 
       draw_well(ctx, animationParams);
       drawGridHorizontal(ctx, animationParams);
       draw_labels(ctx, animationParams);
-      drawWave(ctx, currentTime.current, animationParams, particle1, particle2);
+      drawWave(ctx, currentTime.current, animationParams, eigenstate1, eigenstate2);
       drawTickMarks(ctx, animationParams);
       animationFrameRef.current = requestAnimationFrame(animate);
     };
@@ -240,95 +225,74 @@ export default function TwoParticleWellSimulation() {
     animationFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [CANVAS_DIMENSIONS, animationParams, particle1, particle2]);
-
-  const handleParticle1ProportionChange = (proportion: number[]) => {
-    setParticle1((prev: Particle) => {
-      return { ...prev, proportion: proportion[0], sqrtProportion: Math.sqrt(proportion[0]) };
-    });
-    setParticle2((prev: Particle) => {
-      return { ...prev, proportion: 1 - proportion[0], sqrtProportion: Math.sqrt(1 - proportion[0]) };
-    });
-  };
-
-  const handleParticle2ProportionChange = (proportion: number[]) => {
-    setParticle2((prev: Particle) => {
-      return { ...prev, proportion: proportion[0], sqrtProportion: Math.sqrt(proportion[0]) };
-    });
-    setParticle1((prev: Particle) => {
-      return { ...prev, proportion: 1 - proportion[0], sqrtProportion: Math.sqrt(1 - proportion[0]) };
-    });
-  };
+  }, [CANVAS_DIMENSIONS, animationParams, eigenstate1, eigenstate2]);
 
   const accordionTriggerClassName =
     "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400 transition-colors duration-200";
 
-  const WaveParticleSettings = useMemo<ControlAccordionProps[]>(
-    () => [
-      {
-        id: "Particle 1 Settings",
-        title: "Particle 1 Settings",
+  const WaveEigenstateSettings = useMemo<ControlAccordionProps[]>(() => {
+    const handleProportionChange = (index: 1 | 2, proportion: number[]) => {
+      const value = proportion[0];
+      const otherValue = 1 - value;
+
+      setEigenstate1((prev) => makeEigenstate(prev.quantumNumber, index === 1 ? value : otherValue));
+      setEigenstate2((prev) => makeEigenstate(prev.quantumNumber, index === 2 ? value : otherValue));
+
+      if (value === 1) completeTask(index === 1 ? "setEigenstate1Proportion1" : "setEigenstate2Proportion1");
+      if (value === 0.5) completeTask("setEqualProportions");
+      if (hasBeenCompleted("setBothEigenstateQuantumNumber3") && (value === 0 || value === 1)) {
+        completeTask("setBothEigenstateQuantumNumber3andProportion1");
+      }
+    };
+
+    const handleQuantumNumberChange = (index: 1 | 2, energy: number[]) => {
+      const n = energy[0];
+      const [setThis, otherN] =
+        index === 1
+          ? [setEigenstate1, eigenstate2.quantumNumber]
+          : [setEigenstate2, eigenstate1.quantumNumber];
+
+      setThis((prev) => makeEigenstate(n, prev.proportion));
+
+      if (n === 3 && otherN === 2) completeTask("setEigenstate1QuantumNumber3Eigenstate2QuantumNumber2");
+      if (n === 2 && otherN === 3) completeTask("setEigenstate1QuantumNumber3Eigenstate2QuantumNumber2");
+      if (n === 3 && otherN === 3) completeTask("setBothEigenstateQuantumNumber3");
+      if (n === 2 && otherN === 1) completeTask("setEigenstate1QuantumNumber2Eigenstate2QuantumNumber1");
+      if (n === 1 && otherN === 2) completeTask("setEigenstate1QuantumNumber2Eigenstate2QuantumNumber1");
+      if (Math.abs(n - otherN) >= 5) completeTask("setQuantumNumberDifferenceGreaterThan5");
+    };
+
+    return [1, 2].map((index) => {
+      const eigenstate = index === 1 ? eigenstate1 : eigenstate2;
+      return {
+        id: `Eigenstate ${index} Settings`,
+        title: `Eigenstate ${index} Settings`,
         triggerClassName: accordionTriggerClassName,
         content: (
           <>
             <Slider
-              key={"Particle 1 Energy"}
-              value={[particle1.quantumNumber]}
-              onValueChange={(energy: number[]) => {
-                setParticle1((prev: Particle) => {
-                  return { ...prev, quantumNumber: energy[0] };
-                });
-              }}
-              label={"Particle 1 Energy"}
+              key={`Eigenstate ${index} Quantum Number`}
+              value={[eigenstate.quantumNumber]}
+              onValueChange={(energy: number[]) => handleQuantumNumberChange(index as 1 | 2, energy)}
+              label={`Eigenstate ${index} Quantum Number`}
               min={1}
               max={12}
             />
             <Slider
-              key={"Particle 1 Proportion"}
-              value={[parseFloat(particle1.proportion.toFixed(2))]}
-              onValueChange={handleParticle1ProportionChange}
-              label={"Particle 1 Proportion"}
+              key={`Eigenstate ${index} Proportion`}
+              value={[parseFloat(eigenstate.proportion.toFixed(2))]}
+              onValueChange={(p) => handleProportionChange(index as 1 | 2, p)}
+              label={`Eigenstate ${index} Proportion`}
               min={0}
               max={1}
               step={0.01}
             />
           </>
         ),
-      },
-      {
-        id: "Particle 2 Settings",
-        title: "Particle 2 Settings",
-        triggerClassName: accordionTriggerClassName,
-        content: (
-          <>
-            <Slider
-              key={"Particle 2 Energy"}
-              value={[particle2.quantumNumber]}
-              onValueChange={(energy: number[]) => {
-                setParticle2((prev: Particle) => {
-                  return { ...prev, quantumNumber: energy[0] };
-                });
-              }}
-              label="Particle 2 Energy"
-              min={1}
-              max={12}
-            />
-            <Slider
-              key={"Particle 2 Proportion"}
-              value={[parseFloat(particle2.proportion.toFixed(2))]}
-              onValueChange={handleParticle2ProportionChange}
-              label={"Particle 2 Proportion"}
-              min={0}
-              max={1}
-              step={0.01}
-            />
-          </>
-        ),
-      },
+      };
+    }).concat([
       {
         id: "General Settings",
         title: "General Settings",
@@ -336,37 +300,37 @@ export default function TwoParticleWellSimulation() {
         content: (
           <>
             <Slider
-              key={"Animation Speed"}
+              key="Animation Speed"
               value={animationSpeed}
               onValueChange={setAnimationSpeed}
-              label={"Animation Speed"}
+              label="Animation Speed"
               min={0}
               max={1}
               step={0.01}
             />
             <Slider
-              key={"Wave Amplitude"}
+              key="Wave Amplitude"
               value={waveAmplitude}
               onValueChange={setWaveAmplitude}
-              label={"Wave Amplitude"}
+              label="Wave Amplitude"
               min={1}
               max={500}
               step={1}
             />
             <Slider
-              key={"Well Width"}
+              key="Well Width"
               value={wellWidth}
               onValueChange={setWellWidth}
-              label={"Well Width"}
+              label="Well Width"
               min={300}
               max={1000}
               step={1}
             />
             <Slider
-              key={"Well Base Height"}
+              key="Well Base Height"
               value={wellBaseHeight}
               onValueChange={setWellBaseHeight}
-              label={"Well Base Height"}
+              label="Well Base Height"
               min={400}
               max={700}
               step={1}
@@ -374,9 +338,17 @@ export default function TwoParticleWellSimulation() {
           </>
         ),
       },
-    ],
-    [particle1, particle2, animationSpeed, waveAmplitude, wellWidth, wellBaseHeight],
-  );
+    ]);
+  }, [
+    eigenstate1,
+    eigenstate2,
+    animationSpeed,
+    waveAmplitude,
+    wellWidth,
+    wellBaseHeight,
+    completeTask,
+    hasBeenCompleted,
+  ]);
 
   return (
     <div className="simulationCanvasLayout">
@@ -392,7 +364,7 @@ export default function TwoParticleWellSimulation() {
           controllableSimulationVariables={
             <div className="scrollContainer max-h-[700px]">
               <Accordion key="accordion" allowMultiple={true}>
-                {WaveParticleSettings.map((setting) => (
+                {WaveEigenstateSettings.map((setting) => (
                   <AccordionItem id={setting.id} key={setting.id}>
                     <AccordionTrigger className={setting.triggerClassName}>{setting.title}</AccordionTrigger>
                     <AccordionContent>{setting.content}</AccordionContent>
@@ -403,7 +375,6 @@ export default function TwoParticleWellSimulation() {
           }
         />
         <div className="canvasScrollPane">
-          {/*-6 to account for the extra border space*/}
           <canvas
             ref={canvasRef}
             width={CANVAS_DIMENSIONS.width - 6}

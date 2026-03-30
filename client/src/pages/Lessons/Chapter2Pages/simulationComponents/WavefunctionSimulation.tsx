@@ -3,6 +3,7 @@ import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "../../../../components/simulationControls/SimulationControls";
 import "../../styles/lessons.css";
 import SimulationButton from "@/components/simulationControls/SimulationButton";
+import { useLessonTasks } from "@/context/LessonTasks/useLessonTasks";
 
 type CanvasDimensions = {
   width: number;
@@ -140,6 +141,7 @@ function drawWave(ctx: CanvasRenderingContext2D, animationParams: AnimationParam
 }
 
 export default function WavefunctionSimulation() {
+  const { completeTask } = useLessonTasks();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -222,6 +224,23 @@ export default function WavefunctionSimulation() {
                 key={"Quantum Number (n)"}
                 value={[particle.quantumNumber]}
                 onValueChange={(energy: number[]) => {
+                  switch (energy[0]) {
+                    case 1:
+                      completeTask("setQuantumNumber1Wavefunction");
+                      break;
+                    case 3:
+                      completeTask("setQuantumNumber3Wavefunction");
+                      break;
+                    case 5:
+                      completeTask("setQuantumNumber5Wavefunction");
+                      break;
+                    case 7:
+                      completeTask("setQuantumNumber7Wavefunction");
+                      break;
+                    case 9:
+                      completeTask("setQuantumNumber9Wavefunction");
+                      break;
+                  }
                   setParticle((prev: Particle) => {
                     return { ...prev, quantumNumber: energy[0] };
                   });
@@ -256,7 +275,6 @@ export default function WavefunctionSimulation() {
           <canvas
             ref={canvasRef}
             width={CANVAS_DIMENSIONS.width - 6}
-            
             height={CANVAS_DIMENSIONS.height}
             style={{
               border: "3px solid black",

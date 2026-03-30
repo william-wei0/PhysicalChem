@@ -13,7 +13,7 @@ export default function PageLayout(): JSX.Element {
                 [grid-template-areas:'header_header''sidebar_main''footer_footer']
                 transition-[grid-template-columns] duration-300 ease-in-out"
       style={{
-        gridTemplateColumns: isSidebarOpen ? "400px 1fr" : "52px 1fr",
+        gridTemplateColumns: isSidebarOpen ? "430px 1fr" : "52px 1fr",
       }}
     >
       <header className="[grid-area:header]" id="siteHeader">

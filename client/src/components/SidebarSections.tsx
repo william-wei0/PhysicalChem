@@ -30,7 +30,7 @@ const defaultContentClass = "linkItem";
 const sections: SectionItem[] = [
   {
     id: "1",
-    title: <p>Unit 1: The Heisenberg Uncertainty Principle</p>,
+    title: <p>Chapter 1: The Heisenberg Uncertainty Principle</p>,
     lessons: [
       { chapterNum: 1, unitNum: 1, lessonNum: 1, label: "1.1: Single Slit Diffraction" },
       { chapterNum: 1, unitNum: 1, lessonNum: 2, label: "1.2: Heisenberg Uncertainty Principle" },
@@ -40,7 +40,7 @@ const sections: SectionItem[] = [
   },
   {
     id: "2",
-    title: <p>Unit 2: Single Particle in 1-Dimensional Box</p>,
+    title: <p>Chapter 2: Single Particle in 1-Dimensional Box</p>,
     lessons: [
       { chapterNum: 2, unitNum: 1, lessonNum: 1, label: "2.1 Single Particle in 1-Dimensional Box" },
       { chapterNum: 2, unitNum: 1, lessonNum: 2, label: "2.2 Applying Boundary Conditions" },
@@ -49,7 +49,7 @@ const sections: SectionItem[] = [
   },
   {
     id: "3",
-    title: <p>Unit 3: Superposition of Energy Eigenstates</p>,
+    title: <p>Chapter 3: Superposition of Energy Eigenstates</p>,
     lessons: [
       { chapterNum: 3, unitNum: 1, lessonNum: 1, label: "3.1 Energy Eigenstates vs. Superpositions" },
       { chapterNum: 3, unitNum: 1, lessonNum: 2, label: "3.2 Separation of Position & Time Variables" },
@@ -61,7 +61,7 @@ const sections: SectionItem[] = [
   },
   {
     id: "4",
-    title: <p>Unit 4: The Two-Particle Rigid Rotor</p>,
+    title: <p>Chapter 4: The Two-Particle Rigid Rotor</p>,
     lessons: [
       { chapterNum: 4, unitNum: 1, lessonNum: 1, label: "4.1 The Rigid Rotor Model" },
       { chapterNum: 4, unitNum: 1, lessonNum: 2, label: "4.2 The Hamiltonian and Reduced Mass" },
@@ -75,7 +75,7 @@ const sections: SectionItem[] = [
     id: "5",
     title: (
       <p>
-        Unit 5. Superposition of 1s and 2p<sub>z</sub> States
+        Chapter 5. Superposition of 1s and 2p<sub>z</sub> States
       </p>
     ),
     lessons: [
@@ -114,7 +114,7 @@ const sections: SectionItem[] = [
   },
   {
     id: "6",
-    title: <p>Unit 6. Superposition of 1s and 2p States</p>,
+    title: <p>Chapter 6. Superposition of 1s and 2p States</p>,
     lessons: [
       { chapterNum: 6, unitNum: 1, lessonNum: 1, label: "6.1 Deriving the 1s State Function" },
       { chapterNum: 6, unitNum: 1, lessonNum: 2, label: "6.2 Deriving the 2p State Function" },

@@ -70,6 +70,22 @@ export function LessonTasksProvider({
     [LessonProgressAPIRoute, isAuthenticated],
   );
 
+  const hasBeenCompleted = useCallback(
+    (taskId: string) => {
+      const exists = sections.some((section) => section.tasks.some((task) => task.id === taskId));
+
+      if (!exists) {
+        if (import.meta.env.VITE_DEVELOPMENT_MODE === "development") {
+          console.warn(`hasBeenCompleted: task "${taskId}" not found in any section`);
+        }
+        return false;
+      }
+
+      return sections.some((section) => section.tasks.some((task) => task.id === taskId && task.completed));
+    },
+    [sections],
+  );
+
   const resetTasks = useCallback(async () => {
     if (!isAuthenticated) return;
     setSections(initialTaskSections);
@@ -83,7 +99,7 @@ export function LessonTasksProvider({
   const allComplete = sections.every((section) => section.tasks.every((task) => task.completed));
 
   return (
-    <LessonTasksContext.Provider value={{ sections, completeTask, resetTasks, allComplete }}>
+    <LessonTasksContext.Provider value={{ chapterId, unitId, sections, completeTask, hasBeenCompleted, resetTasks, allComplete }}>
       {showErrorNotif && (
         <Notification
           message="Something went wrong."

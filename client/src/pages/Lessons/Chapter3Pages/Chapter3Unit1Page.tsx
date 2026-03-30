@@ -4,8 +4,124 @@ import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import TwoParticleWellSimulation from "./simulationComponents/TwoParticleWellSimulation";
+import type { TaskSection } from "@/context/LessonTasks/LessonTasksContext";
+import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
+import { TasksPanel } from "@/context/LessonTasks/TasksPanel";
 
 export default function Chapter3Unit1Page() {
+  const LESSON_SECTIONS: TaskSection[] = [
+    {
+      id: "Section 3.6.1 Superposition of Energy Eigenstates - Proportions",
+      title: "Section 3.6.1: Superposition of Energy Eigenstates - Proportions",
+      tasks: [
+        {
+          id: "setEigenstate1Proportion1",
+          label: (
+            <p>
+              <strong>(Task 1.1)</strong> Set the proportion of Eigenstate 1 to <InlineMath math="1.0"></InlineMath> and
+              observe the shape of the wave. Notice how the function has the same probability density of the{" "}
+              <InlineMath math="n=1"></InlineMath> wavefunction. This is because the proportion of Eigenstate 2 is{" "}
+              <InlineMath math="0"></InlineMath> meaning the superposition equation can be reduced to the{" "}
+              <InlineMath math="n=1"></InlineMath> wavefunction.
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setEigenstate2Proportion1",
+          label: (
+            <p>
+              <strong>(Task 1.2)</strong> Now, set the proportion of Eigenstate 2 to{" "}
+              <InlineMath math="1.0"></InlineMath> and observe the shape of the wave. Notice how the function has same
+              probability density of the <InlineMath math="n=2"></InlineMath> wavefunction. This is because the
+              proportion of Eigenstate 1 is <InlineMath math="0"></InlineMath> , meaning the superposition equation
+              reduces to the <InlineMath math="n=2"></InlineMath> wavefunction.
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setEqualProportions",
+          label: (
+            <p>
+              <strong>(Task 1.3)</strong> Now, set the proportion of both eigenstates to{" "}
+              <InlineMath math="0.5"></InlineMath> and observe the shape of the wave. Notice how the function oscillates
+              between the probability densities of the <InlineMath math="n=1"></InlineMath> and{" "}
+              <InlineMath math="n=2"></InlineMath> wavefunctions. This is because the superposition of two wavefunctions
+              is not simply the sum of the two wavefunctions, but rather introduces an interference term dependent on
+              time.
+            </p>
+          ),
+          completed: false,
+        },
+      ],
+    },
+    {
+      id: "Section 3.6.2 Superposition of Energy Eigenstates - Quantum Numbers",
+      title: "Section 3.6.2: Superposition of Energy Eigenstates - Quantum Numbers",
+      tasks: [
+        {
+          id: "setEigenstate1QuantumNumber3Eigenstate2QuantumNumber2",
+          label: (
+            <p>
+              <strong>(Task 2.1)</strong> Set the quantum number of Eigenstate 1 to <InlineMath math="3"></InlineMath>{" "}
+              while keeping the quantum number of Eigenstate 2 at <InlineMath math="2"></InlineMath>. Note the number of
+              peaks and location of each peak. What two probability densities does it look like it oscillates between?
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setBothEigenstateQuantumNumber3",
+          label: (
+            <p>
+              <strong>(Task 2.2)</strong> Now, set the quantum number of both eigenstates to{" "}
+              <InlineMath math="3"></InlineMath> and note the number of peaks and location of each peak. Is there an
+              interference effect? What term in the equation can you simplify to show that there is no time-dependent
+              interference when the quantum number of both eigenstates are equal?
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setBothEigenstateQuantumNumber3andProportion1",
+          label: (
+            <p>
+              <strong>(Task 2.3)</strong> Set the proportion of one of the eigenstates to{" "}
+              <InlineMath math="1"></InlineMath> and compare the shape of the graph to the shape of the graph when both
+              proportions are <InlineMath math="0.5"></InlineMath>. Why does the amplitude of the wave change but not
+              the location of the nodes?
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setEigenstate1QuantumNumber2Eigenstate2QuantumNumber1",
+          label: (
+            <p>
+              <strong>(Task 2.4)</strong> Set the quantum number of Eigenstate 1 to <InlineMath math="2"></InlineMath>{" "}
+              and set the quantum number of Eigenstate 2 to <InlineMath math="1"></InlineMath>. Does it look familiar?
+              Does it matter which eigenstate is picked as Eigenstate 1 or Eigenstate 2? How can you prove this using
+              the equation?
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setQuantumNumberDifferenceGreaterThan5",
+          label: (
+            <p>
+              <strong>(Task 2.5)</strong> Set the difference in quantum number between the eigenstates to be greater
+              than <InlineMath math="5"></InlineMath>. Observe the period of oscillation and compare it to the period of
+              oscillation when the difference in quantum number is <InlineMath math="1"></InlineMath>. How can you prove
+              your observation using the equation and what term in the interference term can be thought of as the angular frequency?
+            </p>
+          ),
+          completed: false,
+        },
+      ],
+    },
+  ];
   return (
     <LessonLayout>
       <h1 id="lesson1">Unit 3. Superposition of Energy Eigenstates in a 1-Dimensional Box</h1>
@@ -294,28 +410,28 @@ export default function Chapter3Unit1Page() {
           />
         </div>
         <p>
-          Finally, substituting the normalized spatial wavefunctions inside the box <InlineMath math="0&lt;x&lt;a" />{" "}
+          Finally, substituting the normalized spatial wavefunctions inside the box <InlineMath math="0&lt;x&lt;l" />{" "}
           from Chapter 2:
         </p>{" "}
-        <BlockMath math="\psi_n(x)=\sqrt{\frac{2}{a}}\sin\!\left(\frac{n\pi x}{a}\right),\quad n=1,2,3,\ldots" />
+        <BlockMath math="\psi_n(x)=\sqrt{\frac{2}{l}}\sin\!\left(\frac{n\pi x}{l}\right),\quad n=1,2,3,\ldots" />
         <div className="importantEquation">
           <BlockMath
             math="\large\begin{equation}|\Psi(x,t)|^2
-          =\frac{2}{a}\Bigg[
-            |c_n|^2\sin^2\!\left(\frac{n\pi x}{a}\right)
-            +|c_m|^2\sin^2\!\left(\frac{m\pi x}{a}\right)
-            +2|c_n||c_m|\sin\!\left(\frac{n\pi x}{a}\right)\sin\!\left(\frac{m\pi x}{a}\right)
+          =\frac{2}{l}\Bigg[
+            |c_n|^2\sin^2\!\left(\frac{n\pi x}{l}\right)
+            +|c_m|^2\sin^2\!\left(\frac{m\pi x}{l}\right)
+            +2|c_n||c_m|\sin\!\left(\frac{n\pi x}{l}\right)\sin\!\left(\frac{m\pi x}{l}\right)
             \cos\!\left(\frac{(E_n-E_m)t}{\hbar}+\Delta\alpha\right)
           \Bigg]\end{equation}"
           />
         </div>{" "}
         <p>
-          This is the full wavefunction that describes the position of a particle within a box. Notice how the
-          wavefunction is not simply the addition of the <InlineMath math="n" /> and <InlineMath math="m" />{" "}
-          wavefunctions but rather also includes a cosine term which describes the interference of the two energy states
-          over time. As a result, rather than simply being a stationary wavefunction, as observed in the stationary
-          state of a single energy eigenstate, the wavefunction oscillates between the energy eigenstates over time
-          according to a cosine term.
+          This is the full probability density function that describes the position of a particle within a box. Notice
+          how the probability density function is not simply the addition of the <InlineMath math="n" /> and{" "}
+          <InlineMath math="m" /> wavefunctions but rather also includes a cosine term which describes the interference
+          of the two energy states over time. As a result, rather than simply being a stationary probability density
+          function, as observed in the stationary state of a single energy eigenstate, the probability density function
+          oscillates between the energy eigenstates over time according to a cosine term.
         </p>
       </LessonSection>
 
@@ -330,7 +446,10 @@ export default function Chapter3Unit1Page() {
           the high proportion.
         </p>
       </LessonSection>
-      <TwoParticleWellSimulation />
+      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS} chapterId={3} unitId={6}>
+        <TasksPanel title={"Superposition of Energy Eigenstates"} />
+        <TwoParticleWellSimulation />
+      </LessonTasksProvider>
     </LessonLayout>
   );
 }

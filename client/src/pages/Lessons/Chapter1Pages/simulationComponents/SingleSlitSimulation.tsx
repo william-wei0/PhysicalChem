@@ -37,7 +37,7 @@ type Status = "hidden" | "in_progress" | "paused";
 type ParticleStatus = Status | "completed" | "first_load" | "new";
 
 export default function SingleSlitSimulation() {
-  const {completeTask} = useLessonTasks();
+  const { completeTask, hasBeenCompleted } = useLessonTasks();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,7 +46,7 @@ export default function SingleSlitSimulation() {
   const SLIT_MAXIMUM = 60;
   const SLIT_MINIMUM = 250;
   const MAX_DELTA = 32;
-  const HIDDEN_PARTICLE_COUNT = 5000;
+  const HIDDEN_PARTICLE_COUNT = 200;
   const MAX_TRACKED = 100000;
   const CANVAS_DIMENSIONS = useMemo<CanvasDimensions>(() => ({ width: 1400, height: 800 }), []);
 
@@ -61,7 +61,7 @@ export default function SingleSlitSimulation() {
   const [particleStatus, setParticleStatus] = useState<ParticleStatus>("first_load");
   const [showLightGradient, setShowLightGradient] = useState(true);
   const [totalParticlesOnReceptorWall, setTotalParticlesHitReceptorWall] = useState(0);
-  const [numOfParticlesToHitReceptorWall, setNumOfParticlesHitReceptorWall] = useState([10000]);
+  const [numOfParticlesToHitReceptorWall, setNumOfParticlesHitReceptorWall] = useState([2000]);
   const [wavelength, setWavelength] = useState([30]);
   const [waveSpeed, setSpeed] = useState([2.0]);
   const [particleSpeed, setParticleSpeed] = useState([0.5]);
@@ -264,6 +264,7 @@ export default function SingleSlitSimulation() {
           }
           if (particlesOnWallRef.current.totalParticles === numOfParticlesToHitReceptorWall[0]) {
             setParticleStatus("completed");
+            completeTask("observeParticleMovement");
             if (waveStatus === "in_progress") {
               setWaveStatus("paused");
             }
@@ -289,7 +290,15 @@ export default function SingleSlitSimulation() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [waveStatus, particleStatus, showLightGradient, animationParams, particleSpeed, numOfParticlesToHitReceptorWall]);
+  }, [
+    waveStatus,
+    particleStatus,
+    showLightGradient,
+    animationParams,
+    particleSpeed,
+    numOfParticlesToHitReceptorWall,
+    completeTask,
+  ]);
 
   const accordionTriggerClassName =
     "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400 transition-colors duration-200";
@@ -318,7 +327,17 @@ export default function SingleSlitSimulation() {
                 if (particleStatus !== "hidden" && particleStatus !== "first_load") {
                   setParticleStatus("new");
                 }
-                setDiffractionWall({ ...diffractionWall, slitSize: wallWidth[0] });
+                if (wallWidth[0] > diffractionWall.slitSize) {
+                  completeTask("observeIncreaseDiffractionSlitSizeChanges");
+                } else {
+                  completeTask("observeDecreaseDiffractionSlitSizeChanges");
+                }
+                if (hasBeenCompleted("observeParticleMovement")) {
+                  completeTask("modifySlitSize");
+                }
+                setDiffractionWall((prev) => {
+                  return { ...prev, slitSize: wallWidth[0] };
+                });
               }}
               label="Diffraction Slit Size (nm)"
               min={SLIT_MAXIMUM}
@@ -327,12 +346,20 @@ export default function SingleSlitSimulation() {
             <Slider
               key={"Wavelength"}
               value={wavelength}
-              onValueChange={(wavelength: number[]) => {
+              onValueChange={(newWavelength: number[]) => {
                 resetParticles();
                 if (particleStatus !== "hidden" && particleStatus !== "first_load") {
                   setParticleStatus("new");
                 }
-                setWavelength(wavelength);
+
+                if (newWavelength[0] > wavelength[0]) {
+                  completeTask("observeIncreaseWavelengthChanges");
+                } else {
+                  completeTask("observeDecreaseWavelengthChanges");
+                }
+                setWavelength(newWavelength);
+
+                return newWavelength;
               }}
               label="Wavelength"
               min={20}
@@ -399,6 +426,10 @@ export default function SingleSlitSimulation() {
                   return "in_progress";
                 });
                 setShowLightGradient(false);
+                completeTask("startFirstParticleSimulation");
+                if (hasBeenCompleted("modifySlitSize")) {
+                  completeTask("startSecondParticleSimulation");
+                }
               }}
               ariaPressed={particleStatus === "in_progress"}
             >
@@ -474,6 +505,8 @@ export default function SingleSlitSimulation() {
       particleSpeed,
       waveSpeed,
       resetParticles,
+      completeTask,
+      hasBeenCompleted,
     ],
   );
 
@@ -490,7 +523,7 @@ export default function SingleSlitSimulation() {
       ${waveStatus !== "hidden" ? buttonActiveClassName : buttonInactiveClassName}`}
               onClick={() => {
                 completeTask("clickWaveStatus");
-                setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"))
+                setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"));
               }}
             >
               {waveStatus !== "hidden" ? "Hide Wave Simulation" : "Show Wave Simulation"}
@@ -500,9 +533,10 @@ export default function SingleSlitSimulation() {
       ${
         particleStatus !== "hidden" && particleStatus !== "first_load" ? buttonActiveClassName : buttonInactiveClassName
       }`}
-              onClick={() =>
-                setParticleStatus((prev) => (prev !== "hidden" && prev !== "first_load" ? "hidden" : "paused"))
-              }
+              onClick={() => {
+                setParticleStatus((prev) => (prev !== "hidden" && prev !== "first_load" ? "hidden" : "paused"));
+                completeTask("showParticles");
+              }}
             >
               {particleStatus !== "hidden" && particleStatus !== "first_load"
                 ? "Hide Particle Simulation"
@@ -512,7 +546,10 @@ export default function SingleSlitSimulation() {
 
           <button
             className={`${buttonClassName} buttonActiveClassName`}
-            onClick={() => setShowLightGradient((prev) => !prev)}
+            onClick={() => {
+              setShowLightGradient((prev) => !prev);
+              completeTask("showParticleDistribution");
+            }}
           >
             {showLightGradient ? (
               <div>

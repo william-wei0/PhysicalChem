@@ -1,6 +1,7 @@
 import { useLessonTasks } from "@/context/LessonTasks/useLessonTasks";
 import type { TaskSection } from "@/context/LessonTasks/LessonTasksContext";
-import "./styles/taskPanel.css";
+import "./taskPanel.css";
+import { useAuth } from "../auth/useAuth";
 
 function TaskSectionGroup({ section }: { section: TaskSection }) {
   const sectionComplete = section.tasks.every((t) => t.completed);
@@ -28,12 +29,12 @@ function TaskSectionGroup({ section }: { section: TaskSection }) {
           <li
             key={task.id}
             className={`
-              flex items-center gap-2 px-2 rounded-lg
+              flex items-start gap-2 px-2 rounded-lg
               transition-all duration-150 ease-in-out
               ${task.completed ? "opacity-50 line-through translate-x-1" : "opacity-100 hover:bg-slate-300"}
             `}
           >
-            <span className="w-5 h-5 flex items-center justify-center">
+            <span className="w-5 h-5 flex items-center justify-center mt-1">
               {task.completed ? (
                 <svg className="w-5 h-5 text-green-900" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" className="opacity-30" />
@@ -52,7 +53,7 @@ function TaskSectionGroup({ section }: { section: TaskSection }) {
               )}
             </span>
 
-            <span>{task.label}</span>
+            <span className="flex-1">{task.label}</span>
           </li>
         ))}
       </ul>
@@ -60,27 +61,43 @@ function TaskSectionGroup({ section }: { section: TaskSection }) {
   );
 }
 
-export function TasksPanel() {
-  const { sections } = useLessonTasks();
+export function TasksPanel({ title }: { title?: string }) {
+  const { isAuthenticated } = useAuth();
+  const { sections, chapterId, unitId, allComplete } = useLessonTasks();
   const totalTasks = sections.flatMap((s) => s.tasks).length;
   const completedTasks = sections.flatMap((s) => s.tasks).filter((t) => t.completed).length;
 
   const overallProgress = (completedTasks / totalTasks) * 100;
 
   return (
-    <div className="tasksPanelBackground ">
+    <div className="tasksPanelBackground">
       <div className="tasksPanel animate-fadeInLessonTasks">
-        <h3 className="text-2xl font-bold">Simulation Objectives</h3>
+        <div className="flex items-start justify-between gap-4">
+          <h3 className="text-6xl font-bold shrink-0 mb-0">
+            Chapter {chapterId} Unit {unitId}: {title ? title : "Simulation Objectives"}
+          </h3>
+
+          {!isAuthenticated && (
+            <div className="flex items-start gap-2.5 bg-blue-50 border border-blue-200 rounded-lg p-2.5 max-w-[400px] shrink-0 mr-1.5">
+              <div>
+                <p className="m-0 text-[13px] font-medium text-gray-900 leading-snug mb-0.5">
+                  Your progress will be reset when reloading the page.
+                </p>
+                <p className="m-0 text-xs text-gray-500 leading-snug">
+                  Create an account or login to save your progress.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="w-full space-y-2">
           <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium">
-                Objectives Completed ({completedTasks}/{totalTasks})
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">{overallProgress.toFixed(1)}%</p>
-            </div>
+            <p className="text-sm font-medium">
+              {allComplete ? "All " : ""}
+              Objectives Completed{allComplete ? "!" : ""} ({completedTasks}/{totalTasks})
+            </p>
+            <p className="text-sm font-medium">{overallProgress.toFixed(1)}%</p>
           </div>
           <div className="w-full h-2 bg-slate-300 rounded-full overflow-hidden mb-4">
             <div
@@ -89,6 +106,7 @@ export function TasksPanel() {
             />
           </div>
         </div>
+
         <div className="space-y-4">
           {sections.map((section) => (
             <TaskSectionGroup key={section.id} section={section} />
