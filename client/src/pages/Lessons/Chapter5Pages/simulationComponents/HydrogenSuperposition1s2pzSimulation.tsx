@@ -5,6 +5,7 @@ import { OrbitControls } from "@react-three/drei";
 import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "../../../../components/simulationControls/SimulationControls";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/accordion/accordion";
+import { useLessonTasks } from "@/context/LessonTasks/useLessonTasks";
 
 const NUM_POINTS = 700000;
 
@@ -197,10 +198,7 @@ function OrbitalPointCloud({ sim, particleData }: { sim: SimConfig; particleData
     const interferenceFactor = oneS * twoPz * cosPhase;
 
     for (let i = 0; i < numPoints; i++) {
-      const density =
-        oneS * wf1sS[i] +
-        twoPz * wf2pzS[i] +
-        interferenceFactor * wf1s[i] * wf2pz[i];
+      const density = oneS * wf1sS[i] + twoPz * wf2pzS[i] + interferenceFactor * wf1s[i] * wf2pz[i];
 
       isActive[i] = density > threshold ? 1 : 0;
     }
@@ -286,6 +284,7 @@ const triggerClass =
   "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400 transition-colors duration-200";
 
 export default function HydrogenSuperposition1s2pzSimulation() {
+  const { completeTask } = useLessonTasks();
   const [threshold, setThreshold] = useState([0.5]);
   const [speed, setSpeed] = useState([1]);
   const [oneSProportion, setOneSProportion] = useState([0.5]);
@@ -315,6 +314,21 @@ export default function HydrogenSuperposition1s2pzSimulation() {
     position: [6, 3, 6] as [number, number, number],
   };
 
+const handleProportionChange = (value: number[], slider: "1s" | "2pz") => {
+  const proportion = value[0];
+  setOneSProportion([slider === "1s" ? proportion : 1 - proportion]);
+
+  if (proportion === 1) completeTask(slider === "1s" ? "set1sProportion1" : "set2pzProportion1");
+  if (proportion === 0.5) completeTask("setEqualProportions");
+  if (proportion === 0) completeTask(slider === "1s" ? "set2pzProportion1" : "set1sProportion1");
+};
+
+const handleThresholdChange = (value: number[]) => {
+  setThreshold(value);
+  if (value[0] > 0.8) completeTask("setProbabilityThreshold0.8");
+  if (value[0] === 0.4) completeTask("setProbabilityThreshold0.4");
+};
+
   const controllableVariables = (
     <div className="scrollContainer max-h-[700px]">
       <Accordion allowMultiple={true}>
@@ -324,7 +338,7 @@ export default function HydrogenSuperposition1s2pzSimulation() {
             <Slider
               key="threshold"
               value={threshold}
-              onValueChange={setThreshold}
+              onValueChange={handleThresholdChange}
               label="Probability Threshold"
               min={0.4}
               max={0.95}
@@ -344,7 +358,7 @@ export default function HydrogenSuperposition1s2pzSimulation() {
             <Slider
               key="one-s"
               value={[parseFloat(oneSProportion[0].toFixed(2))]}
-              onValueChange={(value) => setOneSProportion([value[0]])}
+              onValueChange={(value) => handleProportionChange(value, "1s")}
               label="1s Proportion"
               min={0}
               max={1}
@@ -354,7 +368,7 @@ export default function HydrogenSuperposition1s2pzSimulation() {
             <Slider
               key="two-pz"
               value={[parseFloat(twoPzProportion[0].toFixed(2))]}
-              onValueChange={(value) => setOneSProportion([1 - value[0]])}
+              onValueChange={(value) => handleProportionChange(value, "2pz")}
               label="2pz Proportion"
               min={0}
               max={1}

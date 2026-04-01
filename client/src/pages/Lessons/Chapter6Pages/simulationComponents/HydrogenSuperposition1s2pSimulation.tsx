@@ -10,6 +10,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/accordion/accordion";
+import { useLessonTasks } from "@/context/LessonTasks/useLessonTasks";
 
 const NUM_POINTS = 700000;
 
@@ -316,6 +317,7 @@ const triggerClass =
   "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400 transition-colors duration-200";
 
 export default function HydrogenSuperposition1s2pSimulation() {
+  const {completeTask} = useLessonTasks();
   const [threshold, setThreshold] = useState([0.5]);
   const [speed, setSpeed] = useState([0.5]);
   const [oneSProportion, setOneSProportion] = useState([0.5]);
@@ -346,6 +348,21 @@ export default function HydrogenSuperposition1s2pSimulation() {
     position: [0, 3, 15] as [number, number, number],
   };
 
+  const handleProportionChange = (value: number[], slider: "1s" | "2p") => {
+  const proportion = value[0];
+  setOneSProportion([slider === "1s" ? proportion : 1 - proportion]);
+
+  if (proportion === 1) completeTask(slider === "1s" ? "set1sProportion1" : "set2pProportion1");
+  if (proportion === 0.5) completeTask("setEqualProportions");
+  if (proportion === 0) completeTask(slider === "1s" ? "set2pProportion1" : "set1sProportion1");
+};
+
+const handleThresholdChange = (value: number[]) => {
+  setThreshold(value);
+  if (value[0] > 0.8) completeTask("setProbabilityThreshold0.8");
+  if (value[0] === 0.1) completeTask("setProbabilityThreshold0.1");
+};
+
   const controllableVariables = (
     <div className="scrollContainer max-h-[700px]">
       <Accordion allowMultiple={true}>
@@ -357,9 +374,9 @@ export default function HydrogenSuperposition1s2pSimulation() {
             <Slider
               key="threshold"
               value={threshold}
-              onValueChange={setThreshold}
+              onValueChange={handleThresholdChange}
               label="Probability Threshold"
-              min={0.01}
+              min={0.1}
               max={0.999}
               step={0.001}
             />
@@ -377,7 +394,7 @@ export default function HydrogenSuperposition1s2pSimulation() {
             <Slider
               key="one-s"
               value={[parseFloat(oneSProportion[0].toFixed(2))]}
-              onValueChange={(value) => setOneSProportion([value[0]])}
+              onValueChange={(value) => handleProportionChange(value, "1s")}
               label="1s Proportion"
               min={0}
               max={1}
@@ -387,7 +404,7 @@ export default function HydrogenSuperposition1s2pSimulation() {
             <Slider
               key="two-pz"
               value={[parseFloat(twoPProportion[0].toFixed(2))]}
-              onValueChange={(value) => setOneSProportion([1 - value[0]])}
+              onValueChange={(value) => handleProportionChange(value, "2p")}
               label="2pz Proportion"
               min={0}
               max={1}

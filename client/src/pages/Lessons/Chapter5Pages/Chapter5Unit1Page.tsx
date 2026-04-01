@@ -4,8 +4,77 @@ import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import HydrogenSuperposition1s2pzSimulation from "./simulationComponents/HydrogenSuperposition1s2pzSimulation";
+import type { TaskSection } from "@/context/LessonTasks/LessonTasksContext";
+import { TasksPanel } from "@/context/LessonTasks/TasksPanel";
+import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
 
 export default function Chapter5Unit1Page() {
+  const LESSON_SECTIONS: TaskSection[] = [
+    {
+      id: "Section 5.4.1 Superposition of 1s and 2pz States",
+      title: "Section 5.4.1: Superposition of 1s and 2pz States",
+      tasks: [
+        {
+          id: "set1sProportion1",
+          label: (
+            <p>
+              <strong>(Task 1.1)</strong> Set the proportion of the <InlineMath math="1s"></InlineMath> state to{" "}
+              <InlineMath math="1.0"></InlineMath> and observe the shape of the orbital. Notice how the orbital has the
+              same shape of the <InlineMath math="1s"></InlineMath> orbital. This is because the proportion of the{" "}
+              <InlineMath math="2p_z"></InlineMath> state is <InlineMath math="0"></InlineMath>, meaning the
+              superposition equation can be reduced to the <InlineMath math="1s"></InlineMath> orbital.
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "set2pzProportion1",
+          label: (
+            <p>
+              <strong>(Task 1.2)</strong> Now, set the proportion of the <InlineMath math="2p_z"></InlineMath> state to
+              <InlineMath math="1.0"></InlineMath> and observe the shape of the orbital. Notice the two lobes of the
+              orbital and how the function has same shape of the <InlineMath math="2p_z"></InlineMath> state.
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setEqualProportions",
+          label: (
+            <p>
+              <strong>(Task 1.3)</strong> Now, set the proportion of both states to <InlineMath math="0.5"></InlineMath>{" "}
+              and observe the shape of the orbital. Notice how the function oscillates between the probability densities
+              of the <InlineMath math="1s"></InlineMath> and <InlineMath math="2p_z"></InlineMath> orbitals. This is
+              because the superposition of two wavefunctions is not simply the sum of the two orbitals, but rather
+              introduces an interference term dependent on time.
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setProbabilityThreshold0.8",
+          label: (
+            <p>
+              <strong>(Task 1.4)</strong> Set the probability threshold to <InlineMath math="0.8"></InlineMath> and
+              observe the shape of the orbital. What changed to the shape of the orbital? Why does it shrink?
+            </p>
+          ),
+          completed: false,
+        },
+        {
+          id: "setProbabilityThreshold0.4",
+          label: (
+            <p>
+              <strong>(Task 1.5)</strong> Set the probability threshold to <InlineMath math="0.4"></InlineMath> and
+              observe the shape of the orbital. What changed to the shape of the orbital? Why does it grow? What does
+              this tell you about where electrons can be found if we set the probability threshold to 0?
+            </p>
+          ),
+          completed: false,
+        },
+      ],
+    },
+  ];
   return (
     <LessonLayout>
       <h1 id="lesson1">
@@ -73,16 +142,14 @@ export default function Chapter5Unit1Page() {
 
         <BlockMath math="\int_0^\infty r^2e^{-kr}\,dr=\frac{2}{k^3}" />
 
-        <p>
-          So, the solution to our integral is:
-        </p>
+        <p>So, the solution to our integral is:</p>
         <BlockMath math="4\left(\frac{Z}{a_0}\right)^3\int_0^\infty r^2e^{-2Zr/a_0}\,dr=4\left(\frac{Z}{a_0}\right)^3\cdot\frac{2}{\left(2Z/a_0\right)^3}" />
 
         <BlockMath math="=4\left(\frac{Z}{a_0}\right)^3\cdot\frac{a_0^3}{4Z^3}=1" />
 
         <p>
-          Since <InlineMath math="\int |\psi_{1s}|^2\,d\tau=1" />, the radial factor is properly normalized, and the probability density for the <InlineMath math="1s" />{" "}
-          state is
+          Since <InlineMath math="\int |\psi_{1s}|^2\,d\tau=1" />, the radial factor is properly normalized, and the
+          probability density for the <InlineMath math="1s" /> state is
         </p>
 
         <div className="importantEquation">
@@ -217,7 +284,10 @@ export default function Chapter5Unit1Page() {
 
         <p></p>
       </LessonSection>
-      <HydrogenSuperposition1s2pzSimulation />
+      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS} chapterId={5} unitId={4}>
+        <TasksPanel />
+        <HydrogenSuperposition1s2pzSimulation />
+      </LessonTasksProvider>
     </LessonLayout>
   );
 }

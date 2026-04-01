@@ -5,6 +5,7 @@ import { OrbitControls } from "@react-three/drei";
 import Slider from "../../../../components/simulationControls/Slider";
 import SimulationControls from "../../../../components/simulationControls/SimulationControls";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/accordion/accordion";
+import { useLessonTasks } from "@/context/LessonTasks/useLessonTasks";
 
 interface AtomConfig {
   color: string;
@@ -215,6 +216,7 @@ const triggerClass =
   "relative w-full text-xl font-bold border-t-2 border-zinc-500 pl-4 pt-4 pb-2 hover:cursor-pointer hover:text-zinc-400 transition-colors duration-200";
 
 export default function RigidRotorSimulation2() {
+  const { completeTask } = useLessonTasks();
   const [rotationalSpeed, setRotationalSpeed] = useState([5]);
   const [distanceBetweenAtoms, setDistanceBetweenAtoms] = useState([30]);
   const [phiAngle, setPhiAngle] = useState([0]);
@@ -280,7 +282,23 @@ export default function RigidRotorSimulation2() {
             <Slider
               key="l-quantum"
               value={lQuantumNumber}
-              onValueChange={setLQuantumNumber}
+              onValueChange={(newQuantumNumber: number[]) => {
+                setLQuantumNumber(newQuantumNumber);
+                switch (newQuantumNumber[0]) {
+                  case 1: {
+                    completeTask("setAngularQuantumNumber1");
+                    break;
+                  }
+                  case 3: {
+                    completeTask("setAngularQuantumNumber3");
+                    break;
+                  }
+                  case 100: {
+                    completeTask("setAngularQuantumNumber100");
+                    break;
+                  }
+                }
+              }}
               label="Angular Quantum Number (l)"
               min={1}
               max={100}
@@ -290,7 +308,23 @@ export default function RigidRotorSimulation2() {
             <Slider
               key="m-quantum"
               value={[effectiveM]}
-              onValueChange={setMQuantumNumber}
+              onValueChange={(newQuantumNumber: number[]) => {
+                setMQuantumNumber(newQuantumNumber);
+                switch (newQuantumNumber[0]) {
+                  case 1: {
+                    completeTask("setMagneticQuantumNumber1");
+                    break;
+                  }
+                  case 3: {
+                    completeTask("setMagneticQuantumNumber3");
+                    break;
+                  }
+                  case 100: {
+                    completeTask("setMagneticQuantumNumber100");
+                    break;
+                  }
+                }
+              }}
               label="Magnetic Quantum Number (m)"
               min={-l}
               max={l}
@@ -316,15 +350,7 @@ export default function RigidRotorSimulation2() {
               max={60}
               step={0.5}
             />
-            <Slider
-              key="phi"
-              value={phiAngle}
-              onValueChange={setPhiAngle}
-              label="Azimuth (Φ)"
-              min={0}
-              max={360}
-              step={1}
-            />
+            <Slider key="phi" value={phiAngle} onValueChange={setPhiAngle} label="Phi (φ)" min={0} max={360} step={1} />
 
             <div className="flex flex-col gap-2 mt-3 px-2">
               {(
