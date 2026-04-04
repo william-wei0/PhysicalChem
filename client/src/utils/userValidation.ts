@@ -18,6 +18,7 @@
     if (password.length > 72) errors += "• Must be under 72 characters.\n";
     if (!/[a-zA-Z]/.test(password)) errors += "• Must contain at least one letter. (A-Z)\n";
     if (!/[0-9]/.test(password)) errors += "• Must contain at least one digit. (0-9)\n";
+    if (!/[^a-zA-Z0-9]/.test(password)) errors += "• Must contain at least one special character. (!@#$%^&*...)\n";
     return errors;
   };
 

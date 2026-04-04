@@ -8,8 +8,10 @@ import { EyeIcon, EyeOffIcon, CheckCircle2, CircleAlertIcon, TriangleAlertIcon }
 import { useNavigate } from "react-router";
 import { validateEmail, validatePassword, validateUsername } from "@/utils/userValidation";
 import { Link } from "react-router";
+import { useAuth } from "@/context/auth/useAuth";
 
 export default function SignUpPage() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -75,6 +77,11 @@ export default function SignUpPage() {
         password: "",
         confirmPassword: "",
       });
+      try {
+        await login(formData.email, formData.password);
+      } catch (err) {
+        setFormError(err instanceof Error ? err.message : "Something went wrong.");
+      }
       navigate("/");
     } catch {
       setFormError("Something went wrong. Please try again.");

@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { HashLink } from "react-router-hash-link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion/accordion";
 import "./styles/sidebar.css";
+import { lessonLinkFromLessonNum } from "@/utils/lessonLink";
 
 type LessonItem = {
   chapterNum: number;
@@ -20,9 +21,6 @@ type SectionItem = {
   contentClassName?: string;
   contentStyle?: CSSProperties;
 };
-
-const lessonLink = (chapterNum: number, unitNum: number, lessonNum = 1) =>
-  `/lessons/chapter${chapterNum}/unit${unitNum}#${lessonNum === 1 ? "" : `lesson${lessonNum}`}`;
 
 const defaultTriggerClass = "sidebarAccordionTrigger underlineAnimation";
 const defaultContentClass = "linkItem";
@@ -142,7 +140,7 @@ export default function SidebarSections() {
               className={clsx(defaultContentClass, section.contentClassName)}
               style={section.contentStyle}
             >
-              <HashLink to={lessonLink(lesson.chapterNum, lesson.unitNum, lesson.lessonNum)}>{lesson.label}</HashLink>
+              <HashLink to={lessonLinkFromLessonNum(lesson.chapterNum, lesson.unitNum, lesson.lessonNum)}>{lesson.label}</HashLink>
             </AccordionContent>
           ))}
         </AccordionItem>

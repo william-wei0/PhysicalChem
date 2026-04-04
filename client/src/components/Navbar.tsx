@@ -17,19 +17,25 @@ export default function Navbar() {
             <Link to="/" className="hover:text-zinc-300 transition-colors">
               Home
             </Link>
-            <Link to="/lessons/chapter1/unit1" className="hover:text-zinc-300 transition-colors">
+            <Link to="/lessons" className="hover:text-zinc-300 transition-colors">
               Lessons
             </Link>
           </div>
 
           {/* Center */}
-          <h1 className="text-xl font-bold text-center">CM-UY 3113: Physical Chemistry</h1>
+          <h1 className="text-xl font-bold text-center">Physical Chemistry I: CM-UY 3113 </h1>
 
           {/* Right */}
           <div className="flex gap-4 justify-end items-center">
             {isAuthenticated ? (
               <>
-                <span className="text-zinc-300 text-sm">{user?.username}</span>
+                <span className=" text-zinc-400">
+                  Welcome back,{" "}
+                  <Link to="/dashboard" className="font-semibold text-white bg-blue-400/10 px-2 py-0.5 rounded-md border border-blue-400/20 ml-2">
+                    {user?.username}
+                  </Link>
+                </span>
+                <div className="">|</div>
                 <button onClick={handleLogout} className="px-4 py-1 hover:text-zinc-300 transition-colors">
                   Logout
                 </button>

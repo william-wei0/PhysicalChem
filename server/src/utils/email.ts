@@ -1,14 +1,17 @@
 import { Resend } from "resend";
 
 const getResend = () => new Resend(process.env.RESEND_API_KEY);
+const getResendEmailFrom = () => process.env.RESEND_FROM_EMAIL
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resend = getResend();
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
+  const from = process.env.RESEND_EMAIL_FROM || "Acme <onboarding@resend.dev>";
+  
   const { error } = await resend.emails.send({
-    from: `CM-UY 3113 <${process.env.RESEND_FROM_EMAIL}>`,
-    to: ["delivered@resend.dev"],
+    from,
+    to: [email],
     subject: "Password Reset Request",
     html: `
       <p>You requested a password reset.</p>

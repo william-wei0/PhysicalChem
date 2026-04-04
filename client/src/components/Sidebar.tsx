@@ -41,7 +41,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
   }
 
   return (
-    <div className="bg-zinc-100 flex-1 border border-black relative opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards]">
+    <div className="bg-zinc-100 flex-1 border-x border-t border-black relative opacity-0 animate-[fadeIn_0.5s_ease-in-out_forwards]">
       <div
         className="sticky p-4 transition-[top] duration-500 ease-in-out"
         style={{ top: headerVisible ? headerHeight : 0 }}

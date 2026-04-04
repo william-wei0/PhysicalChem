@@ -7,7 +7,6 @@
     "strict": true,
     "esModuleInterop": true,
     "ignoreDeprecations": "5.0",
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },

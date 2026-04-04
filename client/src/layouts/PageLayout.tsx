@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { Footer } from "@/components/Footer";
 import { useState } from "react";
 import type { JSX } from "react";
 
@@ -25,7 +26,7 @@ export default function PageLayout(): JSX.Element {
       <main className="[grid-area:main] min-h-0 flex flex-col overflow-auto border-t">
         <Outlet />
       </main>
-      <footer className="[grid-area:footer] bg-zinc-900 text-white p-4 rounded">Footer</footer>
+      <Footer className="[grid-area:footer]" />
     </div>
   );
 }

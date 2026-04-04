@@ -31,6 +31,10 @@ export const validatePassword = (password: string) => {
     throw new AppError("Password must contain at least one digit.", 400);
   }
 
+  if (!/[^a-zA-Z0-9]/.test(password)) {
+    throw new AppError(" Must contain at least one special character. (!@#$%^&*...).", 400);
+  }
+
   return true;
 };
 

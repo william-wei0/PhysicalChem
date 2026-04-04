@@ -1,4 +1,4 @@
-import HomePage from "../pages/HomePage";
+import HomePage from "../pages/Homepage/Homepage";
 import ErrorPage from "../pages/ErrorPage";
 import LessonsRouter from "../pages/LessonRouter";
 import LessonIndexPage from "../pages/Lessons/LessonIndexPage";
@@ -9,6 +9,7 @@ import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import AuthLayout from "../layouts/AuthLayout";
 import { UnauthenticatedRoute } from "@/context/auth/UnauthenticatedRoute";
+import AccountDashboard from "@/pages/AccountDashboard";
 
 const routes = [
   {
@@ -23,6 +24,7 @@ const routes = [
           { path: "lessons",                    element: <LessonIndexPage /> },
           { path: "lessons/:lessonId",          element: <LessonsRouter /> },
           { path: "lessons/:chapterId/:unitId", element: <LessonsRouter /> },
+          { path: "dashboard", element: <AccountDashboard /> },
         ],
       },
 

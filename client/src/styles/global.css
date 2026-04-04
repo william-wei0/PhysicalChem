@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@600;700;800&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -165,3 +167,46 @@
     @apply bg-background text-foreground;
   }
 }
+
+.underlineAnimation::after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 0px;
+  background: black;
+  transition: width 300ms ease-in-out;
+  bottom: -2px;
+  right: 0;
+}
+
+.underlineAnimation:hover::after {
+  content: "";
+  height: 4px;
+  background: black;
+  width: 100%;
+}
+
+
+.underlineAnimationText {
+  position: relative;
+  display: inline-block; /* shrinks to text width, not full row width */
+}
+
+.underlineAnimationText::after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 0px;
+  background: black;
+  transition: width 300ms ease-in-out;
+  bottom: -2px;
+  left: 0; /* start from left, not right */
+}
+
+.group:hover .underlineAnimationText::after {
+  width: 100%;
+}
+
+
+.homepageTitleFont { font-family: 'Manrope', sans-serif; }
+.homepageBody    { font-family: 'Inter', sans-serif; }
