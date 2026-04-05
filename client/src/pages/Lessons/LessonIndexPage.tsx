@@ -1,3 +1,5 @@
+import { useAllLessonProgress } from "@/hooks/useAllLessonProgress";
+
 type Unit = {
   title: string;
   href: string;
@@ -98,14 +100,18 @@ const chapters: Chapter[] = [
 ];
 
 export default function LessonsIndexPage() {
+  const { getChapterStats } = useAllLessonProgress();
+
   return (
     <main className="min-h-screen bg-white text-slate-900 p-4">
-        <div className="bg-white p-10 pt-2">
-          <h2 className="homepageTitleFont sm:text-5xl md:text-6xl text-center pt-8 pb-12 font-extrabold tracking-tighter leading-tight text-on-surface text-slate-950 ">
-            CM-UY 3113: Physical Chemistry I: Chapters
-          </h2>
-          <div className="space-y-10">
-            {chapters.map((chapter) => (
+      <div className="bg-white p-10 pt-2">
+        <h2 className="homepageTitleFont sm:text-5xl md:text-6xl text-center pt-8 pb-12 font-extrabold tracking-tighter leading-tight text-on-surface text-slate-950 ">
+          CM-UY 3113: Physical Chemistry I: Chapters
+        </h2>
+        <div className="space-y-10">
+          {chapters.map((chapter) => {
+            const { completed, total, percent, allComplete } = getChapterStats(chapter.id);
+            return (
               <article key={chapter.id} className="overflow-hidden rounded-3xl border border-black bg-white shadow-sm">
                 <div className="grid gap-0 lg:grid-cols-[1fr_1.5fr]">
                   <div className="border-b border-slate-200 bg-slate-50 lg:border-b-0 lg:border-r">
@@ -117,7 +123,22 @@ export default function LessonsIndexPage() {
                       {chapter.title}
                     </h2>
 
-                    <p className="mt-4 text-base leading-7 text-slate-600">{chapter.description}</p>
+                    <p className="mt-4 text-base leading-7 text-slate-600 mb-4">{chapter.description}</p>
+
+                    <div className="w-full space-y-2">
+                      <div className="flex items-start justify-between">
+                        <p className="text-sm font-medium">
+                          {allComplete ? "All " : ""}Objectives Completed{allComplete ? "!" : ""} ({completed}/{total})
+                        </p>
+                        <p className="text-sm font-medium">{percent.toFixed(1)}%</p>
+                      </div>
+                      <div className="w-full h-2 bg-slate-300 rounded-full overflow-hidden mb-4">
+                        <div
+                          className={`h-full transition-all duration-700 ease-out ${allComplete ? "bg-green-500": "bg-red-700"}`}
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
+                    </div>
 
                     <div className="mt-8">
                       <h3 className="font-semibold uppercase tracking-[0.18em] text-slate-500">Chapter units</h3>
@@ -142,10 +163,10 @@ export default function LessonsIndexPage() {
                   </div>
                 </div>
               </article>
-            ))}
-          </div>
+            );
+          })}
         </div>
-
+      </div>
     </main>
   );
 }

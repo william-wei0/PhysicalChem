@@ -1,0 +1,191 @@
+{
+  "chapterId": 5,
+  "unitId": 4,
+  "title": "Section 5.4.1: Superposition of 1s and 2pz States",
+  "sections": [
+    {
+      "id": "Section 5.4.1 Superposition of 1s and 2pz States",
+      "title": "Section 5.4.1: Superposition of 1s and 2pz States",
+      "tasks": [
+        {
+          "taskId": "set1sProportion1",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.1)"
+            },
+            {
+              "type": "text",
+              "text": " Set the proportion of the "
+            },
+            {
+              "type": "math",
+              "expression": "1s"
+            },
+            {
+              "type": "text",
+              "text": " state to"
+            },
+            {
+              "type": "math",
+              "expression": "1.0"
+            },
+            {
+              "type": "text",
+              "text": " and observe the shape of the orbital. Notice how the orbital has the same shape of the "
+            },
+            {
+              "type": "math",
+              "expression": "1s"
+            },
+            {
+              "type": "text",
+              "text": " orbital. This is because the proportion of the"
+            },
+            {
+              "type": "math",
+              "expression": "2p_z"
+            },
+            {
+              "type": "text",
+              "text": " state is "
+            },
+            {
+              "type": "math",
+              "expression": "0"
+            },
+            {
+              "type": "text",
+              "text": ", meaning the superposition equation can be reduced to the "
+            },
+            {
+              "type": "math",
+              "expression": "1s"
+            },
+            {
+              "type": "text",
+              "text": " orbital. "
+            }
+          ]
+        },
+        {
+          "taskId": "set2pzProportion1",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.2)"
+            },
+            {
+              "type": "text",
+              "text": " Now, set the proportion of the "
+            },
+            {
+              "type": "math",
+              "expression": "2p_z"
+            },
+            {
+              "type": "text",
+              "text": " state to "
+            },
+            {
+              "type": "math",
+              "expression": "1.0"
+            },
+            {
+              "type": "text",
+              "text": " and observe the shape of the orbital. Notice the two lobes of the orbital and how the function has same shape of the "
+            },
+            {
+              "type": "math",
+              "expression": "2p_z"
+            },
+            {
+              "type": "text",
+              "text": " state. "
+            }
+          ]
+        },
+        {
+          "taskId": "setEqualProportions",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.3)"
+            },
+            {
+              "type": "text",
+              "text": " Now, set the proportion of both states to "
+            },
+            {
+              "type": "math",
+              "expression": "0.5"
+            },
+            {
+              "type": "text",
+              "text": " and observe the shape of the orbital. Notice how the function oscillates between the probability densities of the "
+            },
+            {
+              "type": "math",
+              "expression": "1s"
+            },
+            {
+              "type": "text",
+              "text": " and "
+            },
+            {
+              "type": "math",
+              "expression": "2p_z"
+            },
+            {
+              "type": "text",
+              "text": " orbitals. This is because the superposition of two wavefunctions is not simply the sum of the two orbitals, but rather introduces an interference term dependent on time. "
+            }
+          ]
+        },
+        {
+          "taskId": "setProbabilityThreshold0.8",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.4)"
+            },
+            {
+              "type": "text",
+              "text": " Set the probability threshold to "
+            },
+            {
+              "type": "math",
+              "expression": "0.8"
+            },
+            {
+              "type": "text",
+              "text": " and observe the shape of the orbital. What changed to the shape of the orbital? Why does it shrink? "
+            }
+          ]
+        },
+        {
+          "taskId": "setProbabilityThreshold0.4",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.5)"
+            },
+            {
+              "type": "text",
+              "text": " Set the probability threshold to "
+            },
+            {
+              "type": "math",
+              "expression": "0.4"
+            },
+            {
+              "type": "text",
+              "text": " and observe the shape of the orbital. What changed to the shape of the orbital? Why does it grow? What does this tell you about where electrons can be found if we set the probability threshold to 0? "
+            }
+          ]
+        }
+      ]
+    }
+  ]
+
+}

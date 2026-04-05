@@ -4,77 +4,10 @@ import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import HydrogenSuperposition1s2pSimulation from "./simulationComponents/HydrogenSuperposition1s2pSimulation";
-import type { TaskSection } from "@/context/LessonTasks/LessonTasksContext";
 import { TasksPanel } from "@/context/LessonTasks/TasksPanel";
 import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
 
 export default function Chapter6Unit1Page() {
-  const LESSON_SECTIONS: TaskSection[] = [
-    {
-      id: "Section 6.4.1 Superposition of 1s and 2p States",
-      title: "Section 6.4.1: Superposition of 1s and 2p States",
-      tasks: [
-        {
-          id: "set1sProportion1",
-          label: (
-            <p>
-              <strong>(Task 1.1)</strong> Set the proportion of the <InlineMath math="1s"></InlineMath> state to{" "}
-              <InlineMath math="1.0"></InlineMath> and observe the shape of the orbital. Notice how the orbital has the
-              same shape of the <InlineMath math="1s"></InlineMath> orbital. This is because the proportion of the{" "}
-              <InlineMath math="2p_z"></InlineMath> state is <InlineMath math="0"></InlineMath>, meaning the
-              superposition equation can be reduced to the <InlineMath math="1s"></InlineMath> orbital.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "set2pProportion1",
-          label: (
-            <p>
-              <strong>(Task 1.2)</strong> Now, set the proportion of the <InlineMath math="2p"></InlineMath> state to {" "}
-              <InlineMath math="1.0"></InlineMath> and observe the shape of the orbital. Notice the two lobes of the
-              orbital and how the function has same shape of the <InlineMath math="2p"></InlineMath> state.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setEqualProportions",
-          label: (
-            <p>
-              <strong>(Task 1.3)</strong> Now, set the proportion of both states to <InlineMath math="0.5"></InlineMath>{" "}
-              and observe the shape of the orbital. Notice how the function oscillates between the probability densities
-              of the <InlineMath math="1s"></InlineMath> and <InlineMath math="2p"></InlineMath> orbitals. This is
-              because the superposition of two wavefunctions is not simply the sum of the two orbitals, but rather
-              introduces an interference term dependent on time.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setProbabilityThreshold0.8",
-          label: (
-            <p>
-              <strong>(Task 1.4)</strong> Set the probability threshold to <InlineMath math="0.8"></InlineMath> and
-              observe the shape of the orbital. What changed to the shape of the orbital? Why does it shrink?
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setProbabilityThreshold0.1",
-          label: (
-            <p>
-              <strong>(Task 1.5)</strong> Set the probability threshold to <InlineMath math="0.1"></InlineMath> and
-              observe the shape of the orbital. What changed to the shape of the orbital? Why does it grow? What does
-              this tell you about where electrons can be found if we set the probability threshold to 0?
-            </p>
-          ),
-          completed: false,
-        },
-      ],
-    },
-  ];
   return (
     <LessonLayout>
       <h1 id="lesson1">Unit 6. Superposition of the 1s and 2p States of the Hydrogen Atom</h1>
@@ -301,7 +234,7 @@ export default function Chapter6Unit1Page() {
         </p>
       </LessonSection>
 
-      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS} chapterId={6} unitId={4}>
+      <LessonTasksProvider chapterId={6} unitId={4}>
         <TasksPanel />
         <HydrogenSuperposition1s2pSimulation />
       </LessonTasksProvider>

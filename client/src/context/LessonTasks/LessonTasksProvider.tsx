@@ -1,105 +1,100 @@
-import { useState, useCallback, useEffect } from "react";
-import { LessonTasksContext, type TaskSection } from "./LessonTasksContext";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useAuth } from "../auth/useAuth";
 import { Notification } from "@/components/Notification";
+import { useUnitManifest } from "@/hooks/useUnitManifest";
+import { renderLabel } from "@/context/LessonTasks/LessonLabel";
+import { LessonTasksContext, type TaskSection } from "./LessonTasksContext";
+import { fetchUnitProgress } from "@/utils/fetchLessonProgress";
 
 export function LessonTasksProvider({
-  initialTaskSections,
   chapterId,
   unitId,
   children,
 }: {
-  initialTaskSections: TaskSection[];
   chapterId: number;
   unitId: number;
   children: React.ReactNode;
 }) {
-  const [sections, setSections] = useState<TaskSection[]>(initialTaskSections);
+  const { manifest, loading: manifestLoading } = useUnitManifest(chapterId, unitId);
+  const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [showErrorNotif, setShowErrorNotif] = useState(false);
   const { isAuthenticated } = useAuth();
-  const LessonProgressAPIRoute = `/api/lessonProgress/chapters/${chapterId}/units/${unitId}`;
+  const apiBase = `/api/lessonProgress/chapters/${chapterId}/units/${unitId}`;
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !manifest) return;
+    fetchUnitProgress(chapterId, unitId).then((ids) => {
+      setCompletedIds(new Set(ids));
+    });
+  }, [isAuthenticated, manifest, chapterId, unitId]);
 
-    const fetchProgress = async () => {
-      const res = await fetch(`${LessonProgressAPIRoute}/progress`, { credentials: "include" });
-      if (!res.ok) return;
-
-      const { progress } = await res.json();
-      const completedIds = new Set(progress.map((p: { taskId: string }) => p.taskId));
-
-      setSections((prev) =>
-        prev.map((section) => ({
-          ...section,
-          tasks: section.tasks.map((t) => ({ ...t, completed: completedIds.has(t.id) })),
-        })),
-      );
-    };
-
-    fetchProgress();
-  }, [LessonProgressAPIRoute, isAuthenticated]);
+  const sections = useMemo<TaskSection[]>(() => {
+    if (!manifest) return [];
+    return manifest.sections.map((section) => ({
+      id: section.id,
+      title: section.title,
+      tasks: section.tasks.map((t) => ({
+        id: t.taskId,
+        label: renderLabel(t.label),
+        completed: completedIds.has(t.taskId),
+      })),
+    }));
+  }, [manifest, completedIds]);
 
   const completeTask = useCallback(
     async (taskId: string) => {
-      setSections((prev) =>
-        prev.map((section) => ({
-          ...section,
-          tasks: section.tasks.map((t) => (t.id === taskId ? { ...t, completed: true } : t)),
-        })),
-      );
+      setCompletedIds((prev) => new Set(prev).add(taskId));
 
-      if (!isAuthenticated) {
-        return;
-      }
-      const res = await fetch(`${LessonProgressAPIRoute}/tasks/${taskId}/complete`, {
+      if (!isAuthenticated) return;
+
+      const res = await fetch(`${apiBase}/tasks/${taskId}/complete`, {
         method: "POST",
         credentials: "include",
       });
 
       if (!res.ok) {
-        setSections((prev) =>
-          prev.map((section) => ({
-            ...section,
-            tasks: section.tasks.map((t) => (t.id === taskId ? { ...t, completed: false } : t)),
-          })),
-        );
+        setCompletedIds((prev) => {
+          const next = new Set(prev);
+          next.delete(taskId);
+          return next;
+        });
         setShowErrorNotif(true);
       }
     },
-    [LessonProgressAPIRoute, isAuthenticated],
+    [apiBase, isAuthenticated],
   );
 
   const hasBeenCompleted = useCallback(
     (taskId: string) => {
-      const exists = sections.some((section) => section.tasks.some((task) => task.id === taskId));
-
+      const exists = manifest?.sections.some((s) => s.tasks.some((t) => t.taskId === taskId));
       if (!exists) {
         if (import.meta.env.VITE_DEVELOPMENT_MODE === "development") {
           console.warn(`hasBeenCompleted: task "${taskId}" not found in any section`);
         }
         return false;
       }
-
-      return sections.some((section) => section.tasks.some((task) => task.id === taskId && task.completed));
+      return completedIds.has(taskId);
     },
-    [sections],
+    [manifest, completedIds],
   );
 
   const resetTasks = useCallback(async () => {
-    if (!isAuthenticated) return;
-    setSections(initialTaskSections);
+    if (!isAuthenticated || !manifest) return;
+    setCompletedIds(new Set());
+    await fetch(`${apiBase}/progress`, { method: "DELETE", credentials: "include" });
+  }, [isAuthenticated, manifest, apiBase]);
 
-    await fetch(`${LessonProgressAPIRoute}/progress`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-  }, [LessonProgressAPIRoute, initialTaskSections, isAuthenticated]);
+  const allComplete = useMemo(
+    () => sections.length > 0 && sections.every((s) => s.tasks.every((t) => t.completed)),
+    [sections],
+  );
 
-  const allComplete = sections.every((section) => section.tasks.every((task) => task.completed));
+  if (manifestLoading) return <div>Loading...</div>;
 
   return (
-    <LessonTasksContext.Provider value={{ chapterId, unitId, sections, completeTask, hasBeenCompleted, resetTasks, allComplete }}>
+    <LessonTasksContext.Provider
+      value={{ chapterId, unitId, sections, completeTask, hasBeenCompleted, resetTasks, allComplete }}
+    >
       {showErrorNotif && (
         <Notification
           message="Something went wrong."
@@ -110,7 +105,6 @@ export function LessonTasksProvider({
           onClose={() => setShowErrorNotif(false)}
         />
       )}
-
       {children}
     </LessonTasksContext.Provider>
   );

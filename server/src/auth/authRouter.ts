@@ -23,7 +23,7 @@ authRouter.get("/me", authenticate, getMe);
 
 const resetLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 5,                     
+  max: 3,                     
   message: { error: "Too many reset attempts, please try again later." }
 });
 

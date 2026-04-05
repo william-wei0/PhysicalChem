@@ -1,0 +1,281 @@
+{
+  "chapterId": 4,
+  "unitId": 6,
+  "title": "Section 4.6.1 The Quantized Rigid Rotor",
+  "sections": [
+    {
+      "id": "Section 4.6.1 The Quantized Rigid Rotor",
+      "title": "Section 4.6.1 The Quantized Rigid Rotor",
+      "tasks": [
+        {
+          "taskId": "setAngularQuantumNumber1",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.1)"
+            },
+            {
+              "type": "text",
+              "text": " Set the angular quantum number "
+            },
+            {
+              "type": "math",
+              "expression": "l"
+            },
+            {
+              "type": "text",
+              "text": " to"
+            },
+            {
+              "type": "math",
+              "expression": "1"
+            },
+            {
+              "type": "text",
+              "text": ". Observe what magnetic quantum numbers "
+            },
+            {
+              "type": "math",
+              "expression": "m"
+            },
+            {
+              "type": "text",
+              "text": " the rotor is restricted to. What does this tell you about the relationship between "
+            },
+            {
+              "type": "math",
+              "expression": "l"
+            },
+            {
+              "type": "text",
+              "text": " and"
+            },
+            {
+              "type": "math",
+              "expression": "m"
+            },
+            {
+              "type": "text",
+              "text": "? "
+            }
+          ]
+        },
+        {
+          "taskId": "setMagneticQuantumNumber1",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.2)"
+            },
+            {
+              "type": "text",
+              "text": " Set the magnetic quantum number "
+            },
+            {
+              "type": "math",
+              "expression": "m"
+            },
+            {
+              "type": "text",
+              "text": " to"
+            },
+            {
+              "type": "math",
+              "expression": "-1"
+            },
+            {
+              "type": "text",
+              "text": ", then to "
+            },
+            {
+              "type": "math",
+              "expression": "0"
+            },
+            {
+              "type": "text",
+              "text": ", and "
+            },
+            {
+              "type": "math",
+              "expression": "1"
+            },
+            {
+              "type": "text",
+              "text": ". Observe what angles the rotor is restricted to. What are those angles and what is the difference between them? "
+            }
+          ]
+        },
+        {
+          "taskId": "setAngularQuantumNumber3",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.3)"
+            },
+            {
+              "type": "text",
+              "text": " Set the angular quantum number "
+            },
+            {
+              "type": "math",
+              "expression": "l"
+            },
+            {
+              "type": "text",
+              "text": " to"
+            },
+            {
+              "type": "math",
+              "expression": "3"
+            },
+            {
+              "type": "text",
+              "text": ". What magnetic quantum numbers "
+            },
+            {
+              "type": "math",
+              "expression": "m"
+            },
+            {
+              "type": "text",
+              "text": " is the rotor restricted to? "
+            }
+          ]
+        },
+        {
+          "taskId": "setMagneticQuantumNumber3",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.4)"
+            },
+            {
+              "type": "text",
+              "text": " Set the magnetic quantum number "
+            },
+            {
+              "type": "math",
+              "expression": "m"
+            },
+            {
+              "type": "text",
+              "text": " to"
+            },
+            {
+              "type": "math",
+              "expression": "-3"
+            },
+            {
+              "type": "text",
+              "text": ", then to "
+            },
+            {
+              "type": "math",
+              "expression": "0"
+            },
+            {
+              "type": "text",
+              "text": ", and "
+            },
+            {
+              "type": "math",
+              "expression": "3"
+            },
+            {
+              "type": "text",
+              "text": ". Observe what angles the rotor is restricted to. What are those angles and what is the difference between them? Is the difference between angles increasing or decreasing? "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Section 4.6.2 The Macroscopic Rigid Rotor",
+      "title": "Section 4.6.2 The Macroscopic Rigid Rotor",
+      "tasks": [
+        {
+          "taskId": "setAngularQuantumNumber100",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 2.3)"
+            },
+            {
+              "type": "text",
+              "text": " Set the angular quantum number "
+            },
+            {
+              "type": "math",
+              "expression": "l"
+            },
+            {
+              "type": "text",
+              "text": " to"
+            },
+            {
+              "type": "math",
+              "expression": "100"
+            },
+            {
+              "type": "text",
+              "text": ". What magnetic quantum numbers "
+            },
+            {
+              "type": "math",
+              "expression": "m"
+            },
+            {
+              "type": "text",
+              "text": " is the rotor restricted to? "
+            }
+          ]
+        },
+        {
+          "taskId": "setMagneticQuantumNumber100",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 2.4)"
+            },
+            {
+              "type": "text",
+              "text": " Set the magnetic quantum number "
+            },
+            {
+              "type": "math",
+              "expression": "m"
+            },
+            {
+              "type": "text",
+              "text": " to"
+            },
+            {
+              "type": "math",
+              "expression": "-100"
+            },
+            {
+              "type": "text",
+              "text": ", then to "
+            },
+            {
+              "type": "math",
+              "expression": "0"
+            },
+            {
+              "type": "text",
+              "text": ", and "
+            },
+            {
+              "type": "math",
+              "expression": "100"
+            },
+            {
+              "type": "text",
+              "text": ". Observe what angles the rotor is restricted to and what is the difference between them? Given your observations and the fact that macroscopic rigid rotors have larger energies, why do macroscopic rigid rotors seem to be able to rotate continuously whereas quantized rigid rotors are restricted to certain angles? "
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

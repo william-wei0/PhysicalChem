@@ -4,94 +4,10 @@ import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import RigidRotorSimulation from "./simulationComponents/RigidRotorSimulation";
-import type { TaskSection } from "@/context/LessonTasks/LessonTasksContext";
 import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
 import { TasksPanel } from "@/context/LessonTasks/TasksPanel";
 
 export default function Chapter4Unit1Page() {
-  const LESSON_SECTIONS: TaskSection[] = [
-    {
-      id: "Section 4.6.1 The Quantized Rigid Rotor",
-      title: "Section 4.6.1 The Quantized Rigid Rotor",
-      tasks: [
-        {
-          id: "setAngularQuantumNumber1",
-          label: (
-            <p>
-              <strong>(Task 1.1)</strong> Set the angular quantum number <InlineMath math="l" /> to{" "}
-              <InlineMath math="1" />. Observe what magnetic quantum numbers <InlineMath math="m" /> the rotor is
-              restricted to. What does this tell you about the relationship between <InlineMath math="l" /> and{" "}
-              <InlineMath math="m" />?
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setMagneticQuantumNumber1",
-          label: (
-            <p>
-              <strong>(Task 1.2)</strong> Set the magnetic quantum number <InlineMath math="m" /> to{" "}
-              <InlineMath math="-1" />, then to <InlineMath math="0" />, and <InlineMath math="1" />. Observe what
-              angles the rotor is restricted to. What are those angles and what is the difference between them?
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setAngularQuantumNumber3",
-          label: (
-            <p>
-              <strong>(Task 1.3)</strong> Set the angular quantum number <InlineMath math="l" /> to{" "}
-              <InlineMath math="3" />. What magnetic quantum numbers <InlineMath math="m" /> is the rotor restricted to?
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setMagneticQuantumNumber3",
-          label: (
-            <p>
-              <strong>(Task 1.4)</strong> Set the magnetic quantum number <InlineMath math="m" /> to{" "}
-              <InlineMath math="-3" />, then to <InlineMath math="0" />, and <InlineMath math="3" />. Observe what
-              angles the rotor is restricted to. What are those angles and what is the difference between them? Is the
-              difference between angles increasing or decreasing?
-            </p>
-          ),
-          completed: false,
-        },
-      ],
-    },
-    {
-      id: "Section 4.6.2 The Macroscopic Rigid Rotor",
-      title: "Section 4.6.2 The Macroscopic Rigid Rotor",
-      tasks: [
-        {
-          id: "setAngularQuantumNumber100",
-          label: (
-            <p>
-              <strong>(Task 2.3)</strong> Set the angular quantum number <InlineMath math="l" /> to{" "}
-              <InlineMath math="100" />. What magnetic quantum numbers <InlineMath math="m" /> is the rotor restricted
-              to?
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setMagneticQuantumNumber100",
-          label: (
-            <p>
-              <strong>(Task 2.4)</strong> Set the magnetic quantum number <InlineMath math="m" /> to{" "}
-              <InlineMath math="-100" />, then to <InlineMath math="0" />, and <InlineMath math="100" />. Observe what
-              angles the rotor is restricted to and what is the difference between them? Given your observations and the
-              fact that macroscopic rigid rotors have larger energies, why do macroscopic rigid rotors seem to be able
-              to rotate continuously whereas quantized rigid rotors are restricted to certain angles?
-            </p>
-          ),
-          completed: false,
-        },
-      ],
-    },
-  ];
   return (
     <LessonLayout>
       <h1 id="lesson1">Unit 4. The Two-Particle Rigid Rotor and Discrete Rotational Energy</h1>
@@ -101,7 +17,7 @@ export default function Chapter4Unit1Page() {
         <p>
           In this section we will look at the <strong>two-particle rigid rotor</strong>. This is a system of two
           particles of masses <InlineMath math="m_1" /> and <InlineMath math="m_2" /> held at a fixed distance{" "}
-          <InlineMath math="d" /> from each other by a rigid, massless rod. Because the interparticle distance is fixed,
+          <InlineMath math="d" /> from each other by a rigid, massless rod. Because the distance between particles is fixed,
           the magnitude of the relative position vector <InlineMath math="\mathbf{r}" /> is constant:
         </p>
         <div className="importantEquation">
@@ -314,7 +230,7 @@ export default function Chapter4Unit1Page() {
           the quantum number <InlineMath math="m" />.
         </p>
       </LessonSection>
-      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS} chapterId={4} unitId={6}>
+      <LessonTasksProvider chapterId={4} unitId={6}>
         <TasksPanel title={"Superposition of Energy Eigenstates"} />
         <RigidRotorSimulation />
       </LessonTasksProvider>

@@ -1,0 +1,149 @@
+{
+  "chapterId": 2,
+  "unitId": 3,
+  "title": "Section 2.3.1: Particle in a Box - Spatial Wavefunction",
+  "sections": [
+    {
+      "id": "Section 2.3.1 Particle in a Box - Spatial Wavefunction",
+      "title": "Section 2.3.1: Particle in a Box - Spatial Wavefunction",
+      "tasks": [
+        {
+          "taskId": "setQuantumNumber1Wavefunction",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.1)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 1, and note the number of peaks and location of the peak. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber3Wavefunction",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.2)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 3, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber5Wavefunction",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.3)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 5, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber7Wavefunction",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.4)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 7, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber9Wavefunction",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 1.5)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 9, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Section 2.3.2: Particle in a Box - Probability Density",
+      "title": "Section 2.3.2: Particle in a Box - Probability Density",
+      "tasks": [
+        {
+          "taskId": "setQuantumNumber1ProbDensity",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 2.1)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 1, and note the number of peaks and location of the peak. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber3ProbDensity",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 2.2)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 3, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber5ProbDensity",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 2.3)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 5, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber7ProbDensity",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 2.4)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 7, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        },
+        {
+          "taskId": "setQuantumNumber9ProbDensity",
+          "label": [
+            {
+              "type": "bold",
+              "text": "(Task 2.5)"
+            },
+            {
+              "type": "text",
+              "text": " Set the quantum number to 9, and note the number of peaks and location of the peaks. "
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

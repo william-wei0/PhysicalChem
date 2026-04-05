@@ -10,6 +10,7 @@ import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import AuthLayout from "../layouts/AuthLayout";
 import { UnauthenticatedRoute } from "@/context/auth/UnauthenticatedRoute";
 import AccountDashboard from "@/pages/AccountDashboard";
+import { ProtectedRoute } from "@/context/auth/ProtectedRoute";
 
 const routes = [
   {
@@ -24,7 +25,7 @@ const routes = [
           { path: "lessons",                    element: <LessonIndexPage /> },
           { path: "lessons/:lessonId",          element: <LessonsRouter /> },
           { path: "lessons/:chapterId/:unitId", element: <LessonsRouter /> },
-          { path: "dashboard", element: <AccountDashboard /> },
+          { path: "dashboard", element: <ProtectedRoute><AccountDashboard /></ProtectedRoute> },
         ],
       },
 

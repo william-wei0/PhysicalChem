@@ -6,135 +6,8 @@ import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import { TasksPanel } from "@/context/LessonTasks/TasksPanel";
 import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
-import { type TaskSection } from "@/context/LessonTasks/LessonTasksContext";
 
 export default function Chapter1Unit1Page() {
-  const LESSON_SECTIONS: TaskSection[] = [
-    {
-      id: "Section 1.3.1 Light as a Wave",
-      title: "Section 1.3.1: Light as a Wave",
-      tasks: [
-        {
-          id: "observeIncreaseDiffractionSlitSizeChanges",
-          label: (
-            <p>
-              <strong>(Task 1.1)</strong> Increase the Diffraction Slit Size (increasing the uncertainty in position{" "}
-              <InlineMath math="\Delta x" />
-              ), and observe how the diffraction pattern narrows on photoreceptor wall (decreasing the uncertainty in
-              momentum <InlineMath math="\Delta p" />
-              ).
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "observeDecreaseDiffractionSlitSizeChanges",
-          label: (
-            <p>
-              <strong>(Task 1.2)</strong> Decrease the Diffraction Slit Size (decreasing the uncertainty in position{" "}
-              <InlineMath math="\Delta x" />
-              ), and observe how the diffraction pattern spreads out on photoreceptor wall (increasing the uncertainty
-              in momentum <InlineMath math="\Delta p" />
-              ).
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "observeIncreaseWavelengthChanges",
-          label: (
-            <p>
-              <strong>(Task 1.3)</strong> From equations (1) and (4), we wrote{" "}
-              <InlineMath math="\Delta x \Delta p_{x} = p \lambda" />. This showed that an increase in wavelength is met
-              by an increase in the uncertainty in position to maintain equality (if <InlineMath math="\Delta x" /> is
-              constant). Observe how increasing the wavelength spreads out the diffraction pattern on photoreceptor
-              wall.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "observeDecreaseWavelengthChanges",
-          label: (
-            <p>
-              <strong>(Task 1.4)</strong> Similarly, a decrease in wavelength is met by a decrease in the uncertainty in
-              position. Observe how decreasing the wavelength narrows the diffraction pattern on photoreceptor wall.
-            </p>
-          ),
-          completed: false,
-        },
-      ],
-    },
-    {
-      id: "Section 1.3.2 Light as a Particle",
-      title: "Section 1.3.2: Light as a Wave",
-      tasks: [
-        {
-          id: "showParticles",
-          label: (
-            <p>
-              <strong>(Task 2.1)</strong> Change the Simulation mode to treat light as particles by clicking{" "}
-              <strong> Show Particle Simulation</strong>.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "showParticleDistribution",
-          label: (
-            <p>
-              <strong>(Task 2.2)</strong> Convert the photoreceptor wall to show expected particle distributions by
-              clicking on <strong>Light Wave Gradient</strong>. Observe how the peaks and valleys of the expected
-              particle distributions matches the light wave gradient.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "startFirstParticleSimulation",
-          label: (
-            <p>
-              <strong>(Task 2.3)</strong> Open the Particle Simulation Settings and start a simulation of light
-              particles passing through the slit. The location of each particle hitting the wall is marked by a yellow
-              tick.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "observeParticleMovement",
-          label: (
-            <p>
-              <strong>(Task 2.4)</strong> Observe how the particles follow wave's anti-nodes (areas of high intensity)
-              and avoids the node (areas of low intensity), resulting in the same distribution on the wall as the
-              expected distribution and the light gradient.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "modifySlitSize",
-          label: (
-            <p>
-              <strong>(Task 2.5)</strong> Modify the Diffraction Slit Size to change the probability distribution.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "startSecondParticleSimulation",
-          label: (
-            <p>
-              <strong>(Task 2.6)</strong> Start a second particle simulation to observe how the particle distribution
-              changed.
-            </p>
-          ),
-          completed: false,
-        },
-      ],
-    },
-  ];
-
   return (
     <LessonLayout>
       <h1 id={"lesson1"}>Unit 1. Single Slit Diffraction and the Heisenberg Uncertainty Principle</h1>
@@ -282,7 +155,7 @@ export default function Chapter1Unit1Page() {
           particle simulation to observe the distribution of photons on the photographic plate.
         </p>
       </LessonSection>
-      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS} chapterId={1} unitId={1}>
+      <LessonTasksProvider chapterId={1} unitId={3}>
         <TasksPanel title={"Single Slit Diffraction"} />
         <SingleSlitSimulation />
       </LessonTasksProvider>

@@ -6,124 +6,9 @@ import "katex/dist/katex.min.css";
 import { InlineMath, BlockMath } from "react-katex";
 import LessonLayout from "../LessonLayout";
 import { LessonTasksProvider } from "@/context/LessonTasks/LessonTasksProvider";
-import type { TaskSection } from "@/context/LessonTasks/LessonTasksContext";
 import { TasksPanel } from "@/context/LessonTasks/TasksPanel";
 
 export default function Chapter2Unit1Page() {
-  const LESSON_SECTIONS: TaskSection[] = [
-    {
-      id: "Section 2.3.1 Particle in a Box - Spatial Wavefunction",
-      title: "Section 2.3.1: Particle in a Box - Spatial Wavefunction",
-      tasks: [
-        {
-          id: "setQuantumNumber1Wavefunction",
-          label: (
-            <p>
-              <strong>(Task 1.1)</strong> Set the quantum number to 1, and note the number of peaks and location of the
-              peak.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setQuantumNumber3Wavefunction",
-          label: (
-            <p>
-              <strong>(Task 1.2)</strong> Set the quantum number to 3, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setQuantumNumber5Wavefunction",
-          label: (
-            <p>
-              <strong>(Task 1.3)</strong> Set the quantum number to 5, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setQuantumNumber7Wavefunction",
-          label: (
-            <p>
-              <strong>(Task 1.4)</strong> Set the quantum number to 7, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-                {
-          id: "setQuantumNumber9Wavefunction",
-          label: (
-            <p>
-              <strong>(Task 1.5)</strong> Set the quantum number to 9, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-      ],
-    },
-    {
-      id: "Section 2.3.2: Particle in a Box - Probability Density",
-      title: "Section 2.3.2: Particle in a Box - Probability Density",
-      tasks: [
-       {
-          id: "setQuantumNumber1ProbDensity",
-          label: (
-            <p>
-              <strong>(Task 2.1)</strong> Set the quantum number to 1, and note the number of peaks and location of the
-              peak.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setQuantumNumber3ProbDensity",
-          label: (
-            <p>
-              <strong>(Task 2.2)</strong> Set the quantum number to 3, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-       {
-          id: "setQuantumNumber5ProbDensity",
-          label: (
-            <p>
-              <strong>(Task 2.3)</strong> Set the quantum number to 5, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-        {
-          id: "setQuantumNumber7ProbDensity",
-          label: (
-            <p>
-              <strong>(Task 2.4)</strong> Set the quantum number to 7, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-       {
-          id: "setQuantumNumber9ProbDensity",
-          label: (
-            <p>
-              <strong>(Task 2.5)</strong> Set the quantum number to 9, and note the number of peaks and location of the
-              peaks.
-            </p>
-          ),
-          completed: false,
-        },
-      ],
-    },
-  ];
   return (
     <LessonLayout>
       <h1 id="lesson1">Unit 2. A Single Particle in 1-Dimensional Box</h1>
@@ -316,7 +201,7 @@ export default function Chapter2Unit1Page() {
         </p>
       </LessonSection>
 
-      <LessonTasksProvider initialTaskSections={LESSON_SECTIONS} chapterId={2} unitId={1}>
+      <LessonTasksProvider chapterId={2} unitId={3}>
         <TasksPanel />
         <WavefunctionSimulation />
         <WavefunctionSquaredSimulation />

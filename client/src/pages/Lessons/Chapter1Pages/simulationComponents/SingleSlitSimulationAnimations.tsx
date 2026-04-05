@@ -149,12 +149,15 @@ export function drawLightIntensityOnWall(
 
 export function drawLightIntensityCurve(ctx: CanvasRenderingContext2D, params: AnimationParams) {
   const { receptorWall, canvasDimensions } = params;
+  const path = new Path2D();
+
+  for (let y = 0; y < canvasDimensions.height; y += 0.5) {
+    const intensity = calculateLightIntensity(y, params);
+    path.rect(receptorWall.x, y, intensity, 0.5);
+  }
 
   ctx.fillStyle = "rgba(32, 146, 245, 1.0)";
-  for (let y = 0; y < canvasDimensions.height; y += 0.5) {
-    const lightIntensity = calculateLightIntensity(y, params);
-    ctx.fillRect(receptorWall.x, y, lightIntensity, 0.5);
-  }
+  ctx.fill(path); // single draw call
 }
 
 export function drawLightIntensityGradient(ctx: CanvasRenderingContext2D, params: AnimationParams) {
@@ -194,7 +197,6 @@ export function randomVelocityXY(speed: number, particlePositionY: number, param
   }
 }
 
-// Precompute functions
 function precomputeInitialRipple(
   width: number,
   height: number,
@@ -233,7 +235,7 @@ export function makeInitialRippleRenderer(scaleFactor: number, outW: number, out
   const data = img.data;
   for (let p = 0; p < simW * simH; p++) {
     const i = p * 4;
-    data[i]     = rgb[0];
+    data[i] = rgb[0];
     data[i + 1] = rgb[1];
     data[i + 2] = rgb[2];
     data[i + 3] = 255;
@@ -270,7 +272,6 @@ export function makeInitialRippleRenderer(scaleFactor: number, outW: number, out
     const B = pre.B;
     const brightness = 150;
 
-    // Only update alpha channel each frame
     for (let x = 0; x < simW; x++) {
       let v = (A[x] * cosine + B[x] * sine) * brightness;
       if (v < 0) v = 0;
@@ -311,7 +312,6 @@ function precomputeWaveAB(
   for (let pointSource = slitTop; pointSource < slitBottom; pointSource += sourceStep)
     wavePointSources.push(pointSource);
 
-  // Compute for top half only
   for (let y = 0; y < height / 2; y++) {
     const row = y * width;
 
@@ -340,7 +340,6 @@ function precomputeWaveAB(
     }
   }
 
-  // Mirror to bottom half
   const halfHeight = height / 2;
   for (let y = 0; y < halfHeight; y++) {
     const mirrorY = height - 1 - y;
@@ -401,7 +400,6 @@ export function makeRippleRenderer(scaleFactor: number, outW: number, outH: numb
     const slitWidth = params.diffractionWall.slitSize;
     const slitWidthSim = slitWidth / scaleFactor;
 
-    // Rebuild precompute if needed
     if (!pre || slitWidth !== lastSlitWidth || canvasH !== lastCanvasH) {
       lastSlitWidth = slitWidth;
       lastCanvasH = canvasH;
@@ -421,7 +419,6 @@ export function makeRippleRenderer(scaleFactor: number, outW: number, outH: numb
       );
     }
 
-    // Fast per-frame render
     const time = timeMilliseconds / 1000;
     const ot = pre.omega * time;
     const c = Math.cos(ot);
@@ -478,6 +475,8 @@ function handleWallCollision(
   }
 }
 
+const gradientCache = new Map<number, CanvasGradient>();
+
 export function animateParticles(
   ctx: CanvasRenderingContext2D,
   particles: Particle[],
@@ -513,16 +512,23 @@ export function animateParticles(
     }
 
     if (particle.isActive) {
-      const gradient = ctx.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.size * 2);
-      gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.8)`); // brighter, more opaque center
-      gradient.addColorStop(0.4, `hsla(${particle.hue}, 80%, 50%, 0.6)`); // hold opacity longer
-      gradient.addColorStop(0.6, `hsla(${particle.hue}, 80%, 40%, 0.01)`); // sharp drop-off here
-      gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`); // fully transparent edge
-
+      let gradient = gradientCache.get(particle.hue);
+      if (!gradient) {
+        gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, particle.size * 2);
+        gradient.addColorStop(0, `hsla(${particle.hue}, 80%, 60%, 0.8)`);
+        gradient.addColorStop(0.4, `hsla(${particle.hue}, 80%, 50%, 0.6)`);
+        gradient.addColorStop(0.6, `hsla(${particle.hue}, 80%, 40%, 0.01)`);
+        gradient.addColorStop(1, `hsla(${particle.hue}, 80%, 40%, 0)`);
+        gradientCache.set(particle.hue, gradient);
+      }
+      // Translate to particle position, draw, restore
+      ctx.save();
+      ctx.translate(particle.x, particle.y);
       ctx.fillStyle = gradient;
       ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+      ctx.arc(0, 0, particle.size * 2, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
     }
   });
   return yPositionOfParticlesOnWall;
@@ -543,13 +549,11 @@ export function blurIntersectionBetweenWaves(
   const height = diffractionWall.slitSize;
 
   ctx.save();
-  // Define the blur region
   ctx.rect(x, y, width, height);
   ctx.clip();
 
-  // Redraw the area with blur
   ctx.filter = "blur(4px)";
-  ctx.drawImage(canvas, 0, 0); // Draw entire canvas onto itself
+  ctx.drawImage(canvas, 0, 0);
   ctx.filter = "none";
 
   ctx.restore();

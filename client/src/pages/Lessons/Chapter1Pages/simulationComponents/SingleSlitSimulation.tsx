@@ -10,7 +10,6 @@ import {
   makeInitialRippleRenderer,
   makeRippleRenderer,
   drawDiffractionWall,
-  blurIntersectionBetweenWaves,
   drawReceptorWall,
   drawLightIntensityCurve,
   animateParticles,
@@ -240,7 +239,6 @@ export default function SingleSlitSimulation() {
           animationParams.waveSpeed[0],
           animationParams,
         );
-        blurIntersectionBetweenWaves(ctx, canvasRef.current, animationParams);
       }
 
       if (
@@ -522,7 +520,6 @@ export default function SingleSlitSimulation() {
               className={`${buttonClassName} border-black border-r-2
       ${waveStatus !== "hidden" ? buttonActiveClassName : buttonInactiveClassName}`}
               onClick={() => {
-                completeTask("clickWaveStatus");
                 setWaveStatus((prev) => (prev !== "hidden" ? "hidden" : "paused"));
               }}
             >
