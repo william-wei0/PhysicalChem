@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { withAdminContext } from "../lib/prisma";
 import AppError from "../errors/AppError";
 
 export const validateUsername = (username: string) => {
@@ -59,15 +59,13 @@ export const validateUserInput = (username: string, password: string, email: str
 };
 
 export const validateUniqueUser = async (username: string, email: string) => {
-  const [existingUsername, existingEmail] = await Promise.all([
-    prisma.users.findUnique({ where: { username } }),
-    prisma.users.findUnique({ where: { email } }),
-  ]);
+  const [existingUsername, existingEmail] = await withAdminContext((client) =>
+    Promise.all([
+      client.users.findUnique({ where: { username } }),
+      client.users.findUnique({ where: { email } }),
+    ])
+  );
 
-  if (existingUsername) {
-    throw new AppError("Username already taken.", 409);
-  }
-  if (existingEmail) {
-    throw new AppError("Email already registered.", 409);
-  }
+  if (existingUsername) throw new AppError("Username already taken.", 409);
+  if (existingEmail) throw new AppError("Email already registered.", 409);
 };

@@ -14,23 +14,23 @@ datasource db {
 
 model loginSession {
   id           Int      @id @default(autoincrement())
-  userId       Int
-  refreshToken String   @unique
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
+  userId       Int      @map("user_id")
+  refreshToken String   @unique @map("refresh_token")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
   user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@map("loginSessions")
+
+  @@map("login_sessions")
 }
 
 model Users {
   id                   Int              @id @default(autoincrement())
   username             String           @unique
   email                String           @unique
-  passwordHash         String
-  resetPasswordToken   String?
-  resetPasswordExpires DateTime?
-  createdAt            DateTime         @default(now())
+  passwordHash         String           @map("password_hash")
+  resetPasswordToken   String?          @map("reset_password_token")
+  resetPasswordExpires DateTime?        @map("reset_password_expires")
+  createdAt            DateTime         @default(now()) @map("created_at")
   lessonProgresses     LessonProgress[]
   userRoles            UserRole[]
   userGroups           UserGroup[]
@@ -41,11 +41,11 @@ model Users {
 
 model LessonProgress {
   id          String   @id @default(cuid())
-  userId      Int
-  chapterId   Int
-  unitId      Int
-  taskId      String
-  completedAt DateTime @default(now())
+  userId      Int      @map("user_id")
+  chapterId   Int      @map("chapter_id")
+  unitId      Int      @map("unit_id")
+  taskId      String   @map("task_id")
+  completedAt DateTime @default(now()) @map("completed_at")
   user        Users    @relation(fields: [userId], references: [id])
 
   @@unique([userId, chapterId, unitId, taskId])
@@ -56,16 +56,16 @@ model Role {
   id          Int        @id @default(autoincrement())
   name        String     @unique
   description String?
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime   @default(now()) @map("created_at")
   userRoles   UserRole[]
 
   @@map("roles")
 }
 
 model UserRole {
-  userId     Int
-  roleId     Int
-  assignedAt DateTime @default(now())
+  userId     Int      @map("user_id")
+  roleId     Int      @map("role_id")
+  assignedAt DateTime @default(now()) @map("assigned_at")
   user       Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   role       Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
@@ -77,19 +77,19 @@ model Group {
   id          Int         @id @default(autoincrement())
   name        String      @unique
   description String?
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime    @default(now()) @map("created_at")
   userGroups  UserGroup[]
 
   @@map("groups")
 }
 
 model UserGroup {
-  userId   Int
-  groupId  Int
-  joinedAt DateTime @default(now())
+  userId   Int      @map("user_id")
+  groupId  Int      @map("group_id")
+  joinedAt DateTime @default(now()) @map("joined_at")
   user     Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
-  @@id([userId, groupId]) // composite primary key — no duplicate memberships
+  @@id([userId, groupId]) // composite primary key, prevent duplicate memberships
   @@map("user_groups")
 }
