@@ -1,4 +1,4 @@
-import { HomepageChapterSections } from "./HomePageChapterSections";
+import { HomepageChapterSections } from "./HomepageChapterSections";
 
 export function HomepageIntro() {
   return (

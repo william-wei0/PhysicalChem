@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts --ignore ./generated"
+    "dev": "tsx watch src/server.ts --ignore ./generated",
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",

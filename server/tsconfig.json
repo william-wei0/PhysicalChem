@@ -13,5 +13,5 @@
     "erasableSyntaxOnly": false
   },
   "include": ["src", "prisma/prisma.config.ts", "src/users/userRouter.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "generated"]
 }

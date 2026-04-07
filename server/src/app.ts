@@ -1,3 +1,5 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from "express";
 import cookieParser from "cookie-parser";
 import userRouter from "./users/userRouter";
@@ -7,12 +9,12 @@ import type { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import lessonRoutes from "./lessons/lessonRouter";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const allowedOrigins = [
   "http://localhost:5173",
   "https://your-frontend.onrender.com",
 ];
-
 
 
 const app = express();
@@ -58,6 +60,12 @@ app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   }
 
   return res.status(500).json({ error: "Internal server error." });
+});
+
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 export default app;

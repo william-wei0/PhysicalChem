@@ -6,7 +6,10 @@
   "scripts": {
     "devServer": "npm run dev --prefix server",
     "devClient": "npm run dev --prefix client",
-    "dev": "concurrently \"npm run devServer\" \"npm run devClient\""
+    "dev": "concurrently \"npm run devServer\" \"npm run devClient\"",
+    "build": "npm install --prefix client && npm run build --prefix client && npm install --prefix server && npm audit fix && npm run build --prefix server",
+    "start": "node server/dist/src/server.js",
+    "preview": "npm run build && npm run start"
   },
   "repository": {
     "type": "git",
