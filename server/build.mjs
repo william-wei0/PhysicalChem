@@ -9,5 +9,6 @@ esbuild.build({
   outfile: "dist/server.js",
   sourcemap: true,
   packages: "external",
+  
 }).catch(() => process.exit(1));
 

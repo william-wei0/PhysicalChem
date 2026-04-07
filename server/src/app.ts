@@ -9,10 +9,10 @@ import type { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import lessonRoutes from "./lessons/lessonRouter";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const allowedOrigins = [
-  "http://localhost:5173",
+  "http://localhost:3000",
   "https://your-frontend.onrender.com",
 ];
 
