@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts --ignore ./generated",
-    "build": "prisma generate && tsc",
+    "typecheck": "tsc --noEmit",
+    "build": "prisma generate && node build.mjs",
     "start": "node dist/server.js"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
     "@types/node": "^24.12.0",
     "@types/pg": "^8.20.0",
     "@types/react": "^19.2.5",
+    "esbuild": "^0.28.0",
     "eslint": "^9.39.3",
     "prisma": "^7.5.0",
     "tsx": "^4.21.0",

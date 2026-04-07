@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as authService from "./authService";
 import { verifyRefreshToken, generateAccessToken } from "../utils/tokens";
 import AppError from "../errors/AppError";
-import { validatePassword } from "@/utils/userValidation";
+import { validatePassword } from "../utils/userValidation";
 
 export const loginUser = async (
   req: Request<{}, {}, { email: string; password: string }>,

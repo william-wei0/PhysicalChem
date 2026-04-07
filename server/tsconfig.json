@@ -7,9 +7,6 @@
     "strict": true,
     "esModuleInterop": true,
     "ignoreDeprecations": "5.0",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     "erasableSyntaxOnly": false
   },
   "include": ["src", "prisma/prisma.config.ts", "src/users/userRouter.ts"],

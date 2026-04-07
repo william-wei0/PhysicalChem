@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { prisma, withUserContext, withAdminContext  } from "../lib/prisma";
+import { withUserContext, withAdminContext  } from "../lib/prisma";
 import AppError from "../errors/AppError";
 
 type CreateUserInput = {

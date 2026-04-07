@@ -42,6 +42,12 @@ app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/lessonProgress", lessonRoutes);
 
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('/*path', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Route not found." });
 });
@@ -62,10 +68,5 @@ app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
   return res.status(500).json({ error: "Internal server error." });
 });
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
 
 export default app;

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { loginUser, refreshToken, logoutUser } from "./authController";
-import { getMe } from "@/users/userController";
+import { getMe } from "../users/userController";
 import { authenticate } from "./authenticate";
 import rateLimit from "express-rate-limit";
 import { forgotPassword } from "./authController";

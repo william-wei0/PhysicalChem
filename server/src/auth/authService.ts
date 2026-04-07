@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { prisma, withAdminContext } from "../lib/prisma";
+import { withAdminContext } from "../lib/prisma";
 import crypto from "crypto";
 import AppError from "../errors/AppError";
 import { getUserByEmail } from "../users/userService";

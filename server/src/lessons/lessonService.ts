@@ -1,4 +1,4 @@
-import { prisma, withUserContext, withAdminContext } from "../lib/prisma";
+import { withUserContext } from "../lib/prisma";
 import AppError from "../errors/AppError";
 import { getUnitTaskIds } from "./manifests/manifestService";
 
