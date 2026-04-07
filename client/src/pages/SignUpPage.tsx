@@ -210,6 +210,10 @@ export default function SignUpPage() {
                   <AlertDescription className="text-green-800">Account created successfully!</AlertDescription>
                 </Alert>
               )}
+              <div>
+              <p className="text-sm">By signing up, you have read and agree to our <a href="privacy-policy" className="text-sm text-blue-600 hover:text-blue-500">privacy policy.</a></p> 
+              </div>
+
 
               <Button type="submit" className="w-full">
                 Sign Up

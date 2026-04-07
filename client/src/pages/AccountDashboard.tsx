@@ -122,7 +122,7 @@ const AccountDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-zinc-100">
+    <div className="flex min-h-screen ">
       <main className="flex-1 flex flex-col pb-10">
         <div className="px-15 pt-10 mx-auto w-full">
           <section className="mb-16 flex items-end justify-between">

@@ -1,0 +1,100 @@
+/* ============================================================
+   Privacy Policy – CSS Module (simple)
+   ============================================================ */
+
+.page {
+  font-family: sans-serif;
+  font-size: 15px;
+  color: #595959;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 0.25rem;
+}
+
+.subtitle {
+  color: #7f7f7f;
+  margin: 0 0 2rem;
+}
+
+.heading1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000;
+  margin: 2rem 0 0.5rem;
+}
+
+.heading2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.body {
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.link {
+  color: #003afa;
+  text-decoration: underline;
+}
+
+.list {
+  padding-left: 1.5rem;
+  margin: 0 0 1rem;
+}
+
+.list li {
+  line-height: 1.6;
+  margin-bottom: 0.35rem;
+}
+
+.tocList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.tocList li {
+  margin-bottom: 0.25rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.table th,
+.table td {
+  border: 1px solid black;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  font-weight: 700;
+  background: #f5f5f5;
+}
+
+.collected {
+  text-align: center;
+}
+
+.contactBlock {
+  line-height: 1.8;
+}
