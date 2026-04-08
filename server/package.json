@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts --ignore ./generated",
     "typecheck": "tsc --noEmit",
-    "build": "prisma generate && node build.mjs",
+    "build": "prisma generate && prisma migrate deploy && node build.mjs",
     "start": "node dist/server.js"
   },
   "dependencies": {
