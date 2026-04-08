@@ -5,7 +5,7 @@ const getResendFromEmail = () => process.env.RESEND_FROM_EMAIL
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resend = getResend();
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+  const resetUrl = `${process.env.SITE_URL}/reset-password?token=${token}`;
 
   const from = getResendFromEmail() || "Acme <onboarding@resend.dev>";
   
