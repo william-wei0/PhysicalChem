@@ -1,8 +1,10 @@
-import AppError from "../../errors/AppError";
+import AppError from "../errors/AppError";
 import fs from "fs";
 import path from "path";
 
-const MANIFEST_ROOT = path.join(process.cwd(), "src/lessons/manifests");
+const MANIFEST_ROOT = process.env.MANIFEST_ROOT
+  ? path.resolve(process.cwd(), process.env.MANIFEST_ROOT)
+  : path.join(__dirname, "assets/manifests");
 
 export type LabelPart =
   | { type: "text"; text: string }

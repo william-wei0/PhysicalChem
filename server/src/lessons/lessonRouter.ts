@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "../auth/authenticate";
 import { completeTask, getLessonProgress, getAllProgress, resetLesson, resetAllLessonProgress, resetChapter } from "./lessonController";
-import { getUnitManifest, getAllChapters } from "./manifests/manifestController";
+import { getUnitManifest, getAllChapters } from "../manifests/manifestController";
 
 const router = Router();
 

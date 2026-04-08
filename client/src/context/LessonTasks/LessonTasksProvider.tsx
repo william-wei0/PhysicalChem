@@ -29,7 +29,7 @@ export function LessonTasksProvider({
   }, [isAuthenticated, manifest, chapterId, unitId]);
 
   const sections = useMemo<TaskSection[]>(() => {
-    if (!manifest) return [];
+    if (!manifest || !manifest.sections || manifest.error ) return [];
     return manifest.sections.map((section) => ({
       id: section.id,
       title: section.title,

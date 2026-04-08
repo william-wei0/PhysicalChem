@@ -70,49 +70,55 @@ export function TasksPanel({ title }: { title?: string }) {
   const overallProgress = (completedTasks / totalTasks) * 100;
 
   return (
-    <div className="tasksPanelBackground">
-      <div className="tasksPanel animate-fadeInLessonTasks">
-        <div className="flex items-start justify-between gap-4">
-          <h3 className="text-6xl font-bold shrink-0 mb-0">
-            Chapter {chapterId} Unit {unitId}: {title ? title : "Simulation Objectives"}
-          </h3>
+    <>
+      {totalTasks > 0 ? (
+        <div className="tasksPanelBackground">
+          <div className="tasksPanel animate-fadeInLessonTasks">
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="text-6xl font-bold shrink-0 mb-0">
+                Chapter {chapterId} Unit {unitId}: {title ? title : "Simulation Objectives"}
+              </h3>
 
-          {!isAuthenticated && (
-            <div className="flex items-start gap-2.5 bg-blue-50 border border-blue-200 rounded-lg p-2.5 max-w-[400px] shrink-0 mr-1.5">
-              <div>
-                <p className="m-0 text-[13px] font-medium text-gray-900 leading-snug mb-0.5">
-                  Your progress will be reset when reloading the page.
+              {!isAuthenticated && (
+                <div className="flex items-start gap-2.5 bg-blue-50 border border-blue-200 rounded-lg p-2.5 max-w-[400px] shrink-0 mr-1.5">
+                  <div>
+                    <p className="m-0 text-[13px] font-medium text-gray-900 leading-snug mb-0.5">
+                      Your progress will be reset when reloading the page.
+                    </p>
+                    <p className="m-0 text-xs text-gray-500 leading-snug">
+                      Create an account or login to save your progress.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="w-full space-y-2">
+              <div className="flex items-start justify-between">
+                <p className="text-sm font-medium">
+                  {allComplete ? "All " : ""}
+                  Objectives Completed{allComplete ? "!" : ""} ({completedTasks}/{totalTasks})
                 </p>
-                <p className="m-0 text-xs text-gray-500 leading-snug">
-                  Create an account or login to save your progress.
-                </p>
+                <p className="text-sm font-medium">{overallProgress.toFixed(1)}%</p>
+              </div>
+              <div className="w-full h-2 bg-slate-300 rounded-full overflow-hidden mb-4">
+                <div
+                  className="h-full bg-black transition-all duration-700 ease-out"
+                  style={{ width: `${overallProgress}%` }}
+                />
               </div>
             </div>
-          )}
-        </div>
 
-        <div className="w-full space-y-2">
-          <div className="flex items-start justify-between">
-            <p className="text-sm font-medium">
-              {allComplete ? "All " : ""}
-              Objectives Completed{allComplete ? "!" : ""} ({completedTasks}/{totalTasks})
-            </p>
-            <p className="text-sm font-medium">{overallProgress.toFixed(1)}%</p>
-          </div>
-          <div className="w-full h-2 bg-slate-300 rounded-full overflow-hidden mb-4">
-            <div
-              className="h-full bg-black transition-all duration-700 ease-out"
-              style={{ width: `${overallProgress}%` }}
-            />
+            <div className="space-y-4">
+              {sections.map((section) => (
+                <TaskSectionGroup key={section.id} section={section} />
+              ))}
+            </div>
           </div>
         </div>
-
-        <div className="space-y-4">
-          {sections.map((section) => (
-            <TaskSectionGroup key={section.id} section={section} />
-          ))}
-        </div>
-      </div>
-    </div>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }

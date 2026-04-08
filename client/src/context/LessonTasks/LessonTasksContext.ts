@@ -21,6 +21,7 @@ export type UnitManifest = {
   unitId: number;
   title: string;
   sections: SectionManifest[];
+  error?: string;
 };
 
 export type ChapterSummary = {

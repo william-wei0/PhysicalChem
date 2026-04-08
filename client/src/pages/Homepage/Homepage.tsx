@@ -27,7 +27,7 @@ export function HomepageIntro() {
 
         <div className="lg:col-span-2 flex items-center justify-center p-3">
           <img
-            src="src/assets/pages/Quantum Chemistry 7th Edition by Ira Levine.jpg"
+            src="pages/Quantum Chemistry 7th Edition by Ira Levine.jpg"
             alt="An image of the cover of Quantum Chemistry 7th Edition by Ira Levine"
             className="w-full h-full object-contain"
           ></img>

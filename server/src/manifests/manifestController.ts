@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as manifestService from "./manifestService";
-import AppError from "../../errors/AppError";
+import AppError from "../errors/AppError";
 
 export const getUnitManifest = (
   req: Request<{ chapterId: string; unitId: string }>,

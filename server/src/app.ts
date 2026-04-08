@@ -13,6 +13,7 @@ const __dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:5173",
   "https://your-frontend.onrender.com",
 ];
 

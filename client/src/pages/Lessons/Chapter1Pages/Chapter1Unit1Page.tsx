@@ -28,7 +28,7 @@ export default function Chapter1Unit1Page() {
         <div className="figure">
           {" "}
           <img
-            src="/src/assets/pages/lessons/Figure1.1-DiffractionOfElectronsBySlit-QuantumChemistry-IraLevine-p6.png"
+            src="/pages/lessons/Figure1.1-DiffractionOfElectronsBySlit-QuantumChemistry-IraLevine-p6.png"
             alt="Figure 1.1. Diffraction of electrons by a slit. Obtained from Quantum Chemistry 7th Edition (p. 6, Figure
             1.1) by Ira N. Levine"
           />
@@ -72,7 +72,7 @@ export default function Chapter1Unit1Page() {
         <div className="figure">
           {" "}
           <img
-            src="/src/assets/pages/lessons/Figure1.2-CalculationOfFirstDiffractionMinimum-QuantumChemistry-IraLevine-p7.png"
+            src="/pages/lessons/Figure1.2-CalculationOfFirstDiffractionMinimum-QuantumChemistry-IraLevine-p7.png"
             alt="Figure 1.2. Calculation of first diffraction minimum. Obtained from Quantum Chemistry 7th Edition (p. 7,
             Figure 1.2) by Ira N. Levine"
           />

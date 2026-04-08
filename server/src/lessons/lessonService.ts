@@ -1,6 +1,6 @@
 import { withUserContext } from "../lib/prisma";
 import AppError from "../errors/AppError";
-import { getUnitTaskIds } from "./manifests/manifestService";
+import { getUnitTaskIds } from "../manifests/manifestService";
 
 export const getLessonProgress = async (userId: number, chapterId: number, unitId: number) => {
   return withUserContext(userId, (tx) =>
