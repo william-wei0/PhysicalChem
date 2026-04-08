@@ -45,13 +45,17 @@ const readJson = <T>(filePath: string): T => {
 export const getUnitManifest = (chapterId: number, unitId: number): UnitManifest => {
   const filePath = path.join(MANIFEST_ROOT, `chapter${chapterId}`, `unit${unitId}.json`);
   if (!fs.existsSync(filePath)) {
-    throw new AppError(`Manifest not found for chapter ${chapterId} unit ${unitId}`, 404);
+    throw new AppError(`Manifest not found for chapter ${chapterId} unit ${unitId} at ${filePath}`, 404);
   }
   return readJson<UnitManifest>(filePath);
 };
 
 export const getAllChapters = (): ChapterSummary[] => {
-  return readJson<ChapterSummary[]>(path.join(MANIFEST_ROOT, "index.json"));
+  const indexFilePath = path.join(MANIFEST_ROOT, "index.json");
+  if (!fs.existsSync(indexFilePath)) {
+    throw new AppError(`Manifest index at ${indexFilePath}`, 404);
+  }
+  return readJson<ChapterSummary[]>(indexFilePath);
 };
 
 export const getUnitTaskIds = (chapterId: number, unitId: number): string[] => {
