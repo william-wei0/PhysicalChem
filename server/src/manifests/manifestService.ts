@@ -2,8 +2,8 @@ import AppError from "../errors/AppError";
 import fs from "fs";
 import path from "path";
 
-const MANIFEST_ROOT = process.env.MANIFEST_ROOT
-  ? path.resolve(process.cwd(), process.env.MANIFEST_ROOT)
+const MANIFEST_ROOT = process.env.MANIFEST_ROOT_DEV
+  ? path.resolve(process.cwd(), process.env.MANIFEST_ROOT_DEV)
   : path.join(__dirname, "assets/manifests");
 
 export type LabelPart =
@@ -53,7 +53,9 @@ export const getUnitManifest = (chapterId: number, unitId: number): UnitManifest
 export const getAllChapters = (): ChapterSummary[] => {
   const indexFilePath = path.join(MANIFEST_ROOT, "index.json");
   if (!fs.existsSync(indexFilePath)) {
-    throw new AppError(`Manifest index at ${indexFilePath}`, 404);
+    console.log("__dirname:", __dirname);
+    console.log("cwd:", process.cwd());
+    throw new AppError(`Manifest index not found at ${indexFilePath}`, 404);
   }
   return readJson<ChapterSummary[]>(indexFilePath);
 };
