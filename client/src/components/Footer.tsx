@@ -17,7 +17,7 @@ export function Footer({ className = "" }: { className?: string }) {
             <h5 className="font-bold uppercase text-primary mb-4">Contact</h5>
             <div className="mb-2">For questions and inquires or to report issues, please contact:</div>
             <div> William Wei</div>
-            <div>williamwei9857@gmail.com</div>
+            <a href="mailto:williamwei9857@gmail.com">williamwei9857@gmail.com</a>
             <div className="flex mt-12 gap-5">
               <a href="privacy-policy" className="font-bold uppercase underline underline-offset-4 text-primary">
                 Privacy Policy
