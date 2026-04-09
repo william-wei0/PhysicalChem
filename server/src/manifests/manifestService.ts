@@ -53,20 +53,6 @@ export const getUnitManifest = (chapterId: number, unitId: number): UnitManifest
 export const getAllChapters = (): ChapterSummary[] => {
   const indexFilePath = path.join(MANIFEST_ROOT, "index.json");
   if (!fs.existsSync(indexFilePath)) {
-    console.log("__dirname:", __dirname);
-    console.log("cwd:", process.cwd());
-    const files = fs.readdirSync(__dirname);
-
-    console.log("Files in __dirname:");
-    files.forEach((file) => {
-      console.log(file);
-    });
-
-    const files_assets = fs.readdirSync(path.join(__dirname, "server"));
-    console.log("Files in files_assets:");
-    files.forEach((file) => {
-      console.log(file);
-    });
     throw new AppError(`Manifest index not found at ${indexFilePath}`, 404);
   }
   return readJson<ChapterSummary[]>(indexFilePath);

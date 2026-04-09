@@ -13,6 +13,7 @@ import AccountDashboard from "@/pages/AccountDashboard";
 import { ProtectedRoute } from "@/context/auth/ProtectedRoute";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import CookiePolicy from "@/pages/CookiePolicy";
+import ContactForm from "@/pages/ContactUs";
 
 const routes = [
   {
@@ -27,9 +28,11 @@ const routes = [
           { path: "lessons",                    element: <LessonIndexPage /> },
           { path: "lessons/:lessonId",          element: <LessonsRouter /> },
           { path: "lessons/:chapterId/:unitId", element: <LessonsRouter /> },
+          { path: "contact-us", element: <ContactForm /> },
           { path: "privacy-policy", element: <PrivacyPolicy /> },
           { path: "cookies", element: <CookiePolicy /> },
           { path: "dashboard", element: <ProtectedRoute><AccountDashboard /></ProtectedRoute> },
+
         ],
       },
 

@@ -1,0 +1,131 @@
+.page {
+  font-family: sans-serif;
+  font-size: 15px;
+  color: #595959;
+  max-width: 900px;
+  margin: 0 4rem;
+  padding: 2rem;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 0.25rem;
+}
+
+.subtitle {
+  color: #7f7f7f;
+  margin: 0 0 2rem;
+}
+
+/* Form layout */
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 560px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.formGroup.full {
+  grid-column: 1 / -1;
+}
+
+/* Labels */
+
+.formGroup label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Inputs, selects, textareas */
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  font-family: sans-serif;
+  font-size: 15px;
+  color: #595959;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 8px 10px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.formGroup input:hover,
+.formGroup select:hover,
+.formGroup textarea:hover {
+  border-color: #b3b3b3;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  border-color: #595959;
+  box-shadow: 0 0 0 2px rgba(89, 89, 89, 0.12);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+/* Submit button */
+
+.page form button[type="submit"] {
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #000;
+  background: transparent;
+  border: 1px solid #b3b3b3;
+  border-radius: 4px;
+  padding: 9px 24px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.page form button[type="submit"]:hover {
+  background: #f5f5f5;
+}
+
+.page form button[type="submit"]:active {
+  transform: scale(0.98);
+}
+
+.page form button[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Status messages */
+
+.statusSent {
+  font-size: 14px;
+  color: #2e7d32;
+  margin-top: 0.75rem;
+}
+
+.statusError {
+  font-size: 14px;
+  color: #c62828;
+  margin-top: 0.75rem;
+}
